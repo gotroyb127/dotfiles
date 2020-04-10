@@ -1,0 +1,1 @@
+statusblocks/player_mpv.sh

@@ -6,19 +6,7 @@
 [[ $- != *i* ]] && return
 
 alias ls='ls --color=auto'
-#PS1='[\u@\h \W]\$ '
-
-
-#red='\e[0;38;5;69m'
-#blue='\e[0;38;5;51m'
-#green='\e[0;38;5;40m'
-#yellow='\e[0;38;5;228m'
-#orange='\e[1;38;5;216m'
-#brown='\e[0;38;5;4m'
-#end='\033[0m'
-
-#PS1="${red}[${end}${blue}\u${end}${brown}@${end}${green}\H${end}${red}]${end}${yellow}\w${end}${orange}\$ ${end}"
-#PS1="${red}[${blue}\u${brown}@${green}\H${red}]${yellow}\w${orange}\$ ${end}"
+alias grep='grep --color=auto'
 
 # Colored prompt
 c1='\[\033[0;38;5;69m\]'
@@ -30,24 +18,38 @@ c6='\[\033[0;38;5;4m\]'
 end='\[\033[00m\]'
 
 PS1="${c1}[${c2}\u${c6}@${c3}\H ${c4}\w${c1}]$c5\$ ${end}"
+unset c{1..6} end
 
 # In order to have colors when connected via ssh: 
-TERM=xterm-256color
+#TERM=xterm-256color
+alias ssh='TERM=xterm-256color ssh'
+
+#export XDG_CACHE_HOME="$HOME/.local/var/cache"
+#export XDG_CONFIG_HOME="$HOME/.local/etc"
+#export XDG_DATA_HOME="$HOME/.local/share"
+#export XDG_STATE_HOME="$HOME/.local/var/lib"
+#export XDG_LIB_HOME="$HOME/.local/lib"
+#export XDG_LOG_HOME="$HOME/.local/var/log"
+
+PATH+=":$HOME/.local/scripts"
+
 export EDITOR=vim
+export PAGER=less
+#export PAGER='vim -MR'
+viman() { /usr/bin/man "$1" | col -b | vim -MR - ; }
+alias man=viman
 
-# Extended bash completition
-complete -cf sudo
-complete -c man
+alias mpv='mpv --input-ipc-server=/tmp/mpvsocket'
 
-EditConfigs () {
-local files=("$HOME/.config/i3/config" "$HOME/.config/i3/i3blocks/i3blocks.conf")
-  
-#assign a default value: geany
-local inp=$1
-echo ${inp:=geany} > /dev/null
-
-$inp ${files[@]}
-}
+#OPENER() {
+#	case "$1" in
+#		*.[hc]pp)    echo geany ;;
+#		*.mp3|*.mp4) echo vlc --one-instance ;;
+#		*.png|*.jpg) echo sxiv ;;
+#		*.pdf)       echo zathura ;;
+#		*)           echo vim ;;
+#	esac
+#}
 
 set -o vi
 

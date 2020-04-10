@@ -1,20 +1,13 @@
-#!/bin/bash
+#!/bin/mksh
 
 str1=$(playerctl metadata --format '{{title}} | {{duration(position)}} . {{duration(mpris:length)}}')
 
 
-if [ $button -eq 1 ]; then
-	playerctl play-pause
-fi
-
+[ "$button" = "1" ] && playerctl play-pause
 
 status=$(playerctl status)
 
-if [ $status = 'Playing' ]; then
-	str2=''
-else
-	str2=''
-fi
+[ "$status" = 'Playing' ] && str2='' || str2=''
 
 echo "$str1 $str2"
 

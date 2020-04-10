@@ -1,0 +1,95 @@
+set findlen 0
+set hidden
+set info size
+#set drawbox
+set previewer ~/.local/etc/lf/scope.sh
+set dircounts
+#set anchorfind!
+set relativenumber
+#set number
+
+#map <delete> ${{
+#	echo "Delete[Y/n] $fx"; read ans
+#	case "$ans" in
+#	'Y'|'y') rm "$fx;;
+#}}
+
+
+#cmd open ${{
+#	case "$f" in
+#	*.[hc]pp) geany "$f" &;;
+#	*.mp3|*.mp4) vlc --one-instance "$f" &;;
+#	*.png|*.jpg|*.webp) sxiv "$f" &;;
+#	*.pdf) zathura "$f" &;;
+#	*) vim "$f";;
+#	esac
+#}}
+
+
+
+##set filesep ' '
+#cmd opensel :set filesep ' '; ${{
+#	case "$fx" in
+#	*.[hc]pp) geany \"$fx\" &;;
+#	*.mp3|*.mp4) vlc \"$fx\" &;;
+#	*.png|*.jpg) sxiv \"$fx\" &;;
+#	*.pdf) zathura \"$fx\" &;;
+#	*) vim \"$fx\";;
+#	esac
+#}}
+
+cmd open :set filesep '\n'; ${{
+	IFS=$'\n'
+	fx=$(echo -en "$fx")
+	case "$fx" in
+		*.[hc]pp|*.[hc]) geany $fx &;;
+		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
+#		*.mp3|*.mp4) vlc --one-instance $fx &;;
+		*.png|*.jpg|*.webp|*.svg) sxiv $fx &;;
+		*.pdf) zathura $fx &;;
+		*) vim $fx;;
+	esac
+}}
+
+#cmd opensel ${{
+## VERY IMPORTANT: ls options filesep must be '\n' (the default value)
+#	echo "$fx" | while read i; do
+#		case "$i" in
+#		*.[hc]pp) geany "$i"&;;
+#		*.mp3|*.mp4) vlc --one-instance "$i" &;;
+#		*.png|*.jpg) sxiv "$i" &;;
+#		*.pdf) zathura "$i" &;;
+#		*) vim "$i";;
+#		esac
+#	done
+#}}
+
+#cmd delete :set filesep '\n'; !{{
+cmd trash :set filesep '\n'; !{{
+	IFS=$'\n'
+	for i in $(echo -e "$fx") ; do
+		mv -v "$i" ~/.local/trash
+	done
+}}
+
+
+# Replace less as a pager
+map i $vim -MR "$f"
+
+map <delete> trash
+map L opensel
+map t &st -e lf
+map a %du -hd0 "$f"
+map b :set drawbox!
+map B :set preview!
+
+map gr cd /
+map gl cd ~/.local
+map gt cd ~/.local/trash
+map gd cd ~/Documents
+
+$sleep .0001
+reload
+
+map - $~/.config/lf/draw_img.sh $f
+
