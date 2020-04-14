@@ -1,31 +1,37 @@
 #!/bin/mksh
 
 l='10'
-prompt='Choose option:'
 fn='Source Code Pro Black:size=8'
-#fn='monospace:size=8'
 nb='#000000'
 nf='#888888'
 sb='#000000'
 sf='#ffffff'
+#fn='monospace:size=8'
 #nb='#111111'
 #nf='#aaaaaa'
 #sb='#333333'
 #sf='#eeeeee'
+prompt='Choose option:'
 
 
-dmenucmd="dmenu -i -l $l -nb $nb -nf $nf -sb $sb -sf $sf"
-echo $dmenucmd
-Option=$(echo -en "0: Reboot\n1: Poweroff\n2: Hibernate\n3: Suspend\n4: Exit\n5: Lock screen" | $dmenucmd -p "$prompt" -fn "$fn" )
+dmenucmd="dmenu -l $l -nb $nb -nf $nf -sb $sb -sf $sf"
+Opt0='0: rEBOOT'
+Opt1='1: pOWEROFF'
+Opt2='2: hIBERNATE'
+Opt3='3: sUSPEND'
+Opt4='4: eXIT'
+Opt5='5: lOCK SCREEN'
+Option=$(echo -en "$Opt0\n$Opt1\n$Opt2\n$Opt3\n$Opt4\n$Opt5\n" | $dmenucmd -p "$prompt" -fn "$fn" )
+notify-send "$Option $(echo $Option | wc -c ) "
 
 case "$Option" in
-	'0: Reboot')      systemctl reboot;;
-	'1: Poweroff')    systemctl poweroff;;
-	'2: Hibernate')   slock systemctl hibernate;;
-	'3: Suspend')     slock systemctl suspend;;
-	'4: Exit')        pkill dwm;;
-	'5: Lock screen') slock & sleep 1 && xset s activate;;
+	("$Opt0") systemctl reboot;;
+	("$Opt1")  systemctl poweroff;;
+	("$Opt2") slock systemctl hibernate;;
+	("$Opt3") slock systemctl suspend;;
+	("$Opt4") pkill dwm;;
+	("$Opt5") slock & sleep 1 && xset s activate;;
 	'screen nolock'|*6*)  sleep 0.3 && xset s activate;;
-	'suspend nolock'|*7*) slock systemctl suspend;;
+	'suspend nolock'|*7*) systemctl suspend;;
 esac
 

@@ -298,6 +298,7 @@ handle_mime() {
                 local highlight_format='ansi'
             env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
                 --out-format="${highlight_format}" \
+		--line-range=1-${PV_HEIGHT} \
                 --force -- "${FILE_PATH}" && exit 5
             env COLORTERM=8bit bat --color=always --style="plain" \
                 -- "${FILE_PATH}" && exit 5

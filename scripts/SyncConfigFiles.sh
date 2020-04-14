@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/mksh
 
 Dest=~/Documents/ConfigFiles
 
@@ -8,8 +8,8 @@ files=(~/.bashrc ~/.inputrc ~/.xinitrc ~/.vimrc ~/Notes.txt)
 folders=("")
 
 
-Folders=("gsimplecal i3 termite ranger zathura dunst htop lf" "scripts")
-Parents=(~/.config/ ~/.local/)
+Folders=("gsimplecal i3 zathura dunst htop lf mpv geany" "scripts" "xorg.conf.d")
+Parents=(~/.config/ ~/.local/ /etc/X11/)
 
 targets=()
 
@@ -25,9 +25,9 @@ total=${#targets[@]}
 
 echo -e "Copying tagerts to $Dest...\n"
 
-for ((a=0; a < $total; a++)); do
-	targ=${targets[$a]}
-	echo -e "     ($((a+1))/${total}): copying $targ..."
+for a in $(seq 1 $total); do
+	targ=${targets[$((a-1))]}
+	echo -e "     ($((a))/${total}): copying $targ..."
 	cp -R $targ $Dest
 done
 

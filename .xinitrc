@@ -3,7 +3,7 @@
 xset m 11/2 0
 xset s 900 600
 xset s blank
-xset r rate 300 25
+xset r rate 250 22
 
 xrandr --output HDMI1 --primary
 

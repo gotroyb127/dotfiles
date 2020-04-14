@@ -1,6 +1,6 @@
 set number
 set relativenumber
-set guifont=Monospace\ Regular\ 9
+set guifont=Source\ Code\ Pro\ 9
 colorscheme pablo
 syntax enable
 

@@ -22,10 +22,10 @@ unset c{1..6} end
 
 # In order to have colors when connected via ssh: 
 #TERM=xterm-256color
-alias ssh='TERM=xterm-256color ssh'
+alias SSH='TERM=xterm-256color luit -encoding ISO-8859-7 ssh'
 
 #export XDG_CACHE_HOME="$HOME/.local/var/cache"
-#export XDG_CONFIG_HOME="$HOME/.local/etc"
+export XDG_CONFIG_HOME="$HOME/.local/etc"
 #export XDG_DATA_HOME="$HOME/.local/share"
 #export XDG_STATE_HOME="$HOME/.local/var/lib"
 #export XDG_LIB_HOME="$HOME/.local/lib"
@@ -33,23 +33,24 @@ alias ssh='TERM=xterm-256color ssh'
 
 PATH+=":$HOME/.local/scripts"
 
+SetDmenucmd() {
+local l='10'; 
+local fn='Source Code Pro Black:size=8'
+local nb='#000000'
+local nf='#888888'
+local sb='#000000'
+local sf='#ffffff'
+echo "dmenu -i -l $l -nb $nb -nf $nf -sb $sb -sf $sf"
+}
+
+export dmenucmd=$(SetDmenucmd)
+
 export EDITOR=vim
 export PAGER=less
-#export PAGER='vim -MR'
 viman() { /usr/bin/man "$1" | col -b | vim -MR - ; }
 alias man=viman
 
-alias mpv='mpv --input-ipc-server=/tmp/mpvsocket'
-
-#OPENER() {
-#	case "$1" in
-#		*.[hc]pp)    echo geany ;;
-#		*.mp3|*.mp4) echo vlc --one-instance ;;
-#		*.png|*.jpg) echo sxiv ;;
-#		*.pdf)       echo zathura ;;
-#		*)           echo vim ;;
-#	esac
-#}
+alias mpvs='mpv --input-ipc-server=/tmp/mpvsocket'
 
 set -o vi
 

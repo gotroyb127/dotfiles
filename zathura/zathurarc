@@ -1,7 +1,8 @@
 set adjust-open width
 set scroll-step 25
 set zoom-step 5
-set first-page-column 0
+set first-page-column 0:0:0:0
+#set scroll-full-overlap 0.0001
 #set selection-clipboard clipboard
 
 #set recolor-reverse-video true
@@ -13,29 +14,31 @@ set recolor-darkcolor "#ffffff"
 #set recolor-lightcolor "#3F3F3F"
 #set recolor-darkcolor "#F0DFAF"
 
-set guioptions svh
+set guioptions vh
 set statusbar-home-tilde true
 
 set font "DejaVu Sans 8"
 
-map e set first-page-column\ 1
-map E set first-page-column\ 2
+#map e set first-page-column\ 1
+#map E set first-page-column\ 2
 #map <S-e> set first-page-column\ 2
 
 map <Esc> abort
 
 map u scroll half-up
 map d scroll half-down
+map U feedkeys <C-Up>
+map D feedkeys <C-Down>
 
 map b scroll full-up
 map f scroll full-down
+#map b feedkeys <PageUp>
+#map f feedkeys <PageDown>
 
-map D toggle_page_mode
+map e toggle_page_mode
 
 map <C-PageUp> scroll half-up
 map <C-PageDown> scroll half-down
 
-#map <Button3> feedkeys <Button1>
 #map l feedkeys <C-r>
 #map <C-Up> feedkeys <C-Up>
-#map <C-Down> scroll half-down
