@@ -24,12 +24,12 @@ unset c{1..6} end
 #TERM=xterm-256color
 alias SSH='TERM=xterm-256color luit -encoding ISO-8859-7 ssh'
 
-#export XDG_CACHE_HOME="$HOME/.local/var/cache"
+export XDG_CACHE_HOME="$HOME/.local/var/cache"
 export XDG_CONFIG_HOME="$HOME/.local/etc"
-#export XDG_DATA_HOME="$HOME/.local/share"
-#export XDG_STATE_HOME="$HOME/.local/var/lib"
-#export XDG_LIB_HOME="$HOME/.local/lib"
-#export XDG_LOG_HOME="$HOME/.local/var/log"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/var/lib"
+export XDG_LIB_HOME="$HOME/.local/lib"
+export XDG_LOG_HOME="$HOME/.local/var/log"
 
 PATH+=":$HOME/.local/scripts"
 

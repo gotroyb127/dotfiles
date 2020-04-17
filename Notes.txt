@@ -1,2 +1,4 @@
 sudo /etc/init.d/vmware start
 youtube-dl -k -x -f mp4 --audio-format mp3 --playlist-items 20-25 -o '%(title)s.%(ext)s'
+ffmpeg -i /dev/video0 -c:v rawvideo -pix_fmt yuv420p -window_size qcif -f sdl "SDL output"
+
