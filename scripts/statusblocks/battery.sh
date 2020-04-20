@@ -1,18 +1,18 @@
 #!/bin/mksh
 
+#Info='Battery 0: Charing, 50%'
 Info=$(acpi -b)
 
-BAT="$(echo $Info | grep -E -o '[0-9" "][0-9][0-9]%')"
-#BAT="$(echo $Info | grep -E -o '[0-9," "][0-9][0-9]%')"']'
+BAT="$(echo $Info | grep -E -o '[0-9]{2,}')"
 
-[[ $(echo "$Info" | grep Charging | wc -l) -ge 1 ]] && Charg='   +' ||\
-[[ $(echo "$Info" | grep "100"    | wc -l) -ge 1 ]] && Charg='' && BAT='' ||\
-Charg='   -'
+if [[ $(echo "$Info" | grep Charging | wc -l) -ge 1 ]]; then
+	Charg=''; BAT="  $BAT"
+elif [[ $(echo "$Info" | grep "100"  | wc -l) -ge 1 ]]; then
+	Charg=''; BAT="   $BAT"
+else
+	Charg=''; BAT="  $BAT"
+fi
 
-#[[ $(echo "$Info" | grep Charging | wc -l) -ge 1 ]] && Charg='[+' ||\
-#[[ $(echo "$Info" | grep "Full"   | wc -l) -ge 1 ]] && Charg='' && BAT='' ||\
-#Charg='[-'
-
-echo -n "$Charg$BAT"
+echo -n "${BAT/%/}$Charg"
 
 

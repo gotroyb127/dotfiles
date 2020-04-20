@@ -8,7 +8,7 @@ files=(~/.bashrc ~/.inputrc ~/.xinitrc ~/.vimrc ~/Notes.txt)
 folders=("")
 
 
-Folders=("gsimplecal i3 zathura dunst htop lf mpv geany" "scripts" "xorg.conf.d")
+Folders=("gsimplecal zathura dunst htop lf mpv geany" "scripts" "xorg.conf.d")
 Parents=(~/.config/ ~/.local/ /etc/X11/)
 
 targets=()
