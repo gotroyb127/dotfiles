@@ -7,12 +7,13 @@ xset r rate 250 22
 
 xrandr --output HDMI1 --primary
 
+dunst &
+clipmenud &
 lxqt-policykit-agent &
 unclutter --timeout 1 &
-dunst &
 
+nm-applet &
 #copyq &
-#nm-applet &
 
 dwmblocks &
 

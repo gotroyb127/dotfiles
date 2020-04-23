@@ -1,0 +1,48 @@
+{
+	"name": "Vimium C",
+	"@time": "4/23/2020, 9:56:32 AM",
+	"time": 1587624992558,
+	"environment": {
+		"extension": "1.81.5",
+		"platform": "linux"
+	},
+	"exclusionRules": [
+		{
+			"pattern": "^https?://www\\.youtube\\.com/*",
+			"passKeys": "< > "
+		}
+	],
+	"extAllowList": "#",
+	"ignoreKeyboardLayout": true,
+	"keyMappings": [
+		"# Insert your preferred key mappings here.",
+		"map <a-g> LinkHints.activateModeToOpenInNewForegroundTab",
+		"",
+		"unmap J",
+		"unmap K",
+		"unmap <a-r>",
+		"",
+		"map J nextTab",
+		"map K previousTab",
+		"map <a-i> LinkHints.activateModeToOpenImage",
+		"map s LinkHints.activateModeToHover",
+		""
+	],
+	"nextPatterns": "next,more,newer,>,›,→,»,≫,>>",
+	"previousPatterns": "prev,previous,back,older,<,‹,←,«,≪,<<",
+	"scrollStepSize": 60,
+	"searchEngines": "#",
+	"searchUrl": "https://duckduckgo.com/?q=$s",
+	"showAdvancedCommands": true,
+	"showAdvancedOptions": true,
+	"userDefinedCss": [
+		".LH {",
+		"  color: #ffffff;",
+		"  font-size: 12px;",
+		"  background: linear-gradient(#000000,#009821) !important;",
+		"  border: 1px solid #00ffff;",
+		"  border-radius: 3px;",
+		"}",
+		""
+	]
+}

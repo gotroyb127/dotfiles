@@ -14,9 +14,10 @@ cmd open :set filesep '\n'; ${{
 	case "$fx" in
 		*.[hc]pp|*.[hc]) geany $fx &;;
 		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
-#		*.mp3|*.mp4) vlc --one-instance $fx &;;
+#		*.mp3|*.mp4) vlc --one-instance $fx ;;
 		*.png|*.jpg|*.webp|*.svg) sxiv $fx &;;
 		*.pdf) zathura $fx &;;
+		*.pptx) loimpress $fx &;;
 		*) vim $fx;;
 	esac
 }}
@@ -34,6 +35,7 @@ map i $vim -MR "$f"
 
 map <delete> trash
 map t &st -e lf
+map A !du -hd1
 map a %du -hd0 "$f"
 map S !echo -e "$fx"
 map b :set drawbox!
