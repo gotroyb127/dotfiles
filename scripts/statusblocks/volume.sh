@@ -1,11 +1,13 @@
 #!/bin/mksh
 
-VOL=$(pulsemixer --id sink-0 --get-volume | awk '{ print $1 }')
+s=$(pulsemixer --list-sinks | grep -o sink-[0-9] | grep -o [0-9] )
 
-if [ $(pulsemixer --id sink-0 --get-mute) -eq 0 ]; then
-	echo -n "     "
+VOL=$(pulsemixer --id sink-$s --get-volume | awk '{ print $1 }')
+
+if [[ $(pulsemixer --id sink-$s --get-mute) -eq 0 ]]; then
+	echo -n "       "
 else
-	echo -n "   ﱝ "; warn=!
+	echo -n "     ﱝ "; warn=!
 fi
 #墳
 

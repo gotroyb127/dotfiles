@@ -14,10 +14,10 @@ cmd open :set filesep '\n'; ${{
 	case "$fx" in
 		*.[hc]pp|*.[hc]) geany $fx &;;
 		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
-#		*.mp3|*.mp4) vlc --one-instance $fx ;;
 		*.png|*.jpg|*.webp|*.svg) sxiv $fx &;;
 		*.pdf) zathura $fx &;;
 		*.pptx) loimpress $fx &;;
+		*.mid|*.MID) timidity -in $fx ;;
 		*) vim $fx;;
 	esac
 }}
@@ -49,6 +49,4 @@ map gd cd ~/Documents
 
 $sleep .0001
 reload
-
-map - $~/.config/lf/draw_img.sh $f
 

@@ -38,10 +38,10 @@
 	"userDefinedCss": [
 		".LH {",
 		"  color: #ffffff;",
-		"  font-size: 12px;",
+		"  font-size: 11px;",
 		"  background: linear-gradient(#000000,#009821) !important;",
 		"  border: 1px solid #00ffff;",
-		"  border-radius: 3px;",
+		"  border-radius: 10px;",
 		"}",
 		""
 	]

@@ -8,4 +8,5 @@ partprobe
 Kernel driver: xhci_hcd
 Kernel module: xhci_pci
 
-
+# SoundFont packages:
+soundfont-fluid, freepats-general-midi

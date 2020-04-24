@@ -8,7 +8,7 @@ files=(~/.bashrc ~/.inputrc ~/.xinitrc ~/.vimrc ~/Notes.txt)
 folders=("")
 
 
-Folders=("gsimplecal zathura dunst htop lf mpv geany" "scripts" "xorg.conf.d")
+Folders=("gsimplecal zathura dunst htop lf mpv" "scripts" "xorg.conf.d")
 Parents=(~/.config/ ~/.local/ /etc/X11/)
 
 targets=()
@@ -30,7 +30,6 @@ for a in $(seq 1 $total); do
 	echo -e "     ($((a))/${total}): copying $targ..."
 	cp -R $targ $Dest
 done
-
 
 echo -e "Done.\n"
 
