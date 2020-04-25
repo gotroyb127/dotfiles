@@ -9,6 +9,7 @@ xrandr --output HDMI1 --primary
 
 dunst &
 clipmenud &
+pulseaudio -D &
 lxqt-policykit-agent &
 unclutter --timeout 1 &
 

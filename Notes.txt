@@ -10,3 +10,6 @@ Kernel module: xhci_pci
 
 # SoundFont packages:
 soundfont-fluid, freepats-general-midi
+
+# copy with progress:
+rsync -r -pP

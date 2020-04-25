@@ -41,6 +41,10 @@ map S !echo -e "$fx"
 map b :set drawbox!
 map B :set preview!
 
+map sn :set sortby natural
+map sN :set sortby name
+
+
 map gr cd /
 map gl cd ~/.local
 map gs cd ~/.local/scripts
