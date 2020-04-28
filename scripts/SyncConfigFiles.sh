@@ -1,10 +1,11 @@
 #!/bin/mksh
 
+Sync() {
 Dest=~/Documents/ConfigFiles
 
 
 
-files=(~/.bashrc ~/.inputrc ~/.xinitrc ~/.vimrc ~/Notes.txt)
+files=(~/.tmux.conf ~/.bashrc ~/.inputrc ~/.xinitrc ~/.vimrc ~/Notes.txt ~/TODO.txt)
 folders=("")
 
 
@@ -23,14 +24,15 @@ targets+=(${files[@]})
 
 total=${#targets[@]}
 
-echo -e "Copying tagerts to $Dest...\n"
+echo -e "Copying tagerts to $Dest.\n"
 
 for a in $(seq 1 $total); do
 	targ=${targets[$((a-1))]}
-	echo -e "     ($((a))/${total}): copying $targ..."
+	echo -e "($((a))/${total}): $targ"
 	cp -R $targ $Dest
 done
 
 echo -e "Done.\n"
+}
 
-
+notify-send "$(Sync)"

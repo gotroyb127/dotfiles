@@ -1,12 +1,13 @@
-set findlen 0
 set hidden
 set info size
 #set drawbox
 set previewer ~/.local/etc/lf/scope.sh
 set dircounts
-#set anchorfind!
 set relativenumber
-#set number
+set period 1
+set incsearch
+set findlen 0
+
 
 cmd open :set filesep '\n'; ${{
 	IFS=$'\n'
@@ -44,6 +45,7 @@ map B :set preview!
 map sn :set sortby natural
 map sN :set sortby name
 
+map <esc> cmd-escape
 
 map gr cd /
 map gl cd ~/.local
@@ -51,6 +53,6 @@ map gs cd ~/.local/scripts
 map gt cd ~/.local/trash
 map gd cd ~/Documents
 
-$sleep .0001
-reload
+#$sleep .0001
+#reload
 

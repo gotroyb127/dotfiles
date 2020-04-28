@@ -31,26 +31,23 @@ export XDG_STATE_HOME="$HOME/.local/var/lib"
 export XDG_LIB_HOME="$HOME/.local/lib"
 export XDG_LOG_HOME="$HOME/.local/var/log"
 
-PATH+=":$HOME/.local/scripts"
-
-SetDmenucmd() {
-local l='10'; 
-local fn='Source Code Pro Black:size=8'
-local nb='#000000'
-local nf='#888888'
-local sb='#000000'
-local sf='#ffffff'
-echo "dmenu -i -l $l -nb $nb -nf $nf -sb $sb -sf $sf"
-}
-
-export dmenucmd=$(SetDmenucmd)
-
 export EDITOR=vim
 export PAGER=less
-viman() { /usr/bin/man "$1" | col -b | vim -MR - ; }
-alias man=viman
+# climenud: manage only the clipboard
+export CM_SELECTIONS=clipboard
 
-alias mpvs='mpv --input-ipc-server=/tmp/mpvsocket'
+PATH+=":$HOME/.local/scripts"
+
+viman() { /usr/bin/man "$1" | col -b | vim -MR - ; }
+
+alias 	man=viman\
+	view='vim -MR'\
+	mpvs='mpv --input-ipc-server=/tmp/mpvsocket'\
+	cdl='cd ~/.local'\
+	cds='cd ~/.local/scripts'\
+	cdc='cd ~/.config'\
+	cdd='cd ~/Documents'\
+
 
 set -o vi
 

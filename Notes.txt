@@ -1,6 +1,12 @@
+#!/usr/bin/env sh
+
+# load vmware modules
 sudo /etc/init.d/vmware start
+
 youtube-dl -k -x -f mp4 --audio-format mp3 --playlist-items 20-25 -o '%(title)s.%(ext)s'
+
 ffmpeg -i /dev/video0 -c:v rawvideo -pix_fmt yuv420p -window_size qcif -f sdl "SDL output"
+
 # refresh disks
 partprobe
 
@@ -13,3 +19,14 @@ soundfont-fluid, freepats-general-midi
 
 # copy with progress:
 rsync -r -pP
+
+# PrintScreen - Current window
+	id=$(xprop -root | awk '/_NET_ACTIVE_WINDOW\(WINDOW\)/{print $NF}')
+or	id=$(xdotool getwindowfocus)
+		shotgun -i $id "$HOME/Screenshots/$(date +'%d-%m-%Y(%H:%M:%S)')w.png"
+
+# Check if it is day for updating (every 7 days).
+	[[ $(( $(date +%j) % 7 )) -le 1 ]] &&\
+	UpsNum=$(pacman -Quq | wc -l)
+	notify-send "Pacman: $UpsNum updates available." \
+\	"$(pacman -Qu | awk '{ printf("%-23s %s\n", $1, $NF) }' )"

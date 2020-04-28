@@ -1,7 +1,7 @@
 {
 	"name": "Vimium C",
-	"@time": "4/23/2020, 9:56:32 AM",
-	"time": 1587624992558,
+	"@time": "4/26/2020, 10:53:50 AM",
+	"time": 1587887630147,
 	"environment": {
 		"extension": "1.81.5",
 		"platform": "linux"
@@ -16,7 +16,7 @@
 	"ignoreKeyboardLayout": true,
 	"keyMappings": [
 		"# Insert your preferred key mappings here.",
-		"map <a-g> LinkHints.activateModeToOpenInNewForegroundTab",
+		"map go LinkHints.activateModeToOpenInNewForegroundTab",
 		"",
 		"unmap J",
 		"unmap K",
