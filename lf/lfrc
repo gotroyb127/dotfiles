@@ -16,7 +16,7 @@ cmd open :set filesep '\n'; ${{
 		*.[hc]pp|*.[hc]) geany $fx &;;
 		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
 		*.png|*.jpg|*.webp|*.svg) sxiv $fx &;;
-		*.pdf) zathura $fx &;;
+		*.pdf) zathura $fx 2> /dev/null &;;
 		*.pptx) loimpress $fx &;;
 		*.mid|*.MID) timidity -in $fx ;;
 		*) vim $fx;;
@@ -35,7 +35,10 @@ cmd trash :set filesep '\n'; !{{
 map i $vim -MR "$f"
 
 map <delete> trash
-map t &st -e lf
+#map t &st -e lf
+map t $tmux splitw -h lf $PWD
+map T $tmux splitw -v lf $PWD
+
 map A !du -hd1
 map a %du -hd0 "$f"
 map S !echo -e "$fx"

@@ -6,29 +6,25 @@ set first-page-column 0:0:0:0
 #set selection-clipboard clipboard
 
 #set recolor-reverse-video true
+## Recoloring Options
+set recolor
 set recolor-keephue
 
 set recolor-lightcolor "#010101"
 set recolor-darkcolor "#ffffff"
 
-#set recolor-lightcolor "#3F3F3F"
-#set recolor-darkcolor "#F0DFAF"
 
 set guioptions vh
 set statusbar-home-tilde true
 
 set font "DejaVu Sans 8"
 
-#map e set first-page-column\ 1
-#map E set first-page-column\ 2
-#map <S-e> set first-page-column\ 2
-
 map <Esc> abort
 
 map u scroll half-up
 map d scroll half-down
-map U feedkeys <C-Up>
-map D feedkeys <C-Down>
+map U     feedkeys <C-Up>
+map D     feedkeys <C-Down>
 map <C-y> feedkeys <C-Up>
 map <C-e> feedkeys <C-Down>
 
@@ -44,3 +40,4 @@ map <C-PageDown> scroll half-down
 
 #map l feedkeys <C-r>
 #map <C-Up> feedkeys <C-Up>
+

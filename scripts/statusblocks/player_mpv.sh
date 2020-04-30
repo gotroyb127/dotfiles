@@ -31,7 +31,8 @@ CurrTime=$(FormatTime $(Info time-pos) )
 Duration=$(FormatTime $(Info duration) )
 RemPlTime=$(FormatTime $(Info playtime-remaining) )
 Speed=$(Info speed)
-echo -n "$Title | $CurrTime . $Duration (-$RemPlTime) x$Speed $p"
+#echo -n "$Title | $CurrTime . $Duration (-$RemPlTime) x$Speed $p"
+echo -n "$Title [$CurrTime . $Duration] (-$RemPlTime) x$Speed $p"
 }
 
 case "$1" in

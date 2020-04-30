@@ -29,10 +29,11 @@ echo -e "Copying tagerts to $Dest.\n"
 for a in $(seq 1 $total); do
 	targ=${targets[$((a-1))]}
 	echo -e "($((a))/${total}): $targ"
-	cp -R $targ $Dest
+	cp -uvR $targ $Dest
 done
 
 echo -e "Done.\n"
 }
 
-notify-send "$(Sync)"
+Sync
+#notify-send "$(Sync)"

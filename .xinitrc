@@ -13,7 +13,7 @@ clipmenud &
 lxqt-policykit-agent &
 unclutter --timeout 1 &
 
-nm-applet &
+#nm-applet &
 
 dwmblocks &
 

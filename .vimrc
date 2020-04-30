@@ -1,7 +1,12 @@
 set number
 set relativenumber
+
+set incsearch
 set hlsearch
 set guifont=Source\ Code\ Pro\ 9
+
+set cursorline
+set cursorlineopt=line
 
 colorscheme slate
 syntax enable
@@ -11,13 +16,31 @@ let &t_SR = "\e[4 q"
 
 let &t_EI = "\e[2 q"
 
-
 " autocmd CmdlineEnter * silent execute '!echo -ne "\e[6 q"'
 " autocmd CmdlineLeave * silent execute '!echo -ne "\e[2 q"'
-
 " autocmd CmdlineEnter * silent execute '!echo -ne "\e[2 q"'
 
 autocmd VimEnter     * silent execute '!echo -ne "\e[2 q"'
+
+inoremap " ""<Left>
+inoremap } }<Left>
+inoremap { {
+inoremap {<C-j> {}<Left><Return><Return><Up>0<Esc>2==cl
+" inoremap {<CR> {}<Left><Return><Return><Up>0<Esc>2==cl
+
+inoremap <C-f> <Esc>*Nea
+
+set shiftwidth=8
+set tabstop=8
+set autoindent
+
+" Faster multi window management inside vim
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+set splitbelow
+set splitright
 
 
 " Clear highlighted search with [Ctrl]+[/]
