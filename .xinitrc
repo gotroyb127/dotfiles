@@ -11,11 +11,11 @@ xrandr --output HDMI1 --primary
 dunst &
 clipmenud &
 lxqt-policykit-agent &
-unclutter --timeout 1 &
-
+unclutter --timeout 1 --jitter 25 --ignore-scrolling &
 #nm-applet &
-
 dwmblocks &
+
+start.sh
 
 exec dwm
 

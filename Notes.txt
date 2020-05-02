@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# Commonly used packages
+xssstate dunst highlight clipmenu mpv(socat,jq) ttf-inconsolata ttf-nerd-fonts-?
+
 # load vmware modules
 sudo /etc/init.d/vmware start
 

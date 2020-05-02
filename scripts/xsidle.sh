@@ -10,7 +10,6 @@ then
 fi
 cmd="$@"
 
-
 while true; do
 	Tim=$(xset q | grep timeout | awk '{print $2}')
 	if [ $(xssstate -s) != "disabled" ];
@@ -19,6 +18,7 @@ while true; do
 		idle=$(($(xssstate -i) / 1000 ))
 #		if [ $tosleep -ge 0 ]; then
 		if [[ $idle -ge $((Tim +10)) ]]; then
+			notify-send "$(date)" "$idle"
 			$cmd
 			sleep 60
 		else
