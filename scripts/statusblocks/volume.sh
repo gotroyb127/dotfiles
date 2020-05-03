@@ -1,6 +1,6 @@
 #!/bin/mksh
 
-s=$(pulsemixer --list-sinks | grep -o sink-[0-9] | grep -o [0-9] )
+s=$(pulsemixer --list-sinks | grep -o 'sink-[0-9]\+' | head -n1 | grep -o [0-9] )
 
 VOL=$(pulsemixer --id sink-$s --get-volume | awk '{ print $1 }')
 

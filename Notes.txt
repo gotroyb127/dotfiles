@@ -1,12 +1,13 @@
 #!/usr/bin/env sh
 
 # Commonly used packages
-xssstate dunst highlight clipmenu mpv(socat,jq) ttf-inconsolata ttf-nerd-fonts-?
+moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) ttf-inconsolata ttf-nerd-fonts-?
 
 # load vmware modules
 sudo /etc/init.d/vmware start
 
 youtube-dl -k -x -f mp4 --audio-format mp3 --playlist-items 20-25 -o '%(title)s.%(ext)s'
+youtube-dl --rm-cache-dir # ERROR: unable to download video data: HTTP Error 403: Forbidden
 
 ffmpeg -i /dev/video0 -c:v rawvideo -pix_fmt yuv420p -window_size qcif -f sdl "SDL output"
 

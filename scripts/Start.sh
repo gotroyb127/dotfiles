@@ -1,5 +1,6 @@
 #!/usr/bin/sh
 
+
 # Show available updates on startup.
 if [[ $(( $(date +%j) % 7 )) -le 1 ]]; then
 	UpsNum=$(pacman -Quq | wc -l)

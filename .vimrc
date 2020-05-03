@@ -25,8 +25,9 @@ autocmd VimEnter     * silent execute '!echo -ne "\e[2 q"'
 inoremap " ""<Left>
 inoremap } }<Left>
 inoremap { {
-inoremap {<C-j> {}<Left><Return><Return><Up>0<Esc>2==cl
-" inoremap {<CR> {}<Left><Return><Return><Up>0<Esc>2==cl
+" Only works with autoident on
+inoremap {<C-j> {}<Left><Return><Return><Up><Tab>
+" inoremap {<CR> {}<Left><Return><Return><Up><Tab>
 
 inoremap <C-f> <Esc>*Nea
 

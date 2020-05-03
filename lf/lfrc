@@ -1,17 +1,41 @@
+#!/bin/sh
+# ^^^ trick vim to syntax highlihght
+
 set hidden
-set info size
 #set drawbox
-set previewer ~/.local/etc/lf/scope.sh
+set color256
 set dircounts
+set incsearch
+set info size
 set relativenumber
 set period 1
-set incsearch
 set findlen 0
+set scrolloff 5
+set previewer ~/.local/etc/lf/scope.sh
+
+#cmd open :set filesep '\n'; ${{
+#	IFS=$'\n'
+#	fx=$(echo -en "$fx")
+#	case "$fx" in
+#		*.[hc]pp|*.[hc]) geany $fx &;;
+#		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
+#		*.png|*.jpg|*.webp|*.svg) sxiv $fx &;;
+#		*.pdf) zathura $fx 2> /dev/null &;;
+#		*.pptx) loimpress $fx &;;
+#		*.mid|*.MID) timidity -in $fx ;;
+#		*) vim $fx;;
+#	esac
+#}}
+#cmd trash :set filesep '\n'; !{{
+#	IFS=$'\n'
+#	for i in $(echo -e "$fx") ; do
+#		mv -v "$i" ~/.local/trash
+#	done
+#}}
 
 
-cmd open :set filesep '\n'; ${{
+cmd open ${{
 	IFS=$'\n'
-	fx=$(echo -en "$fx")
 	case "$fx" in
 		*.[hc]pp|*.[hc]) geany $fx &;;
 		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
@@ -23,25 +47,57 @@ cmd open :set filesep '\n'; ${{
 	esac
 }}
 
-cmd trash :set filesep '\n'; !{{
+cmd trash ${{
 	IFS=$'\n'
-	for i in $(echo -e "$fx") ; do
+	for i in "$fx"; do
 		mv -v "$i" ~/.local/trash
 	done
 }}
 
+cmd recol &{{
+	w=$(tput cols)
+	if [ $w -le 80 ]; then
+		lf -remote "send $id set nopreview"$'\n'\
+\	\	"send $id set ratios 1"
+	elif [ $w -le 150 ]; then
+		lf -remote "send $id set preview"$'\n'\
+\	\	"send $id set ratios 5:8"
+	else
+		lf -remote "send $id set preview"
+		lf -remote "send $id set ratios 3:5:8"
+	fi
+}}
+
+cmd yankname &{{
+	if [ -z "$f" ]; then
+		t="$PWD"
+	else
+		t="$f"
+	fi
+	basename "$t" | tr -d '\n' | xclip
+	echo -n "$t" | xclip -sel clipboard
+}}
+
+recol
 
 # Replace less as a pager
 map i $vim -MR "$f"
+
+map c :clear; unselect
+map <c-r> :redraw; reload
+map <c-l> :recol; &{{sleep .1}}; recol
+map C push $mkdir<space>""<left>
+map X $IFS=$'\n' vidir $fx
 
 map <delete> trash
 #map t &st -e lf
 map t $tmux splitw -h lf $PWD
 map T $tmux splitw -v lf $PWD
+map Y yankname
 
-map A !du -hd1
 map a %du -hd0 "$f"
-map S !echo -e "$fx"
+map A !clear && du -hd1 | sort -k 1 -rh
+map S !clear && echo -e "$fx" | sort -n
 map b :set drawbox!
 map B :set preview!
 

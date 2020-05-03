@@ -26,7 +26,7 @@ esac
 #Perc=$(Info percent-pos | sed 's/\.[0-9]*//g')
 
 #Title=$(Info filename/no-ext)
-Title=$(Info media-title)
+Title=$(Info media-title | cut -c -100)
 CurrTime=$(FormatTime $(Info time-pos) )
 Duration=$(FormatTime $(Info duration) )
 RemPlTime=$(FormatTime $(Info playtime-remaining) )
