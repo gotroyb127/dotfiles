@@ -12,6 +12,7 @@ set period 1
 set findlen 0
 set scrolloff 5
 set previewer ~/.local/etc/lf/scope.sh
+set promptfmt "\033[1;38;5;7m[\033[1;38;5;45m%u\033[0;38;5;195m@\033[1;38;5;42m%h\033[1;38;5;7m]:\033[1;38;5;105m%w/\033[1;38;5;15m%f\033[0m"
 
 #cmd open :set filesep '\n'; ${{
 #	IFS=$'\n'
@@ -41,7 +42,7 @@ cmd open ${{
 		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
 		*.png|*.jpg|*.webp|*.svg) sxiv $fx &;;
 		*.pdf) zathura $fx 2> /dev/null &;;
-		*.pptx) loimpress $fx &;;
+		*.pptx|*.ppt) loimpress $fx &;;
 		*.mid|*.MID) timidity -in $fx ;;
 		*) vim $fx;;
 	esac
@@ -56,7 +57,7 @@ cmd trash ${{
 
 cmd recol &{{
 	w=$(tput cols)
-	if [ $w -le 80 ]; then
+	if [ $w -le 75 ]; then
 		lf -remote "send $id set nopreview"$'\n'\
 \	\	"send $id set ratios 1"
 	elif [ $w -le 150 ]; then
@@ -64,9 +65,10 @@ cmd recol &{{
 \	\	"send $id set ratios 5:8"
 	else
 		lf -remote "send $id set preview"
-		lf -remote "send $id set ratios 3:5:8"
+		lf -remote "send $id set ratios 4:8"
 	fi
 }}
+cmd Recol :recol; sleep &{{sleep .1}}; recol
 
 cmd yankname &{{
 	if [ -z "$f" ]; then
@@ -78,16 +80,15 @@ cmd yankname &{{
 	echo -n "$t" | xclip -sel clipboard
 }}
 
-recol
-
 # Replace less as a pager
 map i $vim -MR "$f"
 
-map c :clear; unselect
+map <c-l> Recol
 map <c-r> :redraw; reload
-map <c-l> :recol; &{{sleep .1}}; recol
-map C push $mkdir<space>""<left>
-map X $IFS=$'\n' vidir $fx
+map c :clear; unselect
+map C $IFS=$'\n' vidir $fx
+map D push $mkdir<space>""<left>
+map X !clear && "$f"
 
 map <delete> trash
 #map t &st -e lf
@@ -97,8 +98,8 @@ map Y yankname
 
 map a %du -hd0 "$f"
 map A !clear && du -hd1 | sort -k 1 -rh
-map S !clear && echo -e "$fx" | sort -n
-map b :set drawbox!
+map S !clear && echo "$fx" | sort -n
+map b :set drawbox!; set relativenumber!
 map B :set preview!
 
 map sn :set sortby natural
@@ -108,10 +109,12 @@ map <esc> cmd-escape
 
 map gr cd /
 map gl cd ~/.local
+map gc cd ~/.local/etc
 map gs cd ~/.local/scripts
 map gt cd ~/.local/trash
 map gd cd ~/Documents
 
 #$sleep .0001
 #reload
+Recol
 

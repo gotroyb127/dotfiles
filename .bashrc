@@ -9,15 +9,18 @@ alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 
 # Colored prompt
-c1='\[\033[0;38;5;69m\]'
-c2='\[\033[0;38;5;51m\]'
-c3='\[\033[0;38;5;40m\]'
-c4='\[\033[0;38;5;228m\]'
-c5='\[\033[1;38;5;216m\]'
-c6='\[\033[0;38;5;4m\]'
+c1='\[\033[1;38;5;111m\]'
+c2='\[\033[1;38;5;45m\]'
+c3='\[\033[1;38;5;42m\]'
+#c4='\[\033[1;38;5;153m\]'
+c4='\[\033[1;38;5;105m\]'
+c5='\[\033[1;38;5;219m\]'
+c6='\[\033[0;38;5;195m\]'
+c7='\[\033[1;38;5;7m\]'
+c1="$c7"
 end='\[\033[00m\]'
 
-PS1="${c1}[${c2}\u${c6}@${c3}\H ${c4}\w${c1}]$c5\$ ${end}"
+PS1="${c1}[${c2}\u${c6}@${c3}\H${c7}:${c4}\w${c1}]$c5\$ ${end}"
 unset c{1..6} end
 
 # In order to have colors when connected via ssh: 
@@ -47,7 +50,9 @@ alias 	man=viman\
 	cds='cd ~/.local/scripts'\
 	cdc='cd ~/.config'\
 	cdd='cd ~/Documents'\
+	Startx='startx 2> /dev/null'
 
 
 set -o vi
+shopt -s autocd
 

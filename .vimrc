@@ -5,10 +5,12 @@ set incsearch
 set hlsearch
 set guifont=Source\ Code\ Pro\ 9
 
+" set scrolloff=5
 set cursorline
 set cursorlineopt=line
 
-colorscheme slate
+" colorscheme slate
+colorscheme pablo
 syntax enable
 
 let &t_SI = "\e[6 q"

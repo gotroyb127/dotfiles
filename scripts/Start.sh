@@ -3,6 +3,7 @@
 
 # Show available updates on startup.
 if [[ $(( $(date +%j) % 7 )) -le 1 ]]; then
+	sudo pacman -Sy
 	UpsNum=$(pacman -Quq | wc -l)
 	notify-send $'Time for Updates!!!\nPacman: '\
 \	"$UpsNum updates available." \

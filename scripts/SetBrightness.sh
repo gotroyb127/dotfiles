@@ -1,16 +1,14 @@
 #!/bin/mksh
 
-#echo "$dmenucmd"
 Dmenucmd() {
 	local CurrBr=$(xbacklight)
 	if [[ -z $1 ]]; then
-		echo -e '+5\n-5\n+1\n-1\n+10\n-10' | $dmenucmd -p "Adjust screen brightness($CurrBr): "
+		echo -e '+5\n-5\n+1\n-1\n+10\n-10' | dmenu -l 7 -p "Adjust screen brightness($CurrBr): "
 	else
-		echo -e '-5\n+5\n-1\n+1\n-10\n+10' | $dmenucmd -p "Adjust screen brightness($CurrBr): "
+		echo -e '-5\n+5\n-1\n+1\n-10\n+10' | dmenu -l 7 -p "Adjust screen brightness($CurrBr): "
 	fi
 }
 
-#notify-send "Asked for: $dmenucmd"
 ans=5
 while $() ; do
 	ans=$(Dmenucmd $last)

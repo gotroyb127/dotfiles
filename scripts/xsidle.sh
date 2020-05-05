@@ -10,22 +10,36 @@ then
 fi
 cmd="$@"
 
+if [[ $(xssstate -s) = "disabled" ]]; then
+	exit 1
+fi
+
+ToLock=15
+ToSusp=600
+
 while true; do
 	Tim=$(xset q | grep timeout | awk '{print $2}')
-	if [ $(xssstate -s) != "disabled" ];
-	then
-#		tosleep=$(($(xssstate -t) / 1000))
-		idle=$(($(xssstate -i) / 1000 ))
-#		if [ $tosleep -ge 0 ]; then
-		if [[ $idle -ge $((Tim +10)) ]]; then
-			notify-send "$(date)" "$idle"
-			$cmd
+	idle=$(($(xssstate -i) / 1000 ))
+	if [[ $idle -ge $((Tim + ToLock)) ]]; then
+		$cmd &
+		while [[ -z $Susp && $idle -ge $((Tim + ToLock)) ]]; do
+			idle=$(($(xssstate -i) / 1000 ))
+			if [[ $idle -gt $((Tim + ToLock + ToSusp)) ]];
+			then
+				Susp=true
+				systemctl suspend
+			fi
+		done
+		Susp=
+		# Safety loop for preventing suspend command
+		# from being executed continiously
+		# useful when it doesn't suspend the system
+		while [[ $idle -ge $((Tim)) ]]; do
+			idle=$(($(xssstate -i) / 1000 ))
 			sleep 60
-		else
-			sleep 10
-		fi
+		done
 	else
-		sleep 300
+		sleep 10
 	fi
 done
 

@@ -1,12 +1,5 @@
 #!/bin/mksh
 
-#fn='Source Code Pro Black:size=8'
-#nb='#000000'
-#nf='#888888'
-#sb='#000000'
-#sf='#ffffff'
-#dmenucmd="dmenu -l $l -nb $nb -nf $nf -sb $sb -sf $sf"
-
 l='10'
 prompt='Choose option:'
 

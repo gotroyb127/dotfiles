@@ -8,9 +8,9 @@ xsidle.sh slock &
 
 xrandr --output HDMI1 --primary
 
-dunst &
+dunst 2> /dev/null &
 clipmenud &
-lxqt-policykit-agent &
+lxqt-policykit-agent 2> /dev/null &
 unclutter --timeout 1 --jitter 25 --ignore-scrolling &
 #nm-applet &
 dwmblocks &
