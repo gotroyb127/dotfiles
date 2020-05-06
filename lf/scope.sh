@@ -29,7 +29,7 @@ IFS=$'\n'
 
 ## Script arguments
 FILE_PATH="${1}"         # Full path of the highlighted file
-PV_WIDTH="100"          # Width of the preview pane (number of fitting characters)
+PV_WIDTH="$(tput cols)"          # Width of the preview pane (number of fitting characters)
 #PV_WIDTH="${3}"          # Width of the preview pane (number of fitting characters)
 ## shellcheck disable=SC2034 # PV_HEIGHT is provided for convenience and unused
 PV_HEIGHT="${2}"         # Height of the preview pane (number of fitting characters)
@@ -70,8 +70,10 @@ handle_extension() {
         pdf)
             ## Preview as text conversion
             TEXT=$(pdftotext -l 10 -nopgbrk -q -- "${FILE_PATH}" - | \
-              fmt -w "${PV_WIDTH}")
-	    if [[ -z $TEXT ]]; then
+              fmt -w "$(tput cols)")
+            pdftotext -l 10 -nopgbrk -q -- "${FILE_PATH}" - | \
+              fmt -w "$(tput cols)"
+	    if [[ -n $TEXT ]]; then
 	    	echo $TEXT && exit 5
 	    else
 		mutool draw -F txt -i -- "${FILE_PATH}" 1-10 | \

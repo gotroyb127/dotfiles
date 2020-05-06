@@ -1,8 +1,3 @@
 1)
-    dwm bindings:
-	Print Screen/window with shortcut
-	(e.g. mod+PrintScreen, mod+Shift+PrintScreen)
-	by invoking a PrintScreen.sh script
-2)
-    explore tmux (?)
+    tmux: chande copy mode colors
 

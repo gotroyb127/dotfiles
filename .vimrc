@@ -1,16 +1,19 @@
+" vimrc
+
 set number
 set relativenumber
-
 set incsearch
 set hlsearch
-set guifont=Source\ Code\ Pro\ 9
+set guifont=Fira\ Code\ Medium\ 9
 
 " set scrolloff=5
+set mouse=a
 set cursorline
 set cursorlineopt=line
 
 " colorscheme slate
-colorscheme pablo
+" colorscheme pablo
+colorscheme elflord
 syntax enable
 
 let &t_SI = "\e[6 q"
@@ -22,9 +25,18 @@ let &t_EI = "\e[2 q"
 " autocmd CmdlineLeave * silent execute '!echo -ne "\e[2 q"'
 " autocmd CmdlineEnter * silent execute '!echo -ne "\e[2 q"'
 
+" Show whitespace
+"¬—>·~><:→—
+set listchars=eol:$,tab:←—→,trail:~,extends:>,precedes:<,space:·
+imap <F2> <C-o>:set list!<CR>
+nmap <F2> :set list!<CR>
+
 autocmd VimEnter     * silent execute '!echo -ne "\e[2 q"'
 
 inoremap " ""<Left>
+inoremap ' ''<Left>
+inoremap ( ()<Left>
+inoremap ) <Right>
 inoremap } }<Left>
 inoremap { {
 " Only works with autoident on
@@ -42,12 +54,18 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+vnoremap ( xi(<C-o>P)
+vnoremap [ xi[<C-o>P]
+vnoremap ' xi'<C-o>P'
+vnoremap " xi"<C-o>P"
+
 set splitbelow
 set splitright
 
 
 " Clear highlighted search with [Ctrl]+[/]
 nmap <C-_> :noh<return>
+imap <C-_> <C-o>:noh<return>
 
 set ttimeout
 set ttimeoutlen=1

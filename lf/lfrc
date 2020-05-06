@@ -13,6 +13,7 @@ set findlen 0
 set scrolloff 5
 set previewer ~/.local/etc/lf/scope.sh
 set promptfmt "\033[1;38;5;7m[\033[1;38;5;45m%u\033[0;38;5;195m@\033[1;38;5;42m%h\033[1;38;5;7m]:\033[1;38;5;105m%w/\033[1;38;5;15m%f\033[0m"
+set shell mksh
 
 #cmd open :set filesep '\n'; ${{
 #	IFS=$'\n'
@@ -38,7 +39,6 @@ set promptfmt "\033[1;38;5;7m[\033[1;38;5;45m%u\033[0;38;5;195m@\033[1;38;5;42m%
 cmd open ${{
 	IFS=$'\n'
 	case "$fx" in
-		*.[hc]pp|*.[hc]) geany $fx &;;
 		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
 		*.png|*.jpg|*.webp|*.svg) sxiv $fx &;;
 		*.pdf) zathura $fx 2> /dev/null &;;
@@ -50,9 +50,56 @@ cmd open ${{
 
 cmd trash ${{
 	IFS=$'\n'
+	DEST=~/.local/trash
 	for i in "$fx"; do
-		mv -v "$i" ~/.local/trash
+		d=$(dirname $i)
+		[[ $d = $DEST ]] && continue
+		i=$(basename $i)
+		! [[ -e $DEST/$i ]] && 
+			mv -iv "$d/$i" $DEST &&
+			continue
+		s=$(echo $i | grep -o ' ([0-9]\+)$' | head -n1 | tr -d '()')
+		[[ -z $s ]] && s=1 || ((++s))
+		p=$(echo $i | sed 's/\ ([0-9]*)$//g')
+		newn="$DEST/$p ($s)"
+		echo $newn
+		while [[ -e $newn ]]; do
+			newn="$DEST/$p ($((++s)))"
+		done
+		mv -iv $d/$i $newn
 	done
+}}
+
+cmd paste %{{
+	IFS=$'\t\n'
+	load=$(lf -remote 'load')
+	mode=$(echo "$load" | sed -n '1p')
+	list=$(echo "$load" | sed '1d')
+	if [ $mode = 'copy' ]; then
+	    Op=$'cp\t-nR'
+	elif [ $mode = 'move' ]; then
+	    Op=$'mv\t-n'
+	fi
+	DEST=$(pwd)
+	for i in $list; do
+		d=$(dirname $i)
+		[[ $d = $DEST && mode = 'move']] && continue
+		i=$(basename $i)
+		! [[ -e $DEST/$i ]] && 
+			$Op "$d/$i" $DEST &&
+			continue
+		s=$(echo $i | grep -o ' ([0-9]\+)$' | head -n1 | tr -d '()')
+		[[ -z $s ]] && s=1 || ((++s))
+		p=$(echo $i | sed 's/\ ([0-9]*)$//g')
+		newn="$DEST/$p ($s)"
+		echo $newn
+		while [[ -e $newn ]]; do
+			newn="$DEST/$p ($((++s)))"
+		done
+		$Op $d/$i $newn
+	done
+	lf -remote 'send load'
+	lf -remote 'send clear'
 }}
 
 cmd recol &{{
@@ -68,7 +115,7 @@ cmd recol &{{
 		lf -remote "send $id set ratios 4:8"
 	fi
 }}
-cmd Recol :recol; sleep &{{sleep .1}}; recol
+cmd Recol :recol; &{{sleep 1}}; recol
 
 cmd yankname &{{
 	if [ -z "$f" ]; then
@@ -80,20 +127,22 @@ cmd yankname &{{
 	echo -n "$t" | xclip -sel clipboard
 }}
 
+cmd resource :source ~/.config/lf/lfrc
+
 # Replace less as a pager
 map i $vim -MR "$f"
 
 map <c-l> Recol
 map <c-r> :redraw; reload
 map c :clear; unselect
-map C $IFS=$'\n' vidir $fx
+map C $IFS=$'\n'; vidir -v $fs && read TeMP
 map D push $mkdir<space>""<left>
 map X !clear && "$f"
 
 map <delete> trash
 #map t &st -e lf
-map t $tmux splitw -h lf $PWD
-map T $tmux splitw -v lf $PWD
+map t $tmux splitw -h lf "$PWD"
+map T $tmux splitw -v lf "$PWD"
 map Y yankname
 
 map a %du -hd0 "$f"
