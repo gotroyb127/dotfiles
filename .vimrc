@@ -36,6 +36,7 @@ autocmd VimEnter     * silent execute '!echo -ne "\e[2 q"'
 inoremap " ""<Left>
 inoremap ' ''<Left>
 inoremap ( ()<Left>
+inoremap )) )
 inoremap ) <Right>
 inoremap } }<Left>
 inoremap { {

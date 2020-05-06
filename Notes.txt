@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Commonly used packages
-moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) ttf-fira-code ttf-nerd-fonts-?
+beets(tag editor) moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) ttf-fira-code ttf-nerd-fonts-?
 
 #
 sleep 1 && xdotool mousemove 1200 700 click 1 sleep 1 mousemove 100 950 click 1
