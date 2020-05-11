@@ -41,7 +41,7 @@ inoremap ) <Right>
 inoremap } }<Left>
 inoremap { {
 " Only works with autoident on
-inoremap {<C-j> {}<Left><Return><Return><Up><Tab>
+inoremap {<C-j> {}<Left><CR><Tab><Up>
 " inoremap {<CR> {}<Left><Return><Return><Up><Tab>
 
 inoremap <C-f> <Esc>*Nea
@@ -55,10 +55,10 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-vnoremap ( xi(<C-o>P)
-vnoremap [ xi[<C-o>P]
-vnoremap ' xi'<C-o>P'
-vnoremap " xi"<C-o>P"
+vnoremap ( c(<Esc>pa)<Esc>
+vnoremap [ c[<Esc>pa]<Esc>
+vnoremap ' c'<Esc>pa'<Esc>
+vnoremap " c"<Esc>pa"<Esc>
 
 set splitbelow
 set splitright

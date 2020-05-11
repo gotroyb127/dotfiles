@@ -17,7 +17,7 @@ case "$Option" in
 	("$Opt1")  systemctl poweroff;;
 	("$Opt2") slock systemctl hibernate;;
 	("$Opt3") slock systemctl suspend;;
-	("$Opt4") killall dwm;;
+	("$Opt4") pkill -15 -t tty"$XDG_VTNR" 'dwm$';;
 	("$Opt5") slock & sleep 1 && xset s activate;;
 	'screen nolock'|*6*)  sleep 0.3 && xset s activate;;
 	'suspend nolock'|*7*) systemctl suspend;;

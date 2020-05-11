@@ -21,7 +21,7 @@ c1="$c7"
 end='\[\033[00m\]'
 
 PS1="${c1}[${c2}\u${c6}@${c3}\H${c7}:${c4}\w${c1}]$c5\$ ${end}"
-unset c{1..6} end
+unset c{1..7} end
 
 # In order to have colors when connected via ssh: 
 #TERM=xterm-256color
@@ -50,9 +50,17 @@ alias 	man=viman\
 	cds='cd ~/.local/scripts'\
 	cdc='cd ~/.config'\
 	cdd='cd ~/Documents'\
-	Startx='startx 2> /dev/null'
+	Startx='startx 2>> /tmp/startx.log'
 
 
 set -o vi
-shopt -s autocd
+#shopt -s autocd
+
+if systemctl -q is-active graphical.target && [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
+  startx 2>> "/tmp/startx($XDG_VTNR).log"
+elif [[ $(ps --no-header --pid=$PPID --format=cmd) != "fish" ]]
+then
+	exec fish
+fi
+
 

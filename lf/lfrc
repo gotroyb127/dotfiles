@@ -2,7 +2,6 @@
 # ^^^ trick vim to syntax highlihght
 
 set hidden
-#set drawbox
 set color256
 set dircounts
 set incsearch
@@ -12,30 +11,10 @@ set period 1
 set findlen 0
 set scrolloff 5
 set previewer ~/.local/etc/lf/scope.sh
-set promptfmt "\033[1;38;5;7m[\033[1;38;5;45m%u\033[0;38;5;195m@\033[1;38;5;42m%h\033[1;38;5;7m]:\033[1;38;5;105m%w/\033[1;38;5;15m%f\033[0m"
+set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%h\033[0;38;5;7m]:\033[1;38;5;105m%w/\033[0;38;5;15m%f\033[0m"
 set shell mksh
 
-#cmd open :set filesep '\n'; ${{
-#	IFS=$'\n'
-#	fx=$(echo -en "$fx")
-#	case "$fx" in
-#		*.[hc]pp|*.[hc]) geany $fx &;;
-#		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
-#		*.png|*.jpg|*.webp|*.svg) sxiv $fx &;;
-#		*.pdf) zathura $fx 2> /dev/null &;;
-#		*.pptx) loimpress $fx &;;
-#		*.mid|*.MID) timidity -in $fx ;;
-#		*) vim $fx;;
-#	esac
-#}}
-#cmd trash :set filesep '\n'; !{{
-#	IFS=$'\n'
-#	for i in $(echo -e "$fx") ; do
-#		mv -v "$i" ~/.local/trash
-#	done
-#}}
-
-
+cmd wait $bash -c 'read -sn1'
 cmd open ${{
 	IFS=$'\n'
 	case "$fx" in
@@ -48,13 +27,30 @@ cmd open ${{
 	esac
 }}
 
+cmd delete ${{
+	IFS=$'\n'
+	clear
+	echo -n "---\tFiles to be deleted:\t---\n\n$fx\n\nDelete? [Y/n]: " \
+	| sed "s/^${HOME//\//\\/}/~/g"
+	read -n1 ans
+	[[ $ans = !(y|Y) ]] && exit 0;
+	mkdir -p /tmp/Trash
+	a=0
+	for f in $fx; do
+		mv $f /tmp/Trash
+		((++a))
+	done
+	echo -e "\n--- $a Objects moved to /tmp/Trash. ---"
+	bash -c 'read -sn1'
+}}
+
 cmd trash ${{
 	IFS=$'\n'
 	DEST=~/.local/trash
-	for i in "$fx"; do
-		d=$(dirname $i)
+	for i in $fx; do
+		d=$(dirname "$i")
 		[[ $d = $DEST ]] && continue
-		i=$(basename $i)
+		i=$(basename "$i")
 		! [[ -e $DEST/$i ]] && 
 			mv -iv "$d/$i" $DEST &&
 			continue
@@ -66,7 +62,7 @@ cmd trash ${{
 		while [[ -e $newn ]]; do
 			newn="$DEST/$p ($((++s)))"
 		done
-		mv -iv $d/$i $newn
+		mv -iv "$d/$i" "$newn"
 	done
 }}
 
@@ -75,15 +71,15 @@ cmd paste %{{
 	load=$(lf -remote 'load')
 	mode=$(echo "$load" | sed -n '1p')
 	list=$(echo "$load" | sed '1d')
-	if [ $mode = 'copy' ]; then
+	if [[ $mode = copy ]]; then
 	    Op=$'cp\t-nR'
-	elif [ $mode = 'move' ]; then
+	elif [[ $mode = move ]]; then
 	    Op=$'mv\t-n'
 	fi
 	DEST=$(pwd)
 	for i in $list; do
 		d=$(dirname $i)
-		[[ $d = $DEST && mode = 'move']] && continue
+		[[ $d = $DEST && mode = move ]] && continue
 		i=$(basename $i)
 		! [[ -e $DEST/$i ]] && 
 			$Op "$d/$i" $DEST &&
@@ -102,20 +98,20 @@ cmd paste %{{
 	lf -remote 'send clear'
 }}
 
-cmd recol &{{
+cmd recol %{{
 	w=$(tput cols)
 	if [ $w -le 75 ]; then
 		lf -remote "send $id set nopreview"$'\n'\
 \	\	"send $id set ratios 1"
-	elif [ $w -le 150 ]; then
-		lf -remote "send $id set preview"$'\n'\
-\	\	"send $id set ratios 5:8"
+	elif [ $w -le 220 ]; then
+		lf -remote "send $id set ratios 5:8"$'\n'\
+\	\	"send $id set preview"
 	else
-		lf -remote "send $id set preview"
-		lf -remote "send $id set ratios 4:8"
+		lf -remote "send $id set ratios 3:8"$'\n'\
+\	\	"send $id set preview"
 	fi
 }}
-cmd Recol :recol; &{{sleep 1}}; recol
+cmd Recol :recol
 
 cmd yankname &{{
 	if [ -z "$f" ]; then
@@ -128,28 +124,29 @@ cmd yankname &{{
 }}
 
 cmd resource :source ~/.config/lf/lfrc
+map R :resource; %sleep .01 && lf -remote "send $id echoerr 'Configuration file (~/.config/lf/lfrc) loaded.'"
 
 # Replace less as a pager
 map i $vim -MR "$f"
 
-map <c-l> Recol
+map <c-l> :Recol
 map <c-r> :redraw; reload
 map c :clear; unselect
-map C $IFS=$'\n'; vidir -v $fs && read TeMP
+map C $IFS=$'\n'; vidir -v $fx && bash -c 'read -sn1'
 map D push $mkdir<space>""<left>
-map X !clear && "$f"
+map X $clear && "$f" && bash -c 'read -sn1'
 
-map <delete> trash
-#map t &st -e lf
+map <delete> :trash
 map t $tmux splitw -h lf "$PWD"
 map T $tmux splitw -v lf "$PWD"
 map Y yankname
 
 map a %du -hd0 "$f"
-map A !clear && du -hd1 | sort -k 1 -rh
-map S !clear && echo "$fx" | sort -n
-map b :set drawbox!; set relativenumber!
-map B :set preview!
+map A $clear && du -hd1 | sort -k 1 -rh && ls -aSlh | grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }' && bash -c 'read -sn1'
+map S $clear && echo "$fx" | sort -n && bash -c 'read -sn1'
+map bb :set drawbox!
+map bv :set preview!
+map bn :set relativenumber!
 
 map sn :set sortby natural
 map sN :set sortby name
@@ -162,8 +159,8 @@ map gc cd ~/.local/etc
 map gs cd ~/.local/scripts
 map gt cd ~/.local/trash
 map gd cd ~/Documents
+map gD cd ~/Downloads
 
-#$sleep .0001
-#reload
+Recol
 Recol
 

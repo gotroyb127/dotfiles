@@ -2,6 +2,7 @@ set adjust-open width
 set scroll-step 25
 set zoom-step 5
 set first-page-column 0:0:0:0
+set continuous-hist-save
 #set scroll-full-overlap 0.0001
 #set selection-clipboard clipboard
 

@@ -3,7 +3,7 @@
 tilde() {
 	while read -r line ; do
 		echo "$line" |\
-		sed 's/'"$(echo $HOME | sed 's/\//\\\//g')"'/~/g'
+		sed 's/'"${HOME//\//\\/}"'/~/g'
 	done
 }
 
@@ -13,7 +13,7 @@ Dest=~/Documents/ConfigFiles
 
 echo -e "Copying to $Dest.\n" | tilde
 
-Targets=(~/.{config/{gsimplecal,zathura,dunst,lf,mpv},local/scripts,tmux.conf,{vim,xinit,bash,input}rc} ~/{Notes,TODO}.txt /etc/X11/xorg.conf.d)
+Targets=(~/.{config/{gsimplecal,zathura,dunst,lf,mpv,fish},local/scripts,tmux.conf,{vim,xinit,bash,input}rc} ~/{Notes,TODO}.txt /etc/X11/xorg.conf.d)
 total=${#Targets[@]}
 
 for i in $(seq 1 $total); do

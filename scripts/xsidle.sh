@@ -5,41 +5,49 @@
 
 if [ $# -lt 1 ];
 then
-	printf "usage: %s cmd\n" "$(basename $0)" 2>&1
+	printf "usage: %s 'LockCmd' 'SuspendCmd'\n" "$(basename $0)" 2>&1
 	exit 1
 fi
-cmd="$@"
+LockCmd="$1"
+SuspendCmd="$2"
 
 if [[ $(xssstate -s) = "disabled" ]]; then
+	notify-send "$0 exited" \
+	    "Because screensaver is deactivated"
 	exit 1
 fi
 
 ToLock=15
+#AtLockCmd='Player.sh pause'
 ToSusp=600
+SleepT=30
 
 while true; do
 	Tim=$(xset q | grep timeout | awk '{print $2}')
-	idle=$(($(xssstate -i) / 1000 ))
-	if [[ $idle -ge $((Tim + ToLock)) ]]; then
-		$cmd &
-		while [[ -z $Susp && $idle -ge $((Tim + ToLock)) ]]; do
-			idle=$(($(xssstate -i) / 1000 ))
-			if [[ $idle -gt $((Tim + ToLock + ToSusp)) ]];
-			then
-				Susp=true
-				systemctl suspend
+	tosleep=$(($(xssstate -t) / 1000))
+	if [ $tosleep -le 0 ];
+	then
+		sleep $ToLock
+		[ "$(xssstate -s)" = 'off' ] && continue
+		$LockCmd &
+
+		[ -n "$SuspendCmd" ] &&
+		    while [ "$(($(xssstate -i)/1000))" -lt "$((Tim + ToSusp))" ]
+		    do
+			if [ "$(xssstate -s)" != 'on' ];
+			then 
+				Waked=True
 			fi
-		done
-		Susp=
-		# Safety loop for preventing suspend command
-		# from being executed continiously
-		# useful when it doesn't suspend the system
-		while [[ $idle -ge $((Tim)) ]]; do
-			idle=$(($(xssstate -i) / 1000 ))
-			sleep 60
+			sleep $SleepT
+		    done
+		    [ -n "$Waked" ] && $SuspendCmd
+		Waked=
+
+		while [ "$(xssstate -s)" = 'on' ]; do
+			sleep $SleepT
 		done
 	else
-		sleep 10
+		sleep $tosleep
 	fi
 done
 
