@@ -36,6 +36,7 @@ export XDG_LOG_HOME="$HOME/.local/var/log"
 
 export EDITOR=vim
 export PAGER=less
+#export PAGER='w3m -t 20 -s -num'
 # climenud: manage only the clipboard
 export CM_SELECTIONS=clipboard
 
@@ -58,7 +59,8 @@ set -o vi
 
 if systemctl -q is-active graphical.target && [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
   startx 2>> "/tmp/startx($XDG_VTNR).log"
-elif [[ $(ps --no-header --pid=$PPID --format=cmd) != "fish" ]]
+fi
+if [[ $(ps --no-header --pid=$PPID --format=cmd) != "fish" ]]
 then
 	exec fish
 fi

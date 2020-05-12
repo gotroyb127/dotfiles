@@ -7,6 +7,8 @@
 #set -U fish_color_host 'DDC2FF'
 #set -U fish_color_cwd '00FF50'
 
+alias mpvs='mpv --input-ipc-server=/tmp/mpvsocket'
+
 abbr cdl 'cd ~/.local'
 abbr cdc 'cd ~/.local/etc'
 abbr cds 'cd ~/.local/scripts'
