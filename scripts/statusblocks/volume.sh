@@ -1,10 +1,8 @@
 #!/bin/mksh
 
-s=$(pulsemixer --list-sinks | grep -o 'sink-[0-9]\+' | head -n1 | grep -o [0-9] )
+read VOL mute <<< $(amixer get Master | tail -n1 | awk '{print $5" "$6}' | tr -d '%[]')
 
-VOL=$(pulsemixer --id sink-$s --get-volume | awk '{ print $1 }')
-
-if [[ $(pulsemixer --id sink-$s --get-mute) -eq 0 ]]; then
+if [[ $mute = on ]]; then
 	echo -n "    "; warn=' '
 else
 	echo -n "   ﱝ "; warn=!
