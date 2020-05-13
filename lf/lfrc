@@ -6,6 +6,7 @@ set color256
 set dircounts
 set incsearch
 set info size
+set number
 set relativenumber
 set period 1
 set findlen 0
@@ -23,6 +24,7 @@ cmd open ${{
 		*.pdf) zathura $fx 2> /dev/null &;;
 		*.pptx|*.ppt) loimpress $fx &;;
 		*.mid|*.MID) timidity -in $fx ;;
+		*.exe) wine $fx;;
 		*) vim $fx;;
 	esac
 }}
@@ -147,6 +149,7 @@ map S $clear && echo "$fx" | sort -n && bash -c 'read -sn1'
 map bb :set drawbox!
 map bv :set preview!
 map bn :set relativenumber!
+map bN :set number!
 
 map sn :set sortby natural
 map sN :set sortby name

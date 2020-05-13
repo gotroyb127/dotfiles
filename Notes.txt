@@ -27,3 +27,6 @@ soundfont-fluid, freepats-general-midi
 # copy with progress:
 rsync -r -pP
 
+# installed with wine
+wine{,-mono} lib32-{mpg123,libpulse}
+
