@@ -33,6 +33,7 @@ nmap <F2> :set list!<CR>
 
 autocmd VimEnter     * silent execute '!echo -ne "\e[2 q"'
 
+inoremap <C-d> <Del>
 inoremap " ""<Left>
 inoremap ' ''<Left>
 inoremap ( ()<Left>
@@ -41,7 +42,7 @@ inoremap ) <Right>
 inoremap } }<Left>
 inoremap { {
 " Only works with autoident on
-inoremap {<C-j> {}<Left><CR><Tab><Up>
+inoremap {<C-j> {<CR><Tab>}<Left><CR><BS><Up><Right>
 " inoremap {<CR> {}<Left><Return><Return><Up><Tab>
 
 inoremap <C-f> <Esc>*Nea
