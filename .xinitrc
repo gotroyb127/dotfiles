@@ -13,7 +13,7 @@ clipmenud &
 lxqt-policykit-agent 2> /dev/null &
 unclutter --timeout 1 --jitter 25 --ignore-scrolling &
 #nm-applet &
-dwmblocks &
+dwmblocks.sh &
 
 Start.sh &
 
