@@ -1,38 +1,44 @@
 #!/bin/mksh
 
 Info() {
-printf '{ "command": ["get_property", "%s"] }\n' "$1" | socat - /tmp/mpvsocket | jq ".data" | sed 's/\"//g'
+	printf '{ "command": ["get_property", "%s"] }\n' "$1" |
+	socat - /tmp/mpvsocket | jq ".data" | tr -d '"'
 }
 
 Command() {
-printf '{ "command": [%s] }\n' "$1" | socat - /tmp/mpvsocket
+	printf '{ "command": [%s] }\n' "$1" | socat - /tmp/mpvsocket
 }
 
+#FormatTime() {
+#	local t=$(echo "$1" | sed 's/\.[0-9]*//g');
+#	s=$((t % 60 )); m=$(( t / 60 % 60 )); h=$((t / 3600));
+#	echo -n "$h:$m:$s" | sed 's/^0:\|//g' 
+#}
 FormatTime() {
-local t=$(echo "$1" | sed 's/\.[0-9]*//g'); s=$((t % 60 )); m=$(( t / 60 % 60 )); h=$((t / 3600));
-echo -n "$h:$m:$s" | sed 's/^0:\|//g' 
+	bc <<< "scale=0; t=$1/1; t/3600; (t/60)%60; t%60" |
+	grep -v '^0' | head -c -1 | tr '\n' ':'
 }
 
 Status() {
-case "$(Info pause 2> /dev/null)" in
-	'true')  p="";;
-	'false') [[ $(Info loop) = true ]] && p=  || p="";;
-	*) exit 1;;
-esac
+	case "$(Info pause 2> /dev/null)" in
+		'true')  p="";;
+		'false') [[ $(Info loop) = true ]] && p=  || p="";;
+		*) exit 1;;
+	esac
 
-#RemTime=$(Info time-remaining)
-#MetaDataTitle=$(Info media-title)
-#RemPlTime=$(Info playtime-remaining)
-#Perc=$(Info percent-pos | sed 's/\.[0-9]*//g')
+#	RemTime=$(Info time-remaining)
+#	MetaDataTitle=$(Info media-title)
+#	RemPlTime=$(Info playtime-remaining)
+#	Perc=$(Info percent-pos | sed 's/\.[0-9]*//g')
 
-#Title=$(Info filename/no-ext)
-Title=$(Info media-title | cut -c -100)
-CurrTime=$(FormatTime $(Info time-pos) )
-Duration=$(FormatTime $(Info duration) )
-RemPlTime=$(FormatTime $(Info playtime-remaining) )
-Speed=$(Info speed)
-#echo -n "$Title | $CurrTime . $Duration (-$RemPlTime) x$Speed $p"
-echo -n "$Title [$CurrTime . $Duration] (-$RemPlTime) x$Speed $p"
+#	Title=$(Info filename/no-ext)
+	Title=$(Info media-title | cut -c -100)
+	CurrTime=$(FormatTime $(Info time-pos) )
+	Duration=$(FormatTime $(Info duration) )
+	RemPlTime=$(FormatTime $(Info playtime-remaining) )
+	Speed=$(Info speed)
+	#echo -n "$Title | $CurrTime . $Duration (-$RemPlTime) x$Speed $p"
+	echo -n "$Title [$CurrTime . $Duration] (-$RemPlTime) x$Speed $p"
 }
 
 case "$1" in

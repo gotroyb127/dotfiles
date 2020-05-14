@@ -8,8 +8,8 @@ esac
 
 case $(nmcli radio wifi) in
 	'disabled') wifis='';;
-	'enabled')  wifis=' 直';;
-	*)          wifis=' 睊 ?';;
+	'enabled')  wifis=' 直 ';;
+	*)          wifis=' 睊 ? ';;
 esac
 
-echo -n "$wifis $st "
+echo -n " $wifis$st"

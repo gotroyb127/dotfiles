@@ -24,8 +24,10 @@ map <Esc> abort
 
 map u scroll half-up
 map d scroll half-down
-map U     feedkeys <C-Up>
-map D     feedkeys <C-Down>
+map U scroll up
+map D scroll down
+map k     feedkeys <C-Up>
+map j     feedkeys <C-Down>
 map <C-y> feedkeys <C-Up>
 map <C-e> feedkeys <C-Down>
 
