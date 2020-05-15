@@ -164,5 +164,6 @@ map gt cd ~/.local/trash
 map gd cd ~/Documents
 map gD cd ~/Downloads
 
+set ratios '5:8'
 Recol
 

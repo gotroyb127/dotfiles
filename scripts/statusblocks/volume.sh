@@ -10,8 +10,8 @@ fi
 
 MicMute=$(amixer get Capture | tail -n1 | awk '{print $6}')
 
-#mic=' '
-#[[ $MicMute = '[on]' ]] && mic=' '
+mic=' '
+[[ $MicMute = '[on]' ]] && mic=' '
 
 echo -n "    $mic$vol$VOL$warn"
 

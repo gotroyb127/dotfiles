@@ -16,7 +16,7 @@ Command() {
 #}
 FormatTime() {
 	bc <<< "scale=0; t=$1/1; t/3600; (t/60)%60; t%60" |
-	grep -v '^0' | head -c -1 | tr '\n' ':'
+	head -c -1 | tr '\n' ':' | sed 's/0://g'
 }
 
 Status() {
