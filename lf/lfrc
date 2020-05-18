@@ -16,18 +16,19 @@ set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%
 set shell mksh
 
 cmd wait $bash -c 'read -sn1'
-cmd open ${{
-	IFS=$'\n'
-	case "$fx" in
-		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
-		*.png|*.jpg|*.webp|*.svg) sxiv $fx &;;
-		*.pdf) zathura $fx 2> /dev/null &;;
-		*.pptx|*.ppt) loimpress $fx &;;
-		*.mid|*.MID) timidity -in $fx ;;
-		*.exe) wine $fx;;
-		*) vim $fx;;
-	esac
-}}
+cmd open ${{ IFS=$'\n'; Open.sh "$fx" }}
+#cmd open ${{
+#	IFS=$'\n'
+#	case "$fx" in
+#		*.mp3|*.mp4) mpv --input-ipc-server=/tmp/mpvsocket $fx ;;
+#		*.png|*.jpg|*.webp|*.svg) sxiv $fx &;;
+#		*.pdf) zathura $fx 2> /dev/null &;;
+#		*.pptx|*.ppt) loimpress $fx &;;
+#		*.mid|*.MID) timidity -in $fx ;;
+#		*.exe) wine $fx;;
+#		*) vim $fx;;
+#	esac
+#}}
 
 cmd delete ${{
 	IFS=$'\n'

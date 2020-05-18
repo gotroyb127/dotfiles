@@ -4,6 +4,7 @@ BlocksDir="$(dirname $0)/statusblocks"
 Blocks=(player volume kblayout battery network date)
 Signal=(5      4      3        2       6       1)
 UpdTime=(1     10     10       10      10      1)
+LastTime=()
 Out=()
 N=$((${#Blocks[@]} -1))
 export Ns=$(seq 0 $N)
@@ -24,8 +25,8 @@ Update() {
 }
 
 Print() {
-#	xsetroot -name "$(for i in $Ns; do echo -n "$SEP1${Out[i]}$SEP2"; done)"
 	xsetroot -name "$(for i in $Ns; do echo -n "${Out[i]}"; done)"
+#	xsetroot -name "$(for i in $Ns; do echo -n "$SEP1${Out[i]}$SEP2"; done)"
 }
 
 # RTMIN: 34

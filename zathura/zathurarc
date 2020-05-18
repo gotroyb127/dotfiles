@@ -3,8 +3,8 @@ set scroll-step 25
 set zoom-step 5
 set first-page-column 0:0:0:0
 set continuous-hist-save
-#set scroll-full-overlap 0.0001
-#set selection-clipboard clipboard
+# set scroll-full-overlap 0.0001
+# set selection-clipboard clipboard
 
 #set recolor-reverse-video true
 ## Recoloring Options
@@ -17,6 +17,7 @@ set recolor-darkcolor "#ffffff"
 
 set guioptions vh
 set statusbar-home-tilde true
+set window-title-home-tilde true
 
 set font "DejaVu Sans 8"
 
@@ -28,6 +29,8 @@ map U scroll up
 map D scroll down
 map k     feedkeys <C-Up>
 map j     feedkeys <C-Down>
+map h     feedkeys <C-Left>
+map l     feedkeys <C-Right>
 map <C-y> feedkeys <C-Up>
 map <C-e> feedkeys <C-Down>
 
@@ -41,6 +44,6 @@ map e toggle_page_mode
 map <C-PageUp> scroll half-up
 map <C-PageDown> scroll half-down
 
-#map l feedkeys <C-r>
-#map <C-Up> feedkeys <C-Up>
+# map l feedkeys <C-r>
+# map <C-Up> feedkeys <C-Up>
 

@@ -13,7 +13,7 @@ Dest=~/Documents/ConfigFiles
 
 echo -e "Copying to $Dest.\n" | tilde
 
-Targets=(~/.{config/{gsimplecal,zathura,dunst,lf,mpv,fish},local/scripts,tmux.conf,{vim,xinit,bash,input}rc} ~/{Notes,TODO}.txt /etc/X11/xorg.conf.d)
+Targets=(~/.{config/{gsimplecal,zathura,dunst,lf,mpv,fish},local/scripts,tmux.conf,{vim,xinit,bash,input}rc} ~/{Notes,TODO}.txt)
 total=${#Targets[@]}
 
 for i in $(seq 1 $total); do

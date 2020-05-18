@@ -9,14 +9,9 @@ Command() {
 	printf '{ "command": [%s] }\n' "$1" | socat - /tmp/mpvsocket
 }
 
-#FormatTime() {
-#	local t=$(echo "$1" | sed 's/\.[0-9]*//g');
-#	s=$((t % 60 )); m=$(( t / 60 % 60 )); h=$((t / 3600));
-#	echo -n "$h:$m:$s" | sed 's/^0:\|//g' 
-#}
 FormatTime() {
 	bc <<< "scale=0; t=$1/1; t/3600; (t/60)%60; t%60" |
-	head -c -1 | tr '\n' ':' | sed 's/0://g'
+	head -c -1 | tr '\n' ':' | sed 's/^0:\|0:0://g'
 }
 
 Status() {
@@ -30,14 +25,13 @@ Status() {
 #	MetaDataTitle=$(Info media-title)
 #	RemPlTime=$(Info playtime-remaining)
 #	Perc=$(Info percent-pos | sed 's/\.[0-9]*//g')
-
 #	Title=$(Info filename/no-ext)
+
 	Title=$(Info media-title | cut -c -100)
 	CurrTime=$(FormatTime $(Info time-pos) )
 	Duration=$(FormatTime $(Info duration) )
 	RemPlTime=$(FormatTime $(Info playtime-remaining) )
 	Speed=$(Info speed)
-	#echo -n "$Title | $CurrTime . $Duration (-$RemPlTime) x$Speed $p"
 	echo -n "$Title [$CurrTime . $Duration] (-$RemPlTime) x$Speed $p"
 }
 
