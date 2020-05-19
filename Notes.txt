@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Commonly used packages
-beets(tag editor) moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) ttf-fira-code ttf-nerd-fonts-?
+moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) timidity++ ttf-fira-code ttf-nerd-fonts-?
 
 #
 sleep 1 && xdotool mousemove 1200 700 click 1 sleep 1 mousemove 100 950 click 1
@@ -9,6 +9,7 @@ sleep 1 && xdotool mousemove 1200 700 click 1 sleep 1 mousemove 100 950 click 1
 # load vmware modules
 sudo /etc/init.d/vmware start
 
+# Youtube-dl usefull usages
 youtube-dl -k -x -f mp4 --audio-format mp3 --playlist-items 20-25 -o '%(title)s.%(ext)s'
 youtube-dl --rm-cache-dir # ERROR: unable to download video data: HTTP Error 403: Forbidden
 
@@ -29,4 +30,22 @@ rsync -r -pP
 
 # installed with wine
 wine{,-mono} lib32-{mpg123,libpulse}
+
+# Mount mtp devices
+mptfs -o allow_other /path/to/mount/point
+
+# Metadata-Tag manipulators
+mat2    -- remove metadata
+tagutil -- can change metadata values
+
+# Regexp rename example
+- - - - - 
+	#!/bin/mksh
+
+	export IFS=$'\n'
+	for i in $(find "$1" -type f); do
+		mv -iv $i $(dirname $i)/$(basename $i | sed 's/\ (Remastered)//g')
+		echo
+	done
+- - - - - 
 

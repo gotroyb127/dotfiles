@@ -137,12 +137,13 @@ map <c-r> :redraw; reload
 map c :clear; unselect
 map C $IFS=$'\n'; vidir -v $fx && bash -c 'read -sn1'
 map D push $mkdir<space>""<left>
+map x push $chmod<space>+x<space>"$f"
 map X $clear && "$f" && bash -c 'read -sn1'
 
 map <delete> :trash
 map t $tmux splitw -h lf "$PWD"
 map T $tmux splitw -v lf "$PWD"
-map Y yankname
+map Y :yankname; echoerr Filename Yanked.
 
 map a %du -hd0 "$f"
 map A $clear && du -hd1 | sort -k 1 -rh && ls -aSlh | grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }' && bash -c 'read -sn1'
