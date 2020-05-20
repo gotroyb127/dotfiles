@@ -144,6 +144,13 @@ map <delete> :trash
 map t $tmux splitw -h lf "$PWD"
 map T $tmux splitw -v lf "$PWD"
 map Y :yankname; echoerr Filename Yanked.
+map M ${{
+	clear
+	printf "\nAre you sure you want to open evey file recursively?\n"
+	printf "[Y/n]: "; read -n1 ans; [[ $ans != @(Y|y) ]] && exit 1;
+	echo
+	IFS=$'\n'; Open.sh $(find -type f | sort -n)
+}}
 
 map a %du -hd0 "$f"
 map A $clear && du -hd1 | sort -k 1 -rh && ls -aSlh | grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }' && bash -c 'read -sn1'
