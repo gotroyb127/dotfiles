@@ -22,6 +22,7 @@ OpenGroup() {
 }
 
 for t in $@; do
+	[[ -d $t ]] && continue
 	case $t in
 		(*.mp3|*.mp4)
 			Groups0+=$'\n'$t ;;
