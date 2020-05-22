@@ -1,6 +1,7 @@
 #!/bin/mksh
 
-read VOL mute <<< $(amixer get Master | tail -n1 | awk '{print $5" "$6}' | tr -d '%[]')
+#read VOL mute <<< $(amixer get Master | tail -n1 | awk '{print $5" "$6}' | tr -d '%[]')
+amixer get Master | tail -n1 | awk '{print $5" "$6}' | tr -d '%[]' |& read -p VOL mute
 
 if [[ $mute = on ]]; then
 	vol=" "; warn=' '

@@ -11,16 +11,15 @@ fi
 LockCmd="$1"
 SuspendCmd="$2"
 
-if [[ $(xssstate -s) = "disabled" ]]; then
+if [ $(xssstate -s) = "disabled" ]; then
 	notify-send "$0 exited" \
 	    "Because screensaver is deactivated"
 	exit 1
 fi
 
 ToLock=15
-#AtLockCmd='Player.sh pause'
 ToSusp=600
-SleepT=30
+SleepT=20
 
 while true; do
 	Tim=$(xset q | grep timeout | awk '{print $2}')
@@ -32,15 +31,15 @@ while true; do
 		$LockCmd &
 
 		[ -n "$SuspendCmd" ] &&
-		    while [ "$(($(xssstate -i)/1000))" -lt "$((Tim + ToSusp))" ]
-		    do
-			if [ "$(xssstate -s)" != 'on' ];
+		    while [ "$(($(xssstate -i)/1000))" -lt "$((Tim + ToLock + ToSusp))" ]
+		    do if [ "$(xssstate -s)" != 'on' ];
 			then 
 				Waked=True
+				break
 			fi
 			sleep $SleepT
 		    done
-		    [ -n "$Waked" ] && $SuspendCmd
+		    [ -z "$Waked" ] && $SuspendCmd 
 		Waked=
 
 		while [ "$(xssstate -s)" = 'on' ]; do

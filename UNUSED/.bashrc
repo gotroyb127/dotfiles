@@ -9,10 +9,10 @@ alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 
 # Colored prompt
+# for i in $(seq 256); do echo -en "\t\e[1;38;5;${i}m$i"; done
 c1='\[\033[1;38;5;111m\]'
 c2='\[\033[1;38;5;45m\]'
 c3='\[\033[1;38;5;42m\]'
-#c4='\[\033[1;38;5;153m\]'
 c4='\[\033[1;38;5;105m\]'
 c5='\[\033[1;38;5;219m\]'
 c6='\[\033[0;38;5;195m\]'
@@ -51,14 +51,14 @@ alias 	man=viman\
 	cds='cd ~/.local/scripts'\
 	cdc='cd ~/.config'\
 	cdd='cd ~/Documents'\
-	Startx='startx 2>> /tmp/startx.log'
+#	Startx='startx 1>2 2>> /tmp/startx.log'
 
 
 set -o vi
 #shopt -s autocd
 
 if systemctl -q is-active graphical.target && [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
-  startx 2>> "/tmp/startx($XDG_VTNR).log"
+  startx &>> "/tmp/startx($XDG_VTNR).log"
 fi
 if [[ $(ps --no-header --pid=$PPID --format=cmd) != "fish" ]]
 then

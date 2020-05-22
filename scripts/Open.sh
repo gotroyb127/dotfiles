@@ -2,48 +2,57 @@
 
 IFS=$'\n'
 
-OpenGroup() {
-	case "$@" in
-		(*.png|*.jpg|*.webp|*.svg)
-			sxiv $@ &;;
-		(*.pdf)
-			zathura $@ 2> /dev/null &;;
-		(*.pptx|*.ppt)
-			loimpress $@ &;;
-		(*.exe)
-			wine $@ &;;
-		(*.mid|*.MID)
-			timidity -in $@ ;;
-		(*.mp3|*.mp4)
-			mpv --input-ipc-server=/tmp/mpvsocket $@ ;;
-		(*)
-			vim $@;;
-	esac
-}
+[[ -z $@ ]] && exit 1
+
+SH=/bin/sh
+#OpenGroup() {
+#	case $(echo $@ | tr -d '" ') in
+#		(*.png|*.jpg|*.webp|*.svg)
+#			echo sxiv $@ ;;
+#		(*.pdf)
+#			zathura $@ 2> /dev/null &;;
+#		(*.pptx|*.ppt)
+#			loimpress $@ &;;
+#		(*.exe)
+#			wine $@ &;;
+#		(*.mid|*.MID)
+#			timidity -in $@ ;;
+#		(*.mp3|*.mp4)
+#			mpv --input-ipc-server=/tmp/mpvsocket $@ ;;
+#		(*)
+##			vim $@;;
+#	esac #| $SH
+#}
+#			Groups1+=$'\n'$t ;;
 
 for t in $@; do
 	[[ -d $t ]] && continue
 	case $t in
-		(*.mp3|*.mp4)
-			Groups0+=$'\n'$t ;;
 		(*.png|*.jpg|*.webp|*.svg)
-			Groups1+=$'\n'$t ;;
+			Groups[0]+='"'$t'" ' ;;
 		(*.pdf)
-			Groups2+=$'\n'$t ;;
+			Groups[1]+='"'$t'" ' ;;
 		(*.pptx|*.ppt)
-			Groups3+=$'\n'$t ;;
-		(*.mid|*.MID)
-			Groups4+=$'\n'$t ;;
+			Groups[2]+='"'$t'" ' ;;
 		(*.exe)
-			Groups5+=$'\n'$t ;;
+			Groups[3]+='"'$t'" ' ;;
+		(*.mid|*.MID)
+			Groups[4]+='"'$t'" ' ;;
+		(*.mp3|*.mp4)
+			Groups[5]+='"'$t'" ' ;;
 		(*)
-			Groups6+=$'\n'$t ;;
+			Groups[6]+='"'$t'" ' ;;
 	esac
 done
 
+Opener=(sxiv zathura loimpress wine 'timidity -in' 'mpv --input-ipc-server=/tmp/mpvsocket' vim)
+
 for i in $(seq 0 6); do
-	[[ -z $(eval "echo \$Groups$i") ]] && continue
-#	eval 'echo OpenGroup $Groups'"$i"
-	eval 'OpenGroup $Groups'"$i"
+	[[ -z ${Groups[i]} ]] && continue
+	if [[ $i -le 3 ]]; then
+		echo ${Opener[i]} ${Groups[i]} | $SH &
+	else
+		eval "${Opener[i]} ${Groups[i]}"
+	fi
 done
 

@@ -8,8 +8,12 @@
 #set -U fish_color_host 'DDC2FF'
 #set -U fish_color_cwd '00FF50'
 
+#viman() { /usr/bin/man "$1" | col -b | vim -MR - ; }
+
 alias mpvs='mpv --input-ipc-server=/tmp/mpvsocket'
-abbr YamahaMD xfce4-appfinder
+alias view='vim -MR'
+
+abbr SSH 'env TERM=xterm-256color luit -encoding ISO-8859-7 ssh'
 
 abbr cdl 'cd ~/.local'
 abbr cdc 'cd ~/.local/etc'
@@ -18,7 +22,7 @@ abbr cdd 'cd ~/Documents'
 abbr cdD 'cd ~/Downloads'
 abbr p pacman
 abbr P 'sudo pacman'
-abbr Startx 'startx 2>> /tmp/startx.log'
+abbr Startx 'startx &>> /tmp/startx.log'
 abbr Compile 'make clean && make && sudo make install && make clean'
 abbr KillTEAMS 'pkill "^teams\$"'
 

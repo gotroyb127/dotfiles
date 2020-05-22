@@ -97,8 +97,8 @@ cmd paste %{{
 		done
 		$Op $d/$i $newn
 	done
-	lf -remote 'send load'
-	lf -remote 'send clear'
+	lf -remote 'send load'$'\n'\
+\	\	'send clear'
 }}
 
 cmd recol %{{

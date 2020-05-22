@@ -10,6 +10,7 @@ set guifont=Fira\ Code\ Medium\ 9
 set mouse=a
 set cursorline
 set cursorlineopt=line
+autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
 
 " colorscheme slate
 " colorscheme pablo
