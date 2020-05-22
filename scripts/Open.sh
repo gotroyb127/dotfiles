@@ -50,7 +50,7 @@ Opener=(sxiv zathura loimpress wine 'timidity -in' 'mpv --input-ipc-server=/tmp/
 for i in $(seq 0 6); do
 	[[ -z ${Groups[i]} ]] && continue
 	if [[ $i -le 3 ]]; then
-		echo ${Opener[i]} ${Groups[i]} | $SH &
+		echo ${Opener[i]} ${Groups[i]} | $SH 2> /dev/null &
 	else
 		eval "${Opener[i]} ${Groups[i]}"
 	fi
