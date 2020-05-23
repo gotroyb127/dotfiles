@@ -40,9 +40,6 @@ cmd delete ${{
 	mkdir -p /tmp/Trash
 	chmod 777 /tmp/Trash
 	a=0
-#	for f in $fx; do
-#		mv $f /tmp/Trash
-#		((++a))
 	DEST=/tmp/Trash
 	for i in $fx; do
 		((++a))
