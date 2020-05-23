@@ -21,8 +21,6 @@ for i in $(seq 1 $total); do
 	t="${Targets[i-1]}"
 	echo "$i" \""$t"\" |\
 	awk '{printf("[%'"$w"'d]\t%s\n",$1,$2,$3)}' |\
-#	echo "$i" "$total" \""$t"\" |\
-#	awk '{printf("(%'"${#total}"'d/%d) %s\n",$1,$2,$3)}' |\
 	tr -d '"' | tilde
 	cp -upRv "$t" "$Dest" | tilde 1>&2
 done

@@ -3,7 +3,7 @@
 Title='shot_'$(date +'%Y-%m-%d(%H:%M:%S)')
 
 if [[ $# -le 0 ]]; then
-	shotgun "$HOME/Screenshots/$Title.png"\
+	shotgun "$HOME/Screenshots/$Title.png"
 	notify-send -i "$HOME/Screenshots/$Title.png" "Screenshot saved."
 	exit 0
 fi

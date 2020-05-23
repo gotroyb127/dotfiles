@@ -1,8 +1,8 @@
-#!/usr/bin/sh
+#!/bin/mksh
 
 
 # Show available updates on startup.
-sleep 3
+sleep 1.5
 
 if [[ $(( $(date +%j) % 7 )) -le 1 ]]; then
 	sudo pacman -Sy

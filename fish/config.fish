@@ -3,12 +3,13 @@
 #set -U fish_prompt_pwd_dir_length 0
 #set -U fish_escape_delay_ms 10
 
-#set -U fish_color_user '14DAFF' #'00D7FF'
 #set -U fish_color_user '42E1FF'
 #set -U fish_color_host 'FFFD9A'
 #set -U fish_color_host '00CE81'
-#set -U fish_color_cwd '00FF50'
 #set -U fish_color_cwd 'DCF000'
+#set -U fish_color_cwd_root 'FF1F00'
+#set -U fish_color_time 'FFB599'
+#set -U fish_color_braces 'FFFCAD'
 
 #viman() { /usr/bin/man "$1" | col -b | vim -MR - ; }
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/mksh
 
 sessions=$(tmux ls | grep '^[0-9]\{1,\}:' | cut -f1 -d':' | sort -n)
 echo $sessions

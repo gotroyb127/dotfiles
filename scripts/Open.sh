@@ -5,25 +5,6 @@ IFS=$'\n'
 [[ -z $@ ]] && exit 1
 
 SH=/bin/sh
-#OpenGroup() {
-#	case $(echo $@ | tr -d '" ') in
-#		(*.png|*.jpg|*.webp|*.svg)
-#			echo sxiv $@ ;;
-#		(*.pdf)
-#			zathura $@ 2> /dev/null &;;
-#		(*.pptx|*.ppt)
-#			loimpress $@ &;;
-#		(*.exe)
-#			wine $@ &;;
-#		(*.mid|*.MID)
-#			timidity -in $@ ;;
-#		(*.mp3|*.mp4)
-#			mpv --input-ipc-server=/tmp/mpvsocket $@ ;;
-#		(*)
-##			vim $@;;
-#	esac #| $SH
-#}
-#			Groups1+=$'\n'$t ;;
 
 for t in $@; do
 	[[ -d $t ]] && continue

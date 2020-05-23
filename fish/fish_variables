@@ -16,11 +16,12 @@ SETUVAR _fish_abbr_cdl:cd\x20\x7e/\x2elocal
 SETUVAR _fish_abbr_cds:cd\x20\x7e/\x2elocal/scripts
 SETUVAR _fish_abbr_p:pacman
 SETUVAR fish_color_autosuggestion:9C9C9C
+SETUVAR fish_color_braces:FFFCAD
 SETUVAR fish_color_cancel:\x2dr
 SETUVAR fish_color_command:F4F4F4
 SETUVAR fish_color_comment:B0B0B0
 SETUVAR fish_color_cwd:DCF000
-SETUVAR fish_color_cwd_root:red
+SETUVAR fish_color_cwd_root:FF1F00
 SETUVAR fish_color_end:969696
 SETUVAR fish_color_error:FFA779
 SETUVAR fish_color_escape:00a6b2
@@ -36,6 +37,7 @@ SETUVAR fish_color_redirection:FAFAFA
 SETUVAR fish_color_search_match:bryellow\x1e\x2d\x2dbackground\x3dbrblack
 SETUVAR fish_color_selection:white\x1e\x2d\x2dbold\x1e\x2d\x2dbackground\x3dbrblack
 SETUVAR fish_color_status:red
+SETUVAR fish_color_time:FFB599
 SETUVAR fish_color_user:42E1FF
 SETUVAR fish_color_valid_path:\x2d\x2dunderline
 SETUVAR fish_escape_delay_ms:10
