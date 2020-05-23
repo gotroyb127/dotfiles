@@ -6,10 +6,13 @@
 #set -U fish_color_user '42E1FF'
 #set -U fish_color_host 'FFFD9A'
 #set -U fish_color_host '00CE81'
-#set -U fish_color_cwd 'DCF000'
+#set -U fish_color_cwd '77FFF0'
 #set -U fish_color_cwd_root 'FF1F00'
 #set -U fish_color_time 'FFB599'
+#set -U fish_color_time 'FFCFF0'
+#set -U fish_color_braces '0FFBBF'
 #set -U fish_color_braces 'FFFCAD'
+#set -U fish_color_suffix '00FFF0'
 
 #viman() { /usr/bin/man "$1" | col -b | vim -MR - ; }
 
