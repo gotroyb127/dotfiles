@@ -38,10 +38,29 @@ cmd delete ${{
 	read -n1 ans
 	[[ $ans = !(y|Y) ]] && exit 0;
 	mkdir -p /tmp/Trash
+	chmod 777 /tmp/Trash
 	a=0
-	for f in $fx; do
-		mv $f /tmp/Trash
+#	for f in $fx; do
+#		mv $f /tmp/Trash
+#		((++a))
+	DEST=/tmp/Trash
+	for i in $fx; do
 		((++a))
+		d=$(dirname "$i")
+		[[ $d = $DEST ]] && continue
+		i=$(basename "$i")
+		! [[ -e $DEST/$i ]] && 
+			mv -i "$d/$i" $DEST &&
+			continue
+		s=$(echo $i | grep -o ' ([0-9]\+)$' | head -n1 | tr -d '()')
+		[[ -z $s ]] && s=1 || ((++s))
+		p=$(echo $i | sed 's/\ ([0-9]*)$//g')
+		newn="$DEST/$p ($s)"
+		echo $newn
+		while [[ -e $newn ]]; do
+			newn="$DEST/$p ($((++s)))"
+		done
+		mv -i "$d/$i" "$newn"
 	done
 	echo -e "\n--- $a Objects moved to /tmp/Trash. ---"
 	bash -c 'read -sn1'

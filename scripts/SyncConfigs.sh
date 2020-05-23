@@ -24,9 +24,8 @@ for i in $(seq 1 $total); do
 #	echo "$i" "$total" \""$t"\" |\
 #	awk '{printf("(%'"${#total}"'d/%d) %s\n",$1,$2,$3)}' |\
 	tr -d '"' | tilde
-	cp -upR "$t" "$Dest"
+	cp -upRv "$t" "$Dest" | tilde 1>&2
 done
-echo 
 }
 
 notify-send "$(Sync)"

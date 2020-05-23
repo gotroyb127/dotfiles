@@ -4,9 +4,11 @@
 #set -U fish_escape_delay_ms 10
 
 #set -U fish_color_user '14DAFF' #'00D7FF'
+#set -U fish_color_user '42E1FF'
 #set -U fish_color_host 'FFFD9A'
-#set -U fish_color_host 'DDC2FF'
+#set -U fish_color_host '00CE81'
 #set -U fish_color_cwd '00FF50'
+#set -U fish_color_cwd 'DCF000'
 
 #viman() { /usr/bin/man "$1" | col -b | vim -MR - ; }
 
