@@ -9,7 +9,8 @@ set info size
 set number
 set relativenumber
 set period 1
-set findlen 0
+set findlen 2
+set noanchorfind
 set scrolloff 5
 set previewer ~/.local/etc/lf/scope.sh
 set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%h\033[0;38;5;7m]:\033[1;38;5;105m%w/\033[0;38;5;15m%f\033[0m"

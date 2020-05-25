@@ -19,7 +19,7 @@ for t in $@; do
 			Groups[3]+='"'$t'" ' ;;
 		(*.mid|*.MID)
 			Groups[4]+='"'$t'" ' ;;
-		(*.mp3|*.mp4)
+		(*.mp3|*.mp4|*.mka|*.ogg|*wav)
 			Groups[5]+='"'$t'" ' ;;
 		(*)
 			Groups[6]+='"'$t'" ' ;;

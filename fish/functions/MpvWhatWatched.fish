@@ -1,10 +1,10 @@
 function MpvWhatWatched
-	echo -e '\n - - - - - - - - - - '
+	echo -en '\n - - - - - '
 	for f in (ls);
 		for i in (head -n1 $f | tr -d '#');
+			echo
 			basename $i
-			echo ' - - - - - - - - - - '
 		end
 	end #| sort -n
-	echo
+	echo -e ' - - - - - '
 end

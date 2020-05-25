@@ -1,7 +1,7 @@
 ####
 
 xset m 11/2 0
-xset s 450 600
+xset s 900 600
 xset s noblank
 xset r rate 250 25
 setxkbmap -layout us,gr -option grp:alt_shift_toggle
@@ -30,7 +30,7 @@ xrandr --output HDMI1 --mode 1920x1080
 clipmenud &
 dunst 2> /dev/null &
 lxqt-policykit-agent 2> /dev/null &
-unclutter --timeout 1 --jitter 25 --ignore-scrolling &
+unclutter --timeout 1 --ignore-scrolling &
 
 xsidle.sh 'slock' 'systemctl suspend' &
 Start.sh &

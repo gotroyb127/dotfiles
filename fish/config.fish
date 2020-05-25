@@ -32,6 +32,4 @@ abbr P 'sudo pacman'
 abbr Startx 'startx &>> /tmp/startx.log'
 abbr Compile 'make clean && make && sudo make install && make clean'
 abbr KillTEAMS 'pkill "^teams\$"'
-abbr WhatWatched MpvWhatWatched
-
 

@@ -19,7 +19,7 @@ case "$Option" in
 	("$Opt3") slock systemctl suspend;;
 	("$Opt4") pkill -15 -t tty"$XDG_VTNR" 'dwm$';;
 	("$Opt5") slock & sleep 1 && xset s activate;;
-	'screen nolock'|*6*)  sleep 0.3 && xset s activate;;
+	'screen nolock'|*6*)  sleep .5 && xset s activate;;
 	'suspend nolock'|*7*) systemctl suspend;;
 esac
 

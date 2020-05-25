@@ -12,5 +12,5 @@ fi
 
 id=$(xdotool getwindowfocus)
 shotgun -i $id "$HOME/Screenshots/${Title}w.png";
-notify-send -i "$HOME/Screenshots/${Title}w.png"
+notify-send -i "$HOME/Screenshots/${Title}w.png" "Screenshot saved."
 
