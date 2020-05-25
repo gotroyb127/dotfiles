@@ -40,7 +40,6 @@ inoremap ' ''<Left>
 inoremap ( ()<Left>
 inoremap )) )
 inoremap ) <Right>
-inoremap } }<Left>
 inoremap { {
 " Only works with autoident on
 inoremap {<C-j> {<CR><Tab>}<Left><CR><BS><Up><Right>
@@ -59,8 +58,10 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 vnoremap ( c(<Esc>pa)<Esc>
 vnoremap [ c[<Esc>pa]<Esc>
+vnoremap { c{<Esc>pa}<Esc>
 vnoremap ' c'<Esc>pa'<Esc>
 vnoremap " c"<Esc>pa"<Esc>
+vnoremap <C-c> "+y
 
 set splitbelow
 set splitright

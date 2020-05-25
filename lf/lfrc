@@ -87,14 +87,14 @@ cmd trash ${{
 }}
 
 cmd paste %{{
-	IFS=$'\t\n'
+	IFS=$'\n'
 	load=$(lf -remote 'load')
 	mode=$(echo "$load" | sed -n '1p')
 	list=$(echo "$load" | sed '1d')
 	if [[ $mode = copy ]]; then
-	    Op=$'cp\t-nR'
+	    Op=$'cp\n-nR'
 	elif [[ $mode = move ]]; then
-	    Op=$'mv\t-n'
+	    Op=$'mv\n-n'
 	fi
 	DEST=$(pwd)
 	for i in $list; do

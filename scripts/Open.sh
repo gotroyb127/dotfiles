@@ -4,36 +4,39 @@ IFS=$'\n'
 
 [[ -z $@ ]] && exit 1
 
-SH=/bin/sh
+Opener=(sxiv
+	zathura
+	loimpress
+	lowriter
+	wine
+	$'timidity\n-in'
+	$'mpv\n--input-ipc-server=/tmp/mpvsocket'
+	vim)
+
+Group=( '\.png$\|\.jpg$\|\.webp$\|\.svg$'
+	'\.pdf$'
+	'\.pptx$\|\.ppt$'
+	'\.doc$\|\.docx$'
+	'\.exe$'
+	'\.mid$\|\.MID$'
+	'\.mp[34]$\|\.mka$\|\.ogg$\|\.wav$'
+	'')
 
 for t in $@; do
+	i=0
 	[[ -d $t ]] && continue
-	case $t in
-		(*.png|*.jpg|*.webp|*.svg)
-			Groups[0]+='"'$t'" ' ;;
-		(*.pdf)
-			Groups[1]+='"'$t'" ' ;;
-		(*.pptx|*.ppt)
-			Groups[2]+='"'$t'" ' ;;
-		(*.exe)
-			Groups[3]+='"'$t'" ' ;;
-		(*.mid|*.MID)
-			Groups[4]+='"'$t'" ' ;;
-		(*.mp3|*.mp4|*.mka|*.ogg|*wav)
-			Groups[5]+='"'$t'" ' ;;
-		(*)
-			Groups[6]+='"'$t'" ' ;;
-	esac
+	until echo $t | grep -q "${Group[i]}"; do
+		((++i))
+	done
+	Groups[i]+="$t"$'\n'
 done
 
-Opener=(sxiv zathura loimpress wine 'timidity -in' 'mpv --input-ipc-server=/tmp/mpvsocket' vim)
-
-for i in $(seq 0 6); do
+for i in $(seq 0 $((${#Group[@]}-1))); do
 	[[ -z ${Groups[i]} ]] && continue
-	if [[ $i -le 3 ]]; then
-		echo ${Opener[i]} ${Groups[i]} | $SH 2> /dev/null &
+	if [[ $i -le 4 ]]; then
+		${Opener[i]} ${Groups[i]} 2> /dev/null &
 	else
-		eval "${Opener[i]} ${Groups[i]}"
+		${Opener[i]} ${Groups[i]}
 	fi
 done
 
