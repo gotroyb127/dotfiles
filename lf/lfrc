@@ -16,6 +16,7 @@ set previewer ~/.local/etc/lf/scope.sh
 set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%h\033[0;38;5;7m]:\033[1;38;5;105m%w/\033[0;38;5;15m%f\033[0m"
 set shell mksh
 
+#cmd on-cd $cd "$(basename "$f")"
 cmd wait $bash -c 'read -sn1'
 cmd open ${{ IFS=$'\n'; Open.sh "$f" }}
 cmd OpenSel ${{ IFS=$'\n' Open.sh "$fx" }}
@@ -158,8 +159,8 @@ map x push $chmod<space>+x<space>"$f"
 map X $clear && "$f" && bash -c 'read -sn1'
 
 map <delete> :trash
-map t $tmux splitw -h lf "$PWD"
-map T $tmux splitw -v lf "$PWD"
+map t $tmux run -b 'st -e tmux new -c "$PWD"'
+map T $tmux run -b 'st -e tmux new lf "$PWD"'
 map Y :yankname; echoerr Filename Yanked.
 map M :SelRecurs
 map L :OpenSel

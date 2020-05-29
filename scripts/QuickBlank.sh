@@ -30,7 +30,7 @@ trap 'Reset' exit
 
 Pause() {
 	An=$(bash -c 'read -sn1 An && echo $An')
-	[[ $An = @(e|s) ]] && exit 0
+	[[ $An = @(e|s|q) ]] && exit 0
 }
 
 while true; do
