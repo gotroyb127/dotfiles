@@ -11,23 +11,26 @@ fi
 LockCmd="$1"
 SuspendCmd="$2"
 
-if [ $(xssstate -s) = "disabled" ]; then
-	notify-send "$0 exited" \
-	    "Because screensaver is deactivated"
-	exit 1
-fi
+#if [ $(xssstate -s) = "disabled" ]; then
+#	notify-send "$0 exited" \
+#	    "Because screensaver is deactivated"
+#	exit 1
+#fi
 
 ToLock=15
 ToSusp=600
 SleepT=20
+BigSleepT=100
 
 while true; do
 	Tim=$(xset q | grep timeout | awk '{print $2}')
 	tosleep=$(($(xssstate -t) / 1000))
-	if [ $tosleep -le 0 ];
+	if [ $(xssstate -s) = "disabled" ]; then
+		sleep $BigSleepT
+	elif [ $tosleep -eq 0 ];
 	then
 		sleep $ToLock
-		[ "$(xssstate -s)" = 'off' ] && continue
+		[ "$(xssstate -s)" != 'on' ] && continue
 		$LockCmd &
 
 		[ -n "$SuspendCmd" ] &&

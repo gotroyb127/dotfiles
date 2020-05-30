@@ -27,8 +27,8 @@ let &t_EI = "\e[2 q"
 " autocmd CmdlineEnter * silent execute '!echo -ne "\e[2 q"'
 
 " Show whitespace
-"¬—>·~><:→—
-set listchars=eol:$,tab:←—→,trail:~,extends:>,precedes:<,space:·
+"¬—>·~><:→— ←—→
+set listchars=eol:$,tab:\ —→,trail:~,extends:>,precedes:<,space:·
 imap <F2> <C-o>:set list!<CR>
 nmap <F2> :set list!<CR>
 

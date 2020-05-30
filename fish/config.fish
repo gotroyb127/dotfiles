@@ -33,3 +33,6 @@ abbr Startx 'startx &>> /tmp/startx.log'
 abbr Compile 'make clean && make && sudo make install && make clean'
 abbr KillTEAMS 'pkill "^teams\$"'
 
+function BuildLf
+	mksh -c 'export GOPATH="$PWD/gopath"; go mod vendor; version=r$pkgver ./gen/build.sh -mod=vendor -trimpath'
+end
