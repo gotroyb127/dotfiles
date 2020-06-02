@@ -7,6 +7,7 @@ set hlsearch
 set guifont=Fira\ Code\ Medium\ 9
 
 " set scrolloff=5
+" set autochdir
 set mouse=a
 set cursorline
 set cursorlineopt=line

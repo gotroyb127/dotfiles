@@ -7,6 +7,7 @@ set dircounts
 set incsearch
 set info size
 set number
+set drawbox
 set relativenumber
 set period 1
 set findlen 2
@@ -16,7 +17,7 @@ set previewer ~/.local/etc/lf/scope.sh
 set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%h\033[0;38;5;7m]:\033[1;38;5;105m%w/\033[0;38;5;15m%f\033[0m"
 set shell mksh
 
-#cmd on-cd $cd "$(basename "$f")"
+#cmd on-cd $cd "$(dirname "$f")"
 cmd wait $bash -c 'read -sn1'
 cmd open ${{ IFS=$'\n'; Open.sh "$f" }}
 cmd OpenSel ${{ IFS=$'\n' Open.sh "$fx" }}
@@ -179,6 +180,8 @@ map sN :set sortby name
 map <esc> cmd-escape
 
 map gr cd /
+map ge cd /etc
+map gT cd /tmp
 map gl cd ~/.local
 map gc cd ~/.local/etc
 map gs cd ~/.local/scripts

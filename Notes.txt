@@ -21,11 +21,14 @@ sleep 1 && xdotool mousemove 1200 700 click 1 sleep 1 mousemove 100 950 click 1
 	PS1="${c1}[${c2}\u${c6}@${c3}\H${c7}:${c4}\w${c1}]$c5\$ ${end}"
 	unset c{1..7} end
 
+# Firefox diable ui animation: Go to about:config and add 
+	ui.prefersReducedMotion equal to 1.
 
 # load vmware modules
 sudo /etc/init.d/vmware start
 ## mount linux guest with vmware (open-vm-tools installed)
 	/usr/bin/vmhgfs-fuse .host:/ /mount-point -o allow_other
+
 # Youtube-dl usefull usages
 youtube-dl -k -x -f mp4 --audio-format mp3 --playlist-items 20-25 -o '%(title)s.%(ext)s'
 youtube-dl --rm-cache-dir # ERROR: unable to download video data: HTTP Error 403: Forbidden

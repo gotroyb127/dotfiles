@@ -10,11 +10,11 @@ Opt2='2: hIBERNATE'
 Opt3='3: sUSPEND'
 Opt4='4: eXIT'
 Opt5='5: lOCK SCREEN'
-Option=$(echo -en "$Opt0\n$Opt1\n$Opt2\n$Opt3\n$Opt4\n$Opt5\n" | dmenu -l $l -p "$prompt" )
+Option=$(echo -en "$Opt5\n$Opt4\n$Opt3\n$Opt2\n$Opt1\n$Opt0\n" | dmenu -l $l -p "$prompt" )
 
 case "$Option" in
 	("$Opt0") systemctl reboot;;
-	("$Opt1")  systemctl poweroff;;
+	("$Opt1") systemctl poweroff;;
 	("$Opt2") slock systemctl hibernate;;
 	("$Opt3") slock systemctl suspend;;
 	("$Opt4") pkill -15 -t tty"$XDG_VTNR" 'dwm$';;
