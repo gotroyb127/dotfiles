@@ -6,12 +6,13 @@ set color256
 set dircounts
 set incsearch
 set info size
+set icons
 set number
 set drawbox
 set relativenumber
 set period 1
 set findlen 2
-set noanchorfind
+set anchorfind
 set scrolloff 5
 set previewer ~/.local/etc/lf/scope.sh
 set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%h\033[0;38;5;7m]:\033[1;38;5;105m%w/\033[0;38;5;15m%f\033[0m"
@@ -62,7 +63,7 @@ cmd delete ${{
 		done
 		mv -i "$d/$i" "$newn"
 	done
-	echo -e "\n--- $a Objects moved to /tmp/Trash. ---"
+	echo -e "\n\n--- $a Objects moved to /tmp/Trash. ---"
 	bash -c 'read -sn1'
 }}
 
@@ -192,3 +193,4 @@ map gD cd ~/Downloads
 set ratios '5:8'
 Recol
 
+map - $~/.config/lf/show_img.sh "$f"

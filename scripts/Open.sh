@@ -16,10 +16,10 @@ Opener=(sxiv
 Group=( '\.png$\|\.jpg$\|\.webp$\|\.svg$'
 	'\.pdf$'
 	'\.pptx$\|\.ppt$'
-	'\.doc$\|\.docx$'
+	'\.odt$\|\.doc$\|\.docx$'
 	'\.exe$'
 	'\.mid$\|\.MID$'
-	'\.mp[34]$\|\.mka$\|\.ogg$\|\.wav$'
+	'\.mp[34]$\|\.mka$\|\.ogg$\|\.wav\|\.mkv$'
 	'')
 
 for t in $@; do
