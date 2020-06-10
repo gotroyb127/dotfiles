@@ -19,7 +19,7 @@ set guioptions vh
 set statusbar-home-tilde true
 set window-title-home-tilde true
 
-set font "DejaVu Sans 8"
+set font "DejaVu Sans Semi-Condensed 10"
 
 map <Esc> abort
 

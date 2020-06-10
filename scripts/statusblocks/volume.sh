@@ -7,14 +7,14 @@ amixer get Master | tail -1 \
  | sed 's/.*\[\([0-9]*\)%\] \[\(.*\)\].*/\1 \2/' |& read -p VOL mute
 
 if [[ $mute = on ]]; then
-	vol=" "; warn=' '
+	vol="墳 "; warn=' '
 else
 	vol="ﱝ "; warn='!'
 fi
 
 MicMute=$(amixer get Capture | tail -n1 | awk '{print $6}')
 
-#mic=' '
+#mic=' '墳 
 [[ $MicMute = '[on]' ]] && mic=' '
 
 echo -n "    $mic$vol$VOL$warn"

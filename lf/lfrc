@@ -19,7 +19,7 @@ set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%
 set shell mksh
 
 #cmd on-cd $cd "$(dirname "$f")"
-cmd wait $bash -c 'read -sn1'
+cmd Wait $bash -c 'read -sn1'
 cmd open ${{ IFS=$'\n'; Open.sh "$f" }}
 cmd OpenSel ${{ IFS=$'\n' Open.sh "$fx" }}
 
@@ -67,7 +67,7 @@ cmd delete ${{
 	bash -c 'read -sn1'
 }}
 
-cmd trash ${{
+cmd Trash ${{
 	IFS=$'\n'
 	DEST=~/.local/trash
 	for i in $fx; do
@@ -121,7 +121,7 @@ cmd paste %{{
 \	\	'send clear'
 }}
 
-cmd recol %{{
+cmd Recol %{{
 	w=$(tput cols)
 	if [ $w -le 75 ]; then
 		lf -remote "send $id set nopreview"$'\n'\
@@ -134,9 +134,8 @@ cmd recol %{{
 \	\	"send $id set preview"
 	fi
 }}
-cmd Recol :recol
 
-cmd yankname &{{
+cmd Yankname &{{
 	if [ -z "$f" ]; then
 		t="$PWD"
 	else
@@ -146,30 +145,47 @@ cmd yankname &{{
 	echo -n "$t" | xclip -sel clipboard
 }}
 
-cmd resource :source ~/.config/lf/lfrc
-map R :resource; %sleep .01 && lf -remote "send $id echoerr 'Configuration file (~/.config/lf/lfrc) loaded.'"
+cmd Resource :source ~/.config/lf/lfrc
+map R :{{
+	Resource
+	%sleep .01 && lf -remote "send $id echoerr 'Configuration file (~/.config/lf/lfrc) loaded.'"
+}}
 
 # Replace less as a pager
 map i $vim -MR "$f"
 
 map <c-l> :Recol
+map <esc> cmd-escape
 map <c-r> :redraw; reload
 map c :clear; unselect
-map C $IFS=$'\n'; vidir -v $fx && bash -c 'read -sn1'
+map C :{{ 
+	$IFS=$'\n'; vidir -v $fx
+	Wait
+}}
+
 map D push $mkdir<space>""<left>
 map x push $chmod<space>+x<space>"$f"
-map X $clear && "$f" && bash -c 'read -sn1'
+map X :{{
+	$clear && "$f"
+	Wait
+}}
 
-map <delete> :trash
-map t $tmux run -b 'st -e tmux new -c "$PWD"'
-map T $tmux run -b 'st -e tmux new lf "$PWD"'
-map Y :yankname; echoerr Filename Yanked.
+map <delete> :Trash
+map Y :Yankname; echoerr Filename Yanked.
 map M :SelRecurs
 map L :OpenSel
 
-map a %du -hd0 "$f"
-map A $clear && du -hd1 | sort -k 1 -rh && ls -aSlh | grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }' && bash -c 'read -sn1'
-map S $clear && echo "$fx" | sort -n && bash -c 'read -sn1'
+map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls --color=always -lhd "$f"
+map A :{{
+	$clear && du -hd1 | sort -k 1 -rh && ls -aSlh | grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }'
+	Wait
+}}
+
+map S :{{
+	$clear && echo "$fx" | sort -n
+	Wait
+}}
+
 map bb :set drawbox!
 map bv :set preview!
 map bn :set relativenumber!
@@ -178,7 +194,9 @@ map bN :set number!
 map sn :set sortby natural
 map sN :set sortby name
 
-map <esc> cmd-escape
+map Jj %LF_Jump.sh -type f
+map Jd %LF_Jump.sh -type d
+map Ja %LF_Jump.sh
 
 map gr cd /
 map ge cd /etc

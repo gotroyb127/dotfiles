@@ -2,7 +2,7 @@
 # VERSION: 3.0
 SETUVAR __fish_initialized:3100
 SETUVAR _fish_abbr_Compile:make\x20clean\x20\x26\x26\x20make\x20\x26\x26\x20sudo\x20make\x20install\x20\x26\x26\x20make\x20clean
-SETUVAR _fish_abbr_KillTEAMS:pkill\x20\x22\x5eteams\x5c\x24\x22
+SETUVAR _fish_abbr_KillTeams:pkill\x20\x22\x5eteams\x5c\x24\x22
 SETUVAR _fish_abbr_P:sudo\x20pacman
 SETUVAR _fish_abbr_SSH:env\x20TERM\x3dxterm\x2d256color\x20luit\x20\x2dencoding\x20ISO\x2d8859\x2d7\x20ssh
 SETUVAR _fish_abbr_Startx:startx\x20\x26\x3e\x3e\x20/tmp/startx\x2elog

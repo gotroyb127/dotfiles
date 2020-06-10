@@ -1,9 +1,11 @@
 " vimrc
 
+set ruler
 set number
-set relativenumber
-set incsearch
+set showcmd
 set hlsearch
+set incsearch
+set relativenumber
 set guifont=Fira\ Code\ Medium\ 9
 
 " set scrolloff=5
@@ -20,7 +22,6 @@ syntax enable
 
 let &t_SI = "\e[6 q"
 let &t_SR = "\e[4 q"
-
 let &t_EI = "\e[2 q"
 
 " autocmd CmdlineEnter * silent execute '!echo -ne "\e[6 q"'
@@ -66,7 +67,6 @@ vnoremap <C-c> "+y
 
 set splitbelow
 set splitright
-
 
 " Clear highlighted search with [Ctrl]+[/]
 nmap <C-_> :noh<return>
