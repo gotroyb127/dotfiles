@@ -11,7 +11,7 @@ Opener=(zathura
 	$'sxiv\n-o'
 	$'timidity\n-in'
 	$'mpv\n--input-ipc-server=/tmp/mpvsocket'
-	vim)
+	nvim)
 
 Group=( '\.pdf$'
 	'\.pptx$\|\.ppt$'
@@ -34,7 +34,8 @@ done
 for i in $(seq 0 $((${#Group[@]}-1))); do
 	[[ -z ${Groups[i]} ]] && continue
 	if [[ $i -le 4 ]]; then
-		${Opener[i]} ${Groups[i]} 2> /dev/null | xclip &
+		${Opener[i]} ${Groups[i]} 2> /dev/null |
+		    xclip -selection clipboard &
 	else
 		${Opener[i]} ${Groups[i]}
 	fi

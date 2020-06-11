@@ -26,5 +26,6 @@ for i in $(seq 1 $total); do
 done
 }
 
+date 1>&2
 notify-send "$(Sync)"
-
+echo 1>&2

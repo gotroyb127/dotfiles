@@ -6,7 +6,7 @@ set color256
 set dircounts
 set incsearch
 set info size
-set icons
+set noicons
 set number
 set drawbox
 set relativenumber
@@ -152,7 +152,7 @@ map R :{{
 }}
 
 # Replace less as a pager
-map i $vim -MR "$f"
+map i $nvim -MR "$f"
 
 map <c-l> :Recol
 map <esc> cmd-escape
@@ -190,6 +190,7 @@ map bb :set drawbox!
 map bv :set preview!
 map bn :set relativenumber!
 map bN :set number!
+map bi :set icons!
 
 map sn :set sortby natural
 map sN :set sortby name
@@ -210,5 +211,3 @@ map gD cd ~/Downloads
 
 set ratios '5:8'
 Recol
-
-map - $~/.config/lf/show_img.sh "$f"

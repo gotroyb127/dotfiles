@@ -9,7 +9,7 @@ export XDG_STATE_HOME="$HOME/.local/var/lib"
 export XDG_LIB_HOME="$HOME/.local/lib"
 export XDG_LOG_HOME="$HOME/.local/var/log"
 
-export EDITOR=vim
+export EDITOR=nvim
 export PAGER=less
 #export PAGER='w3m -t 20 -s -num'
 # climenud: manage only the clipboard
@@ -30,7 +30,6 @@ export LF_ICONS="tw=$dir:st=st:ow=:di=$dir:ln=:or=:pi=pi:so=:cd=:
 export PATH+=":$HOME/.local/scripts"
 
 if systemctl -q is-active graphical.target && [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
-	modprobe fbdev
 	startx &>> "/tmp/startx($XDG_VTNR).log"
 fi
 if [[ $(ps --no-header --pid=$PPID --format=cmd) != "fish" ]]

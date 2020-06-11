@@ -5,6 +5,7 @@ set number
 set showcmd
 set hlsearch
 set incsearch
+set laststatus=2
 set relativenumber
 set guifont=Fira\ Code\ Medium\ 9
 
@@ -12,21 +13,16 @@ set guifont=Fira\ Code\ Medium\ 9
 " set autochdir
 set mouse=a
 set cursorline
-set cursorlineopt=line
+if ! has("nvim")
+	let &t_SI = "\e[6 q"
+	let &t_SR = "\e[4 q"
+	let &t_EI = "\e[2 q"
+	set cursorlineopt=line
+endif
 autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
 
-" colorscheme slate
-" colorscheme pablo
 colorscheme elflord
 syntax enable
-
-let &t_SI = "\e[6 q"
-let &t_SR = "\e[4 q"
-let &t_EI = "\e[2 q"
-
-" autocmd CmdlineEnter * silent execute '!echo -ne "\e[6 q"'
-" autocmd CmdlineLeave * silent execute '!echo -ne "\e[2 q"'
-" autocmd CmdlineEnter * silent execute '!echo -ne "\e[2 q"'
 
 " Show whitespace
 "¬—>·~><:→— ←—→

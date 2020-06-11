@@ -17,21 +17,22 @@
 #viman() { /usr/bin/man "$1" | col -b | vim -MR - ; }
 
 alias mpvs='mpv --input-ipc-server=/tmp/mpvsocket'
-alias view='vim -MR'
+alias vim='nvim'
+alias view='nvim -MR'
 
-abbr SSH 'env TERM=xterm-256color luit -encoding ISO-8859-7 ssh'
+#abbr SSH 'env TERM=xterm-256color luit -encoding ISO-8859-7 ssh'
 
-abbr cdl 'cd ~/.local'
-abbr cdc 'cd ~/.local/etc'
-abbr cds 'cd ~/.local/scripts'
-abbr cdd 'cd ~/Documents'
-abbr cdD 'cd ~/Downloads'
-abbr p pacman
-abbr P 'sudo pacman'
+#abbr cdl 'cd ~/.local'
+#abbr cdc 'cd ~/.local/etc'
+#abbr cds 'cd ~/.local/scripts'
+#abbr cdd 'cd ~/Documents'
+#abbr cdD 'cd ~/Downloads'
+#abbr p pacman
+#abbr P 'sudo pacman'
 
-abbr Startx 'startx &>> /tmp/startx.log'
-abbr Compile 'make clean && make && sudo make install && make clean'
-abbr KillTeams 'pkill "^teams\$"'
+#abbr Startx 'startx &>> /tmp/startx.log'
+#abbr Compile 'make clean && make && sudo make install && make clean'
+#abbr KillTeams 'pkill "^teams\$"'
 
 function BuildLf
 	mksh -c 'export GOPATH="$PWD/gopath"; go mod vendor; version=r$pkgver ./gen/build.sh -mod=vendor -trimpath'
