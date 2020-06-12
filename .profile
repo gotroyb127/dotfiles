@@ -11,7 +11,8 @@ export XDG_LOG_HOME="$HOME/.local/var/log"
 
 export EDITOR=nvim
 export PAGER=less
-#export PAGER='w3m -t 20 -s -num'
+export MANPAGER='nvim +Man!'
+
 # climenud: manage only the clipboard
 export CM_SELECTIONS=clipboard
 

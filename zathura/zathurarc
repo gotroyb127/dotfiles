@@ -6,7 +6,7 @@ set continuous-hist-save
 # set scroll-full-overlap 0.0001
 # set selection-clipboard clipboard
 
-#set recolor-reverse-video true
+#set recolor-reverse-video
 ## Recoloring Options
 set recolor
 set recolor-keephue
@@ -16,8 +16,10 @@ set recolor-darkcolor "#ffffff"
 
 
 set guioptions vh
-set statusbar-home-tilde true
-set window-title-home-tilde true
+set statusbar-home-tilde
+set window-title-home-tilde
+set window-title-basename
+set window-title-page false
 
 set font "DejaVu Sans Semi-Condensed 10"
 
@@ -36,14 +38,8 @@ map <C-e> feedkeys <C-Down>
 
 map b scroll full-up
 map f scroll full-down
-#map b feedkeys <PageUp>
-#map f feedkeys <PageDown>
 
 map e toggle_page_mode
 
 map <C-PageUp> scroll half-up
 map <C-PageDown> scroll half-down
-
-# map l feedkeys <C-r>
-# map <C-Up> feedkeys <C-Up>
-
