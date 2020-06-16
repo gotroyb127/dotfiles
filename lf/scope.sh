@@ -29,7 +29,7 @@ IFS=$'\n'
 
 ## Script arguments
 FILE_PATH="${1}"         # Full path of the highlighted file
-PV_WIDTH="$(( $(tput cols)*5 / 8 -3 ))"          # Width of the preview pane (number of fitting characters)
+PV_WIDTH="$(( $(tput cols)*11 / 16 -3 ))"          # Width of the preview pane (number of fitting characters)
 #PV_WIDTH="${3}"          # Width of the preview pane (number of fitting characters)
 ## shellcheck disable=SC2034 # PV_HEIGHT is provided for convenience and unused
 PV_HEIGHT="${2}"         # Height of the preview pane (number of fitting characters)

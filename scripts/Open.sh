@@ -15,9 +15,9 @@ Opener=(zathura
 
 Group=( '\.pdf$'
 	'\.pptx$\|\.ppt$'
-	'\.odt$\|\.doc$\|\.docx$'
+	'\.odf$\|\.odt$\|\.doc$\|\.docx$'
 	'\.exe$'
-	'\.png$\|\.jpg$\|\.webp$\|\.svg$'
+	'\.png$\|\.jpg$\|\.webp$\|\.svg$\|\.tiff$'
 	'\.mid$\|\.MID$'
 	'\.mp[34]$\|\.mka$\|\.ogg$\|\.wav\|\.mkv$'
 	'')

@@ -13,4 +13,3 @@ else
 fi
 
 echo -n "  ${BAT}$Charg"
-

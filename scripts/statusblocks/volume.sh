@@ -18,4 +18,3 @@ MicMute=$(amixer get Capture | tail -n1 | awk '{print $6}')
 [[ $MicMute = '[on]' ]] && mic=' '
 
 echo -n "    $mic$vol$VOL$warn"
-

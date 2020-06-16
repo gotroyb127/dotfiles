@@ -22,7 +22,7 @@ Reset() {
 	echo -e "\n|-RR- \t\tTimeout reset: $DefTime\t${BlankStyle}blank"
 	echo -en "(II)\t"
 	killall -v -CONT "$Locker"
-	echo -e "\n -  -  -  -  -  -  -  -  -  - \n"
+	echo -e "\n---------------------------------------------------\n"
 }
 
 trap 'exit' SIGINT SIGTERM

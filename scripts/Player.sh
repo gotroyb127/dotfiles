@@ -6,11 +6,11 @@ Info() {
 }
 
 Command() {
-	printf '{ "command": [%s] }\n' "$1" | socat - /tmp/mpvsocket
+	printf '{ "command": [%s] }\n' "$1" | socat - /tmp/mpvsocket > /dev/null
 }
 
-FormatTime() {
-	bc <<< "scale=0; t=$1/1; t/3600; (t/60)%60; t%60" |
+SecsToTime() {
+	echo "scale=0; t=$1/1; t/3600; (t/60)%60; t%60" | bc |
 	head -c -1 | tr '\n' ':' | sed 's/^0:\|0:0://g'
 }
 
@@ -28,28 +28,40 @@ Status() {
 #	Title=$(Info filename/no-ext)
 
 	Title=$(Info media-title)
-	CurrTime=$(FormatTime $(Info time-pos) )
-	Duration=$(FormatTime $(Info duration) )
-	RemPlTime=$(FormatTime $(Info playtime-remaining) )
+	CurrTime=$(SecsToTime $(Info time-pos) )
+	Duration=$(SecsToTime $(Info duration) )
+	RemPlTime=$(SecsToTime $(Info playtime-remaining) )
 	Speed=$(Info speed)
 	echo -n "$Title [$CurrTime . $Duration] (-$RemPlTime) x$Speed $p"
 }
 
 TimeToSecs() {
-	sed -e 's/^\([0-9]*\):\([0-9]*\)$/\1*60+\2/g' -e 's/^\([0-9]*\):\([0-9]*\):\([0-9]*\)$/\1*3600+\2*60+\3/g' | bc
+	sed -e 's/^\([0-9]*\):\([0-9]*\)$/\1*60+\2/g' \
+	    -e 's/^\([0-9]*\):\([0-9]*\):\([0-9]*\)$/\1*3600+\2*60+\3/g' \
+	| bc
 }
 
 case "$1" in
+	status) Status;;
 	position+)  Command '"seek", '"$2" ;;
 	position-)  Command '"seek", -'"$2" ;;
 	position)
-		echo | dmenu -p "[$(FormatTime $(Info time-pos)) / $(FormatTime $(Info duration))"'] Jump to: '\
+		echo | dmenu -p "[$(SecsToTime $(Info time-pos)) / $(SecsToTime $(Info duration))"'] Jump to: '\
 		| TimeToSecs |& read -p Secs
 		Command '"set_property", "time-pos", '"$Secs" ;;
-	speed+)  Command '"add", "speed", '"$2";;
-	speed1)  Command '"set_property", "speed", 1';;
-	speed-)  Command '"add", "speed", -'"$2";;
-	*pause*) Command '"cycle", "pause"' ;;
+	speed+) Command '"add", "speed", '"$2";;
+	speed)  Command '"set_property", "speed", '"$2";;
+	speed-) Command '"add", "speed", -'"$2";;
+	play)   Command '"set_property", "pause", false';;
+	pause)  Command '"set_property", "pause", true';;
+	play-pause)
+		Command '"cycle", "pause"' ;;
+	pause-after1)
+		Command '"set_property", "pause", false'
+		t="$(echo "$(Info playtime-remaining) - 0.01" | bc)"
+		notify-send "Pausing mpv after $(SecsToTime $t)" "$(date +'%-I:%-M:%-S %p.')"
+		sleep "$t" &&
+		Command '"set_property", "pause", true';;
 	loop)	if [[ $(Info loop) = false ]]; then
 			Command '"set_property", "loop", true'
 		else
@@ -57,8 +69,8 @@ case "$1" in
 		fi ;;
 	next)   Command '"playlist-next"';;
 	prev*)  Command '"playlist-prev"';;
-	quit)   Command '"quit-watch-later"';;
-	status) Status;;
+	quit-wl) Command '"quit-watch-later"';;
+	quit)    Command '"quit"';;
 	Info*)  $@;;
 	*)      Command "$1";;
 esac

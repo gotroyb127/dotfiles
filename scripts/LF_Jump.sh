@@ -3,7 +3,8 @@
 echo -n "Jump to pattern: "
 read Pattern
 i=0
-find "$PWD" $@ | grep "/[^/]*$Pattern[^/]*$" | sort |&
+#find "$PWD" $@ | sed 's/.*\/\([^/]*\)/\1/g' | grep $Pattern | sort |&
+find "$PWD" $@ | grep "[^/]*$Pattern[^/]*$" | sort |&
 while read -p Matches[i]; do
 	((++i))
 done

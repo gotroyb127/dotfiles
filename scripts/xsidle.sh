@@ -31,6 +31,7 @@ while true; do
 	then
 		sleep $ToLock
 		[ "$(xssstate -s)" != 'on' ] && continue
+		echo "$0: $(date)" " Executing LockCmd: \"$LockCmd\"." >&2
 		$LockCmd &
 
 		[ -n "$SuspendCmd" ] &&
@@ -42,7 +43,9 @@ while true; do
 			fi
 			sleep $SleepT
 		    done
-		    [ -z "$Waked" ] && $SuspendCmd 
+		[ -z "$Waked" ] &&
+		    echo "$0: $(date)" " Executing SuspendCmd: \"$SuspendCmd\"." >&2 && 
+		    $SuspendCmd
 		Waked=
 
 		while [ "$(xssstate -s)" = 'on' ]; do

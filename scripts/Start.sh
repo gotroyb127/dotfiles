@@ -8,7 +8,7 @@ sudo pacman -Fy || exit 1
 
 cachedir="${XDG_CACHE_HOME:-"$HOME/.cache"}"
 cache="$cachedir/AutoUpdated"
-Invl=4
+Invl=5
 
 cday="$(date +%j)"
 

@@ -6,7 +6,7 @@ set color256
 set dircounts
 set incsearch
 set info size
-set noicons
+set icons
 set number
 set drawbox
 set relativenumber
@@ -19,24 +19,23 @@ set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%
 set shell mksh
 
 #cmd on-cd $cd "$(dirname "$f")"
-cmd Wait $bash -c 'read -sn1'
+#cmd Wait $bash -c 'read -sn1'
 cmd open ${{ IFS=$'\n'; Open.sh "$f" }}
 cmd OpenSel ${{ IFS=$'\n' Open.sh "$fx" }}
 
 cmd SelRecurs %{{
 	IFS=$'\n'
+	N=$'\n'
 	[[ ! -d $f ]] && exit 0
 	for d in $(find $f -type d | sort); do
-		lf -remote "send $id select '$d'"$'\n'\
-\	\	\	"send $id open"$'\n'\
-\	\	\	"send $id invert"
+		lf -remote "send $id select '$d'${N}send $id open${N}send $id invert"
 	done
 	lf -remote "send $id select '$f'"
 }}
 
 cmd delete ${{
 	IFS=$'\n'
-	clear
+	clear -x
 	echo -n "---\tFiles to be deleted:\t---\n\n$fx\n\nDelete? [Y/n]: " \
 	| sed "s/^${HOME//\//\\/}/~/g"
 	read -n1 ans
@@ -91,13 +90,14 @@ cmd Trash ${{
 
 cmd paste %{{
 	IFS=$'\n'
+	N=$'\n'
 	load=$(lf -remote 'load')
 	mode=$(echo "$load" | sed -n '1p')
 	list=$(echo "$load" | sed '1d')
 	if [[ $mode = copy ]]; then
-	    Op=$'cp\n-nR'
+	    Op="cp${N}-nR"
 	elif [[ $mode = move ]]; then
-	    Op=$'mv\n-n'
+	    Op="mv${N}-n"
 	fi
 	DEST=$(pwd)
 	for i in $list; do
@@ -117,21 +117,18 @@ cmd paste %{{
 		done
 		$Op $d/$i $newn
 	done
-	lf -remote 'send load'$'\n'\
-\	\	'send clear'
+	lf -remote "send load${N}send clear"
 }}
 
-cmd Recol %{{
+cmd Recol &{{
 	w=$(tput cols)
+	N=$'\n'
 	if [ $w -le 75 ]; then
-		lf -remote "send $id set nopreview"$'\n'\
-\	\	"send $id set ratios 1"
+		lf -remote "send $id set nopreview${N}send $id set ratios 1"
 	elif [ $w -le 220 ]; then
-		lf -remote "send $id set ratios 5:8"$'\n'\
-\	\	"send $id set preview"
+		lf -remote "send $id set ratios 11:16${N}send $id set preview"
 	else
-		lf -remote "send $id set ratios 3:8"$'\n'\
-\	\	"send $id set preview"
+		lf -remote "send $id set ratios 7:16${N}send $id set preview"
 	fi
 }}
 
@@ -145,52 +142,24 @@ cmd Yankname &{{
 	echo -n "$t" | xclip -sel clipboard
 }}
 
+cmd EchoSelection !clear -x && echo "$fx" | sort -n
+
 cmd Resource :source ~/.config/lf/lfrc
 map R :{{
 	Resource
 	%sleep .01 && lf -remote "send $id echoerr 'Configuration file (~/.config/lf/lfrc) loaded.'"
 }}
 
-# Replace less as a pager
-map i $nvim -MR "$f"
+map C !IFS=$'\n'; vidir -v $fx
 
-map <c-l> :Recol
-map <esc> cmd-escape
-map <c-r> :redraw; reload
-map c :clear; unselect
-map C :{{ 
-	$IFS=$'\n'; vidir -v $fx
-	Wait
-}}
-
-map D push $mkdir<space>""<left>
-map x push $chmod<space>+x<space>"$f"
-map X :{{
-	$clear && "$f"
-	Wait
-}}
-
-map <delete> :Trash
-map Y :Yankname; echoerr Filename Yanked.
-map M :SelRecurs
-map L :OpenSel
+map X !clear -x && "$f"
 
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls --color=always -lhd "$f"
-map A :{{
-	$clear && du -hd1 | sort -k 1 -rh && ls -aSlh | grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }'
-	Wait
-}}
+map A !clear -x && du -hd1 | sort -k 1 -rh && ls -aSlh | grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }'
 
-map S :{{
-	$clear && echo "$fx" | sort -n
-	Wait
-}}
-
-map bb :set drawbox!
-map bv :set preview!
-map bn :set relativenumber!
-map bN :set number!
-map bi :set icons!
+map Sp &xclip -o | LF_Select.sh
+map Sc &xclip -o -sel clipboard | LF_Select.sh
+map Ss :EchoSelection
 
 map sn :set sortby natural
 map sN :set sortby name
@@ -198,6 +167,35 @@ map sN :set sortby name
 map Jj %LF_Jump.sh -type f
 map Jd %LF_Jump.sh -type d
 map Ja %LF_Jump.sh
+
+map <delete> :Trash
+map Y :Yankname; echoerr Filename Yanked.
+map M :SelRecurs
+map L :OpenSel
+
+map i $nvim -MR "$f"
+map E push $nvim<space>""<left>
+map D push $mkdir<space>""<left>
+map x push $chmod<space>+x<space>"$f"
+
+map <c-y> up
+map <c-e> down
+map <c-l> :Recol
+map <esc> cmd-escape
+map <c-r> :redraw; reload
+map c :clear; unselect
+
+map r
+map re :rename; cmd-word-back; cmd-left
+map rA :rename
+map rS :rename; cmd-delete-home
+map rI :rename; cmd-home
+
+map bb :set drawbox!
+map bv :set preview!
+map bn :set relativenumber!
+map bN :set number!
+map bi :set icons!
 
 map gr cd /
 map ge cd /etc
@@ -209,5 +207,5 @@ map gt cd ~/.local/trash
 map gd cd ~/Documents
 map gD cd ~/Downloads
 
-set ratios '5:8'
+set ratios 11:16
 Recol

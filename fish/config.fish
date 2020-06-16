@@ -7,6 +7,7 @@
 #set -U fish_color_host 'FFFD9A'
 #set -U fish_color_host '00CE81'
 #set -U fish_color_cwd '77FFF0'
+#set -U fish_color_cwd '77CDF0'
 #set -U fish_color_cwd_root 'FF1F00'
 #set -U fish_color_time 'FFB599'
 #set -U fish_color_time 'FFCFF0'
