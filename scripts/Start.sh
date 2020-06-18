@@ -1,4 +1,4 @@
-#!/bin/mksh
+#!/bin/ksh
 
 # Show available updates on startup.
 sleep .5
@@ -14,7 +14,7 @@ cday="$(date +%j)"
 
 Updating=
 if [ -f "$cache" ]; then
-	passed="$(($cday - $(cat $cache)))"
+	passed="$((cday - $(cat "$cache")))"
 	echo "Days passed since last auto-update: $passed."
 	[[ $passed -ge $Invl || $passed -le -$Invl ]] &&
 	Updating=True
@@ -29,5 +29,5 @@ if [ -n "$Updating" ] ; then
 \	"$UpsNum updates available." \
 	"$Updates"
 	st tmux new 'sudo pacman -Su && read'
-	pacman -Quq || echo "$cday" > $cache && echo "Updating cache file ($cache)."
+	pacman -Quq || echo "$cday" > "$cache" && echo "Updating cache file ($cache)."
 fi

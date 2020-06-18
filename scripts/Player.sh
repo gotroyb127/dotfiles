@@ -1,4 +1,4 @@
-#!/bin/mksh
+#!/bin/ksh
 
 Info() {
 	printf '{ "command": ["get_property", "%s"] }\n' "$1" |

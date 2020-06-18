@@ -1,6 +1,6 @@
-#!/bin/mksh
+#!/bin/sh
 
-export IFS=$'\t\n'
+IFS="$(printf '\t\n\b')"
 #export  SED_CMD=$'-e\ts/\ I[.] /\ 1. /g\t'\
 #\	\	$'-e\ts/\ II[.] /\ 2. /g\t'\
 #\	\	$'-e\ts/\ III[.] /\ 3. /g\t'\
@@ -16,6 +16,6 @@ export IFS=$'\t\n'
 for i in $(find "$1" -type f | sort -n); do
 #	mv -iv "$i" "$(dirname $i)/$(basename $i | sed $SED_CMD )"
 	echo "$i:\n"$(dirname $i)/$(basename $i | sed $SED_CMD )""
-#	echo -e "Testing: 1 I I. 2 II II. 3 III III. " | sed $SED_CMD
+#	echo "Testing: 1 I I. 2 II II. 3 III III. " | sed $SED_CMD
 done
 

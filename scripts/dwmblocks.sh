@@ -1,13 +1,13 @@
 #!/bin/mksh
 
 BlocksDir="$(dirname $0)/statusblocks"
-Blocks=(player volume kblayout battery network date)
-Signal=(5      4      3        2       6       1)
-UpdTime=(1     10     10       10      10      1)
-LastTime=()
-Out=()
+set -A Blocks	player volume kblayout battery network date
+set -A Signal	5      4      3        2       6       1
+set -A UpdTime	1     10     10       10      10      1
+set -A LastTime
+set -A Out
 N=$((${#Blocks[@]} -1))
-export Ns=$(seq 0 $N)
+Ns=$(seq 0 $N)
 #export SEP1=' '
 #export SEP2=''
 

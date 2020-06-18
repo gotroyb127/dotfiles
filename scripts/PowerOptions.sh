@@ -1,4 +1,4 @@
-#!/bin/mksh
+#!/bin/sh
 
 l='10'
 prompt='Choose option:'
@@ -10,7 +10,7 @@ Opt2='2: hIBERNATE'
 Opt3='3: sUSPEND'
 Opt4='4: eXIT'
 Opt5='5: lOCK SCREEN'
-Option=$(echo -en "$Opt5\n$Opt4\n$Opt3\n$Opt2\n$Opt1\n$Opt0\n" | dmenu -l $l -p "$prompt" )
+Option=$(printf "$Opt5\n$Opt4\n$Opt3\n$Opt2\n$Opt1\n$Opt0\n" | dmenu -l $l -p "$prompt" )
 
 case "$Option" in
 	("$Opt0") systemctl reboot;;

@@ -1,20 +1,20 @@
-#!/bin/mksh
+#!/bin/sh
 
-#amixer get Master | tail -n1 | awk '{print $5" "$6}' \
-# | tr -d '%[]' |& read -p VOL mute
+#out="$(amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\] \[\(.*\)\].*/\1 \2/')"
 
-amixer get Master | tail -1 \
- | sed 's/.*\[\([0-9]*\)%\] \[\(.*\)\].*/\1 \2/' |& read -p VOL mute
+info="$(amixer get Master | grep -m 1 -o '[[0-9]*%] [[onf]*]' | tr -d '[]%')"
+VOL=${info%% *}
+mute=${info##* }
 
-if [[ $mute = on ]]; then
+if [ "$mute" = on ]; then
 	vol="墳 "; warn=' '
 else
 	vol="ﱝ "; warn='!'
 fi
 
-MicMute=$(amixer get Capture | tail -n1 | awk '{print $6}')
+MicMute="$(amixer get Capture | tail -n1 | awk '{print $6}')"
 
 #mic=' '墳 
-[[ $MicMute = '[on]' ]] && mic=' '
+[ "$MicMute" = '[on]' ] && mic=' '
 
 echo -n "    $mic$vol$VOL$warn"

@@ -1,3 +1,3 @@
-#!/bin/mksh
+#!/bin/sh
 
 Player.sh status

@@ -16,16 +16,16 @@ set anchorfind
 set scrolloff 5
 set previewer ~/.local/etc/lf/scope.sh
 set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%h\033[0;38;5;7m]:\033[1;38;5;105m%w/\033[0;38;5;15m%f\033[0m"
-set shell mksh
+set shell ksh
 
 #cmd on-cd $cd "$(dirname "$f")"
 #cmd Wait $bash -c 'read -sn1'
-cmd open ${{ IFS=$'\n'; Open.sh "$f" }}
-cmd OpenSel ${{ IFS=$'\n' Open.sh "$fx" }}
+cmd open ${{ IFS="$(print '\n\b')"; Open.sh "$f" }}
+cmd OpenSel ${{ IFS="$(print '\n\b')"; Open.sh "$fx" }}
 
 cmd SelRecurs %{{
-	IFS=$'\n'
-	N=$'\n'
+	IFS="$(print '\n\b')"
+	N="$(print '\n\b')"
 	[[ ! -d $f ]] && exit 0
 	for d in $(find $f -type d | sort); do
 		lf -remote "send $id select '$d'${N}send $id open${N}send $id invert"
@@ -34,11 +34,10 @@ cmd SelRecurs %{{
 }}
 
 cmd delete ${{
-	IFS=$'\n'
+	IFS="$(print '\n\b')"
 	clear -x
-	echo -n "---\tFiles to be deleted:\t---\n\n$fx\n\nDelete? [Y/n]: " \
-	| sed "s/^${HOME//\//\\/}/~/g"
-	read -n1 ans
+	echo -n "---\tFiles to be deleted:\t---\n\n$fx\n\nDelete? [Y/n]: "
+	read ans
 	[[ $ans = !(y|Y) ]] && exit 0;
 	mkdir -p /tmp/Trash
 	chmod 777 /tmp/Trash
@@ -67,7 +66,7 @@ cmd delete ${{
 }}
 
 cmd Trash ${{
-	IFS=$'\n'
+	IFS="$(print '\n\b')"
 	DEST=~/.local/trash
 	for i in $fx; do
 		d=$(dirname "$i")
@@ -89,8 +88,8 @@ cmd Trash ${{
 }}
 
 cmd paste %{{
-	IFS=$'\n'
-	N=$'\n'
+	IFS="$(print '\n\b')"
+	N="$(print '\n\b')"
 	load=$(lf -remote 'load')
 	mode=$(echo "$load" | sed -n '1p')
 	list=$(echo "$load" | sed '1d')
@@ -122,7 +121,7 @@ cmd paste %{{
 
 cmd Recol &{{
 	w=$(tput cols)
-	N=$'\n'
+	N="$(print '\n\b')"
 	if [ $w -le 75 ]; then
 		lf -remote "send $id set nopreview${N}send $id set ratios 1"
 	elif [ $w -le 220 ]; then
@@ -150,7 +149,7 @@ map R :{{
 	%sleep .01 && lf -remote "send $id echoerr 'Configuration file (~/.config/lf/lfrc) loaded.'"
 }}
 
-map C !IFS=$'\n'; vidir -v $fx
+map C !IFS="$(print '\n\b')"; vidir -v $fx
 
 map X !clear -x && "$f"
 
@@ -200,6 +199,7 @@ map bi :set icons!
 map gr cd /
 map ge cd /etc
 map gT cd /tmp
+map gm cd /mnt
 map gl cd ~/.local
 map gc cd ~/.local/etc
 map gs cd ~/.local/scripts

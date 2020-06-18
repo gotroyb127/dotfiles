@@ -22,8 +22,8 @@ if ! has("nvim")
 else
 	command! Resource source ~/.config/nvim/init.vim
 endif
-autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
 
+autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
 colorscheme elflord
 syntax enable
 
@@ -41,8 +41,8 @@ inoremap <C-d> <Del>
 inoremap " ""<Left>
 inoremap ' ''<Left>
 inoremap ( ()<Left>
-inoremap )) )
 inoremap ) <Right>
+inoremap )) )
 inoremap { {
 
 " Only works with autoident on

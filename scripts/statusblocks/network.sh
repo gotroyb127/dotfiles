@@ -1,4 +1,4 @@
-#!/bin/mksh
+#!/bin/sh
 
 case $(nmcli networking connectivity) in
 	'full')    st=' o';;
@@ -12,4 +12,4 @@ case $(nmcli radio wifi) in
 	*)          wifis=' 睊 ? ';;
 esac
 
-echo -n " $wifis$st"
+printf " $wifis$st"
