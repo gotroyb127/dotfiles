@@ -1,15 +1,20 @@
-#!/bin/ksh
+#!/bin/mksh
 
 echo -n "Jump to pattern: "
 read Pattern
 i=0
-#find "$PWD" $@ | sed 's/.*\/\([^/]*\)/\1/g' | grep $Pattern | sort |&
 find "$PWD" $@ | grep "[^/]*$Pattern[^/]*$" | sort |&
 while read -p Matches[i]; do
 	((++i))
 done
 
-[ "$i" -eq 0 ] && printf '\033[7;31;47m%s\033[0m' "Pattern not found" && exit 1
+#find "$PWD" $1 $2 | sort |&
+#while read -p f; do
+#	basename "$f" | grep -q "$Pattern" &&
+#	    Matches[i]="$f" && ((++i))
+#done
+
+[ "$i" -eq 0 ] && printf '\e[7;31;47m%s\e[0m' "Pattern not found" && exit 1
 [ "$i" -eq 1 ] && echo 'Only one match found.' && E=' ' || E=
 
 LfSelect() {

@@ -1,19 +1,18 @@
 #!/bin/mksh
 
 BlocksDir="$(dirname $0)/statusblocks"
-set -A Blocks	player volume kblayout battery network date
-set -A Signal	5      4      3        2       6       1
-set -A UpdTime	1     10     10       10      10      1
+set -A Blocks	player	volume kblayout battery network date
+set -A Signal	1	4	2	3	5	3
+set -A UpdTime	1	10	10	10	10	1
 set -A LastTime
 set -A Out
 N=$((${#Blocks[@]} -1))
 Ns=$(seq 0 $N)
-#export SEP1=' '
-#export SEP2=''
+#SEP1=' '
+#SEP2=''
 
-Refresh() { Out[$1]="$($BlocksDir/${Blocks[$1]}.sh)"; }
-UpdateFast() { Refresh $1; Print; }
-HandleSignal() { UpdateFast $1; }
+Refresh()	{ Out[$1]="$($BlocksDir/${Blocks[$1]}.sh)"; }
+HandleSignal()	{ Refresh $1; Print; }
 Update() {
 	for i in $Ns; do 
 		((--LastTime[i]))
@@ -31,7 +30,8 @@ Print() {
 
 # RTMIN: 34
 for i in $Ns; do
-	trap "HandleSignal $i" $((34+${Signal[i]}))
+	s="$((31-Signal[i]))"
+	trap "echo 'Received signal $s'; HandleSignal $i" $s
 	Refresh $i
 done
 

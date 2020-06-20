@@ -19,24 +19,24 @@ set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%
 set shell ksh
 
 #cmd on-cd $cd "$(dirname "$f")"
-#cmd Wait $bash -c 'read -sn1'
-cmd open ${{ IFS="$(print '\n\b')"; Open.sh "$f" }}
-cmd OpenSel ${{ IFS="$(print '\n\b')"; Open.sh "$fx" }}
+cmd open ${{ IFS="${IFS#??}"; Open.sh "$f" }}
+cmd OpenSel ${{ IFS="${IFS#??}"; Open.sh "$fx" }}
 
 cmd SelRecurs %{{
-	IFS="$(print '\n\b')"
-	N="$(print '\n\b')"
+	IFS="${IFS#??}"
+	N="$IFS"
 	[[ ! -d $f ]] && exit 0
-	for d in $(find $f -type d | sort); do
+	find $f -type d | sort |
+	while read d; do
 		lf -remote "send $id select '$d'${N}send $id open${N}send $id invert"
 	done
 	lf -remote "send $id select '$f'"
 }}
 
-cmd delete ${{
-	IFS="$(print '\n\b')"
+cmd delete !{{
+	IFS="${IFS#??}"
 	clear -x
-	echo -n "---\tFiles to be deleted:\t---\n\n$fx\n\nDelete? [Y/n]: "
+	echo -n "---\tFiles to be deleted:\t---\n\n$(echo "$fx" | sed "s!^$HOME!~!")\n\nDelete? [Y/n]: "
 	read ans
 	[[ $ans = !(y|Y) ]] && exit 0;
 	mkdir -p /tmp/Trash
@@ -61,12 +61,11 @@ cmd delete ${{
 		done
 		mv -i "$d/$i" "$newn"
 	done
-	echo -e "\n\n--- $a Objects moved to /tmp/Trash. ---"
-	bash -c 'read -sn1'
+	echo -e "\n--- $a Objects moved to /tmp/Trash. ---"
 }}
 
 cmd Trash ${{
-	IFS="$(print '\n\b')"
+	IFS="${IFS#??}"
 	DEST=~/.local/trash
 	for i in $fx; do
 		d=$(dirname "$i")
@@ -88,13 +87,13 @@ cmd Trash ${{
 }}
 
 cmd paste %{{
-	IFS="$(print '\n\b')"
-	N="$(print '\n\b')"
+	IFS="${IFS#??}"
+	N="$IFS"
 	load=$(lf -remote 'load')
 	mode=$(echo "$load" | sed -n '1p')
 	list=$(echo "$load" | sed '1d')
 	if [[ $mode = copy ]]; then
-	    Op="cp${N}-nR"
+	    Op="cp${N}-R"
 	elif [[ $mode = move ]]; then
 	    Op="mv${N}-n"
 	fi
@@ -119,9 +118,9 @@ cmd paste %{{
 	lf -remote "send load${N}send clear"
 }}
 
-cmd Recol &{{
+cmd Recol %{{
 	w=$(tput cols)
-	N="$(print '\n\b')"
+	N="${IFS#??}"
 	if [ $w -le 75 ]; then
 		lf -remote "send $id set nopreview${N}send $id set ratios 1"
 	elif [ $w -le 220 ]; then
@@ -131,7 +130,7 @@ cmd Recol &{{
 	fi
 }}
 
-cmd Yankname &{{
+cmd Yankname %{{
 	if [ -z "$f" ]; then
 		t="$PWD"
 	else
@@ -149,15 +148,15 @@ map R :{{
 	%sleep .01 && lf -remote "send $id echoerr 'Configuration file (~/.config/lf/lfrc) loaded.'"
 }}
 
-map C !IFS="$(print '\n\b')"; vidir -v $fx
+map C !IFS="${IFS#??}"; vidir -v $fx
 
 map X !clear -x && "$f"
 
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls --color=always -lhd "$f"
 map A !clear -x && du -hd1 | sort -k 1 -rh && ls -aSlh | grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }'
 
-map Sp &xclip -o | LF_Select.sh
-map Sc &xclip -o -sel clipboard | LF_Select.sh
+map Sp %xclip -o | LF_Select.sh
+map Sc %xclip -o -sel clipboard | LF_Select.sh
 map Ss :EchoSelection
 
 map sn :set sortby natural
@@ -201,7 +200,7 @@ map ge cd /etc
 map gT cd /tmp
 map gm cd /mnt
 map gl cd ~/.local
-map gc cd ~/.local/etc
+map gc %lf -remote "send $id cd '${XDG_CONFIG_HOME:-'$HOME'}'"
 map gs cd ~/.local/scripts
 map gt cd ~/.local/trash
 map gd cd ~/Documents

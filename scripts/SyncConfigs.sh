@@ -3,29 +3,36 @@
 tilde() {
 	while read -r line ; do
 		echo "$line" |
-		sed 's/'"$(echo "$HOME" | sed 's/\//\\\//g')"'/~/g'
+		sed "s!'$HOME!'~!g"
 	done
 }
 
-Sync() {
+DEST="$HOME/Documents/ConfigFiles"
 
-Dest=~/Documents/ConfigFiles
+set -A Targets ~/.{config/{gsimplecal,zathura,dunst,lf,mpv,init.sh},local/scripts,tmux.conf,{vim,xinit,input}rc,profile} ~/{Notes,TODO}.txt
 
-echo -e "Copying to $Dest.\n" | tilde
+Update() {
+	local bsnm="$(basename "$1")"
+	if [ -f "$1" -a "$1" -nt "$2/$bsnm" ]; then
+		cp -pv "$1" "$2"
+		return 0
+	elif [ ! -d "$1" ]; then
+		return 1
+	fi
 
-set -A Targets ~/.{config/{gsimplecal,zathura,dunst,lf,mpv,fish,init.sh},local/scripts,tmux.conf,{vim,xinit,input}rc,profile} ~/{Notes,TODO}.txt
-total=${#Targets[@]}
-w=${#total}
+	mkdir -p "$2/$bsnm"
 
-for i in $(seq 1 $total); do
-	t="${Targets[i-1]}"
-	echo "$i" \""$t"\" |
-	awk '{printf("[%'"$w"'d]\t%s\n",$1,$2,$3)}' |
-	tr -d '"' | tilde
-	cp -upRv "$t" "$Dest" | tilde 1>&2
-done
+	find "$1" -maxdepth 1 |
+	    while read f; do
+		[[ $1 == $f ]] && continue
+		Update "$f" "$2/$bsnm"
+	    done
 }
 
-date 1>&2
-notify-send "$(Sync)"
-echo 1>&2
+date
+printf "\nCopying to $DEST:\n" | tilde
+for i in $(seq ${#Targets[@]}); do
+	t="${Targets[i-1]}"
+	Update "$t" "$DEST" | tilde
+done
+echo

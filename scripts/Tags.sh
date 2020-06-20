@@ -1,7 +1,6 @@
 #!/bin/ksh
 
-IFS="$(printf '\n\b')"
-echo -En $IFS | wc -c && exit
+IFS="${IFS#??}"
 
 Title() { basename $1 | sed 's/.mp[34]//g'; }
 

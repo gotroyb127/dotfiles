@@ -1,7 +1,7 @@
 #!/bin/ksh
 
-IFS="$(print '\n\b')"
-N="$(print '\n\b')"
+IFS="${IFS#??}"
+N="$IFS"
 
 [[ -z $@ ]] && exit 1
 
@@ -15,18 +15,18 @@ set -A Opener	zathura\
 		nvim
 
 set -A Group	'\.pdf$'\
-		'\.pptx$\|\.ppt$'\
-		'\.odf$\|\.odt$\|\.doc$\|\.docx$'\
+		'\.pptx$|\.ppt$'\
+		'\.odf$|\.odt$|\.doc$|\.docx$'\
 		'\.exe$'\
-		'\.png$\|\.jpg$\|\.webp$\|\.svg$\|\.tiff$'\
-		'\.mid$\|\.MID$'\
-		'\.mp[34]$\|\.mka$\|\.ogg$\|\.wav\|\.mkv$'\
+		'\.png$|\.jpg$|\.webp$|\.svg$|\.tiff$'\
+		'\.mid$|\.MID$'\
+		'\.mp[34]$|\.mka$|\.ogg$|\.wav|\.mkv$'\
 		''
 
 for t in $@; do
 	i=0
 	[[ -d $t ]] && continue
-	until echo $t | grep -q "${Group[i]}"; do
+	until echo $t | grep -Eq "${Group[i]}"; do
 		((++i))
 	done
 	Groups[i]="${Groups[i]}$t$N"

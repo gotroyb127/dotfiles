@@ -58,11 +58,13 @@ case "$1" in
 		Command '"cycle", "pause"' ;;
 	pause-after1)
 		Command '"set_property", "pause", false'
+		kill -9 $(pgrep -f 'Player.sh pause-after1' | grep -v $$)
 		t="$(echo "$(Info playtime-remaining) - 0.01" | bc)"
 		notify-send "Pausing mpv after $(SecsToTime $t)" "$(date +'%-I:%-M:%-S %p.')"
 		sleep "$t" &&
 		Command '"set_property", "pause", true';;
-	loop)	if [[ $(Info loop) = false ]]; then
+	loop)
+		if [[ $(Info loop) = false ]]; then
 			Command '"set_property", "loop", true'
 		else
 			Command '"set_property", "loop", false'
