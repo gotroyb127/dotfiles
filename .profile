@@ -17,8 +17,6 @@ export XDG_LOG_HOME="$HOME/.local/var/log"
 export EDITOR=nvim
 export PAGER=less
 export MANPAGER='nvim +Man!'
-#export PAGER='w3m -t 20 -s -num'
-# climenud: manage only the clipboard
 export CM_SELECTIONS=clipboard
 export LESSHISTFILE='-'
 
@@ -36,6 +34,6 @@ export LF_ICONS="tw=$dir :st=st :ow= :di=$dir :ln= :or= :pi=pi :so= 
 
 if [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]]; then
 	echo "Starting xorg..."
-	startx >> "/tmp/startx($XDG_VTNR).log"
+	startx >> "/tmp/startx($XDG_VTNR).log" 2>&1
 fi
 echo "---> Sourced ~/.profile"

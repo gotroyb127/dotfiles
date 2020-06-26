@@ -1,7 +1,7 @@
 HISTFILE="${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history"
 export HISTCONTROL="ignoredups:ignorespace"
 
-alias	='clear -x'\
+alias	='clear -x 2> /dev/null || clear'\
 	ls='ls --color=auto'\
 	la='ls -al'\
 	vim='nvim'\
@@ -46,7 +46,8 @@ SET_PS1 () {
 	}
 
 #	PS1="\e[${1:-2} q$B[$T\t$B] $U\u$N@$H\h $D\w\n\$(ExtStatus)$P> $N"
-	PS1="\e[${1:-2} q[\t] \u@\h \w\n\$(ExtStatus)\$ "
+#	PS1="\e[${1:-2} q[\t] \u@\h \w\n\$(ExtStatus)\$ "
+	PS1="\e[${1:-2} q[\t] \w\n\$(ExtStatus)\$ "
 }
 
 SET_PS1 4

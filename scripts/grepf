@@ -1,0 +1,5 @@
+#!/bin/sh
+
+IFS="
+"
+grep "$@" $(find -type f)

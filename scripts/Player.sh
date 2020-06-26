@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/sh
 
 Info() {
 	printf '{ "command": ["get_property", "%s"] }\n' "$1" |
@@ -17,7 +17,7 @@ SecsToTime() {
 Status() {
 	case "$(Info pause 2> /dev/null)" in
 		'true')  p="";;
-		'false') [[ $(Info loop) = true ]] && p=  || p="";;
+		'false') [ "$(Info loop)" = true ] && p=  || p="";;
 		*) exit 1;;
 	esac
 
@@ -32,7 +32,7 @@ Status() {
 	Duration=$(SecsToTime $(Info duration) )
 	RemPlTime=$(SecsToTime $(Info playtime-remaining) )
 	Speed=$(Info speed)
-	echo -n "$Title [$CurrTime . $Duration] (-$RemPlTime) x$Speed $p"
+	printf "%s" "$Title [$CurrTime . $Duration] (-$RemPlTime) x$Speed $p"
 }
 
 TimeToSecs() {
@@ -46,8 +46,8 @@ case "$1" in
 	position+)  Command '"seek", '"$2" ;;
 	position-)  Command '"seek", -'"$2" ;;
 	position)
-		echo | dmenu -p "[$(SecsToTime $(Info time-pos)) / $(SecsToTime $(Info duration))"'] Jump to: '\
-		| TimeToSecs |& read -p Secs
+		Secs=$(echo | dmenu -p "[$(SecsToTime $(Info time-pos)) / $(SecsToTime $(Info duration))"'] Jump to: '\
+		| TimeToSecs)
 		Command '"set_property", "time-pos", '"$Secs" ;;
 	speed+) Command '"add", "speed", '"$2";;
 	speed)  Command '"set_property", "speed", '"$2";;
@@ -59,12 +59,12 @@ case "$1" in
 	pause-after1)
 		Command '"set_property", "pause", false'
 		kill -9 $(pgrep -f 'Player.sh pause-after1' | grep -v $$)
-		t="$(echo "$(Info playtime-remaining) - 0.01" | bc)"
+		t="$(echo "$(Info playtime-remaining) - 0.5" | bc)"
 		notify-send "Pausing mpv after $(SecsToTime $t)" "$(date +'%-I:%-M:%-S %p.')"
 		sleep "$t" &&
 		Command '"set_property", "pause", true';;
 	loop)
-		if [[ $(Info loop) = false ]]; then
+		if [ "$(Info loop)" = false ]; then
 			Command '"set_property", "loop", true'
 		else
 			Command '"set_property", "loop", false'

@@ -2,7 +2,7 @@
 
 IFS="
 "
-clear -x
+clear -x 2> /dev/null || clear
 box='==========----------------------------------------------------------------------=========='
 echo -n "$box"
 for f in $(find ~/.config/mpv/watch_later -type f); do

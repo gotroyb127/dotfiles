@@ -15,7 +15,9 @@ set findlen 2
 set anchorfind
 set scrolloff 5
 set previewer ~/.local/etc/lf/scope.sh
-set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%h\033[0;38;5;7m]:\033[1;38;5;105m%w/\033[0;38;5;15m%f\033[0m"
+#set promptfmt "\033[0;38;5;7m[\033[0;38;5;45m%u\033[0;38;5;195m@\033[0;38;5;42m%h\033[0;38;5;7m]:\033[1;38;5;105m%w/\033[0;38;5;15m%f\033[0m"
+#set promptfmt "\033[0;38;5;45m %u\033[0;38;5;195m@\033[0;38;5;42m%h \033[1;38;5;105m%w/\033[0;38;5;15m%f\033[0m"
+set promptfmt " \033[0;38;5;105m%w/\033[0;38;5;15m%f\033[0m"
 set shell ksh
 
 #cmd on-cd $cd "$(dirname "$f")"
@@ -35,7 +37,7 @@ cmd SelRecurs %{{
 
 cmd delete !{{
 	IFS="${IFS#??}"
-	clear -x
+	clear -x 2> /dev/null || clear
 	echo -n "---\tFiles to be deleted:\t---\n\n$(echo "$fx" | sed "s!^$HOME!~!")\n\nDelete? [Y/n]: "
 	read ans
 	[[ $ans = !(y|Y) ]] && exit 0;
@@ -61,7 +63,7 @@ cmd delete !{{
 		done
 		mv -i "$d/$i" "$newn"
 	done
-	echo -e "\n--- $a Objects moved to /tmp/Trash. ---"
+	echo -en "\n--- $a Objects moved to /tmp/Trash. ---"
 }}
 
 cmd Trash ${{
@@ -136,11 +138,12 @@ cmd Yankname %{{
 	else
 		t="$f"
 	fi
-	basename "$t" | tr -d '\n' | xclip
-	echo -n "$t" | xclip -sel clipboard
+	basename "$t" | tr -d '\n' | xsel
+	echo -n "$t" | xsel -b
 }}
 
-cmd EchoSelection !clear -x && echo "$fx" | sort -n
+cmd EchoSelection !clear -x 2> /dev/null || clear; echo "$fx" | sort -n;
+cmd RE-sel &LF_Pattern.sh $@ | LF_Select.sh
 
 cmd Resource :source ~/.config/lf/lfrc
 map R :{{
@@ -150,13 +153,17 @@ map R :{{
 
 map C !IFS="${IFS#??}"; vidir -v $fx
 
-map X !clear -x && "$f"
+map X !clear -x 2> /dev/null || clear; "$f"
 
-map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls --color=always -lhd "$f"
-map A !clear -x && du -hd1 | sort -k 1 -rh && ls -aSlh | grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }'
+map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls -lhd "$f"
+map A !{{
+	clear -x 2> /dev/null || clear;
+	du -hd1 | sort -k 1 -rh && ls -aSlh |
+	grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }'
+}}
 
-map Sp %xclip -o | LF_Select.sh
-map Sc %xclip -o -sel clipboard | LF_Select.sh
+map Sp %xsel -o | LF_Select.sh
+map Sc %xsel -b -o | LF_Select.sh
 map Ss :EchoSelection
 
 map sn :set sortby natural
@@ -168,7 +175,8 @@ map Ja %LF_Jump.sh
 
 map <delete> :Trash
 map Y :Yankname; echoerr Filename Yanked.
-map M :SelRecurs
+map V :SelRecurs
+map <c-space> :toggle; up
 map L :OpenSel
 
 map i $nvim -MR "$f"

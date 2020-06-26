@@ -1,7 +1,8 @@
 #!/usr/bin/env mksh
 
 set -o noclobber -o noglob -o nounset -o pipefail
-IFS=$'\n'
+IFS='
+'
 
 ## If the option `use_preview_script` is set to `true`,
 ## then this script will be called and its output will be displayed in ranger.
@@ -35,7 +36,7 @@ PV_WIDTH="$(( $(tput cols)*11 / 16 -3 ))"          # Width of the preview pane (
 PV_HEIGHT="${2}"         # Height of the preview pane (number of fitting characters)
 #IMAGE_CACHE_PATH="${4}"  # Full path that should be used to cache image preview
 #PV_IMAGE_ENABLED="${5}"  # 'True' if image previews are enabled, 'False' otherwise.
-PV_IMAGE_ENABLED="False"  # 'True' if image previews are enabled, 'False' otherwise.
+#PV_IMAGE_ENABLED="False"  # 'True' if image previews are enabled, 'False' otherwise.
 
 FILE_EXTENSION="${FILE_PATH##*.}"
 FILE_EXTENSION_LOWER="$(printf "%s" "${FILE_EXTENSION}" | tr '[:upper:]' '[:lower:]')"
@@ -46,8 +47,8 @@ HIGHLIGHT_TABWIDTH=${HIGHLIGHT_TABWIDTH:-8}
 HIGHLIGHT_STYLE=${HIGHLIGHT_STYLE:-pablo}
 HIGHLIGHT_WRAP='-V' # -W:fill with tabs, -V simple
 HIGHLIGHT_OPTIONS="--replace-tabs=${HIGHLIGHT_TABWIDTH} --style=${HIGHLIGHT_STYLE} ${HIGHLIGHT_WRAP} -J ${PV_WIDTH} ${HIGHLIGHT_OPTIONS:-}"
-OPENSCAD_IMGSIZE=${RNGR_OPENSCAD_IMGSIZE:-1000,1000}
-OPENSCAD_COLORSCHEME=${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}
+#OPENSCAD_IMGSIZE=${RNGR_OPENSCAD_IMGSIZE:-1000,1000}
+#OPENSCAD_COLORSCHEME=${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}
 
 handle_extension() {
     case "${FILE_EXTENSION_LOWER}" in
@@ -74,7 +75,7 @@ handle_extension() {
             pdftotext -l 10 -nopgbrk -q -- "${FILE_PATH}" - | \
               fmt -w "$(tput cols)"
 	    if [[ -n $TEXT ]]; then
-	    	echo $TEXT && exit 5
+	    	echo "$TEXT" && exit 5
 	    else
 		mutool draw -F txt -i -- "${FILE_PATH}" 1-10 | \
 		  fmt -w "${PV_WIDTH}" && exit 5

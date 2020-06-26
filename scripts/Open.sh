@@ -42,4 +42,3 @@ for i in $(seq 0 $((${#Group[@]}-1))); do
 		${Opener[i]} ${Groups[i]}
 	fi
 done
-

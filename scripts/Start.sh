@@ -28,6 +28,6 @@ if [ -n "$Updating" ] ; then
 	notify-send -t 15000 $'Time for Updates!!!\nPacman: '\
 \	"$UpsNum updates available." \
 	"$Updates"
-	st tmux new 'sudo pacman -Su && read'
+	st tmux new 'sudo pacman -Su && echo '--- ---' && read'
 	pacman -Quq || echo "$cday" > "$cache" && echo "Updating cache file ($cache)."
 fi

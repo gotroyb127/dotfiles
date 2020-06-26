@@ -31,7 +31,7 @@ Print() {
 # RTMIN: 34
 for i in $Ns; do
 	s="$((31-Signal[i]))"
-	trap "echo 'Received signal $s'; HandleSignal $i" $s
+	trap "HandleSignal $i" $s
 	Refresh $i
 done
 
