@@ -33,6 +33,6 @@ unclutter --timeout 1 --ignore-scrolling &
 
 xsidle.sh 'slock' 'systemctl suspend' &
 Start.sh &
-dwmblocks.sh &
+dwmblocks &
 
 exec dwm

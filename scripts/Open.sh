@@ -1,7 +1,8 @@
 #!/bin/ksh
 
-IFS="${IFS#??}"
-N="$IFS"
+N="
+"
+IFS="$N"
 
 [[ -z $@ ]] && exit 1
 
