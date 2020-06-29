@@ -12,4 +12,4 @@ else
 	BAT="$BAT"; Charg='!'
 fi
 
-echo -n "  ${BAT}$Charg"
+echo -n "${BAT}$Charg"

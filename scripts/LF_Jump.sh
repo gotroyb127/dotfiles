@@ -1,10 +1,17 @@
-#!/bin/mksh
+#!/bin/sh
 
 echo -n "Jump to pattern: "
 read Pattern
 i=0
-find "$PWD" $@ | grep "[^/]*$Pattern[^/]*$" | sort |&
-while read -p Matches[i]; do
+#find "$PWD" $@ | grep "[^/]*$Pattern[^/]*$" | sort |&
+#while read -p Matches[i]; do
+#	((++i))
+#done
+
+IFS="
+"
+for Matches[i] in $(find "$PWD" $@ | grep "[^/]*$Pattern[^/]*$" | sort);
+do
 	((++i))
 done
 

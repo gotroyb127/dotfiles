@@ -35,7 +35,7 @@ done
 
 for i in $(seq 0 $((${#Group[@]}-1))); do
 	[[ -z ${Groups[i]} ]] && continue
-	echo "${Opener[i]} ${Groups[i]}"
+	echo ${Opener[i]} "$N${Groups[i]}"
 	if [[ $i -le 4 ]]; then
 		${Opener[i]} ${Groups[i]} 2> /dev/null |
 		    xsel -b &

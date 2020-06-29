@@ -12,4 +12,4 @@ case $(nmcli radio wifi) in
 	*)          wifis=' 睊 ? ';;
 esac
 
-printf " $wifis$st"
+printf "$wifis$st"

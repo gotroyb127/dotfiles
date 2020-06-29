@@ -32,8 +32,8 @@ dir='';music='';midi='ﱘ';vid='辶';img='';book='';ex='';txt='�
 
 export LF_ICONS="tw=$dir :st=st :ow= :di=$dir :ln= :or= :pi=pi :so= :cd= :cd= :bd=bd :su=su :sg=sg :dt=dt :fi=$fi :ex=$ex :*.opus=$music :*.ogg=$music :*.m4a=$music :*.mp3=$music :*.midi=$midi :*.mid=$midi :*.MID=$midi :*.mkv=$vid :*.mp4=$vid :*.webm=$vid :*.mpeg=$vid :*.avi=$vid :*.jpg=$img :*.jpeg=$img :*.png=$img :*.pdf=$book :*.djvu=$book :*.epub=$book :*.txt=$txt :*.zip=$arc :*.rar=$arc :*.7z=$arc :*.gz=$arc :*.xz=$arc :*.exe= :*.doc=$word :*.docx=$word :*.odt=$word :*.ppt=$ppt :*.pptx=$ppt :*.py= :*.c=$txt :*.cpp=$txt :*.h=$txt :*.hpp=$txt :*.go=$txt :*.sh=$txt :*.fish=$txt :"
 
-if [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]]; then
+if [ -z "$DISPLAY" -a "$(tty)" = /dev/tty1 ]; then
 	echo "Starting xorg..."
-	startx >> "/tmp/startx($XDG_VTNR).log" 2>&1
+	startx >> "/tmp/startx(tty1).log" 2>&1
 fi
 echo "---> Sourced ~/.profile"
