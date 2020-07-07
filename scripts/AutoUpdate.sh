@@ -13,8 +13,8 @@ cday="$(date +%j)"
 
 Updating=
 if [ -f "$cache" ]; then
-	echo "Days passed since last auto-update: $passed."
 	passed="$((cday - $(cat "$cache")))"
+	echo "Days passed since last auto-update: $passed."
 	[[ $passed -ge $Invl || $passed -le -$Invl ]] &&
 	Updating=True
 else
