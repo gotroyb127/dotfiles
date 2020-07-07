@@ -8,4 +8,4 @@ case "$2" in
 esac
 
 RE="$1"
-sed "s/\($RE\)/$(printf '\e[01;3'${C}m)\1$(printf '\e[0m')/g"
+sed "s\`\($RE\)\`$(printf '\e[01;3'${C}m)\1$(printf '\e[0m')\`g"

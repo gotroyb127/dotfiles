@@ -60,7 +60,7 @@ rsync -ra --info=progress2
 wine{,-mono} lib32-{mpg123,libpulse}
 
 # Mount mtp devices: using the simple-mptfs package (AUR)
-simple-mtpfs --device 1 -o allow_other /mnt/Android -o uid="$(id -n)" -o gid="$(id -g)"
+simple-mtpfs --device 1 -o allow_other /mnt/Android -o uid="$(id -u)" -o gid="$(id -g)"
 fusermount -u /mnt/Android
 
 # Metadata-Tag manipulators
@@ -79,4 +79,4 @@ tagutil -- can change metadata values
 - - - - - 
 
 # List of essential packages
-{linux,linux-firmware,base-devel,moreutiles,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils {xdotool,shotgun,clipmenu,dunst,highlight} ttf-{fira-code,nerd-fonts-symbols-mono}
+{linux,linux-firmware,base-devel,moreutiles,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils {xdotool,xsel,shotgun,clipmenu,dunst,highlight} ttf-{fira-code,nerd-fonts-symbols-mono}

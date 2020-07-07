@@ -1,33 +1,34 @@
 #!/bin/ksh
 
+# Synaptic settings for touchpad
+synclient TapButton1=1\
+	TapButton2=3\
+	TapButton3=2\
+	HorizTwoFingerScroll=on\
+	VertTwoFingerScroll=on\
+	MinSpeed=0.5\
+	MaxSpeed=3\
+	AccelFactor=0.2\
+	ClickTime=50\
+	VertScrollDelta=-115\
+	HorizScrollDelta=-60\
+	VertTwoFingerScroll=1\
+	HorizTwoFingerScroll=1\
+	PalmDetect=1\
+
+# Xotg settings
+xset m 11/2 0
+xset s 900 600
+xset s noblank
+xset r rate 250 25
+setxkbmap -layout us,gr -option grp:alt_shift_toggle
+
+# xrandr settings
+#xrandr --output HDMI1 --primary
+#xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsync
+#xrandr --addmode HDMI1 "1920x1080_60.00"
+#xrandr --output HDMI1 --mode 1920x1080_60.00
+
+
 # Show available updates on startup.
-sleep .5
-
-sudo pacman -Sy &&
-sudo pacman -Fy || exit 1
-
-cachedir="${XDG_CACHE_HOME:-"$HOME/.cache"}"
-cache="$cachedir/AutoUpdated"
-Invl=5
-
-cday="$(date +%j)"
-
-Updating=
-if [ -f "$cache" ]; then
-	passed="$((cday - $(cat "$cache")))"
-	echo "Days passed since last auto-update: $passed."
-	[[ $passed -ge $Invl || $passed -le -$Invl ]] &&
-	Updating=True
-else
-	Updating=True
-fi
-
-if [ -n "$Updating" ] ; then
-	Updates="$(pacman -Qu | awk '{ printf("%-23s %s\n", $1, $NF) }' )"
-	UpsNum="$(echo "$Updates" | wc -l)"
-	notify-send -t 15000 $'Time for Updates!!!\nPacman: '\
-\	"$UpsNum updates available." \
-	"$Updates"
-	st tmux new 'sudo pacman -Su && echo '--- ---' && read'
-	pacman -Quq || echo "$cday" > "$cache" && echo "Updating cache file ($cache)."
-fi
+AutoUpdate.sh

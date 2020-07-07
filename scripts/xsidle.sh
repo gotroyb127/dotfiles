@@ -3,19 +3,18 @@
 # Use xset s $time to control the timeout when this will run.
 #
 
+b0="$(basename $0)"
 if [ $# -lt 1 ];
 then
-	printf "usage: %s 'LockCmd' 'SuspendCmd'\n" "$(basename "$0")" 2>&1
+	printf "usage: %s 'LockCmd' 'SuspendCmd'\n" "$b0" 2>&1
 	exit 1
 fi
 LockCmd="$1"
 SuspendCmd="$2"
 
-#if [ $(xssstate -s) = "disabled" ]; then
-#	notify-send "$0 exited" \
-#	    "Because screensaver is deactivated"
-#	exit 1
-#fi
+log() {
+	echo "$b0: $(date) $1" >&2
+}
 
 ToLock=15
 ToSusp=600
@@ -29,9 +28,10 @@ while true; do
 		sleep $BigSleepT
 	elif [ $tosleep -eq 0 ];
 	then
+		log "Screensaver activated."
 		sleep $ToLock
 		[ "$(xssstate -s)" != 'on' ] && continue
-		echo "$0: $(date)" " Executing LockCmd: \"$LockCmd\"." >&2
+		log "Executing LockCmd: '$LockCmd'."
 		$LockCmd &
 
 		[ -n "$SuspendCmd" ] &&
@@ -44,7 +44,7 @@ while true; do
 			sleep $SleepT
 		    done
 		[ -z "$Waked" ] &&
-		    echo "$0: $(date)" " Executing SuspendCmd: \"$SuspendCmd\"." >&2 && 
+		    log "Executing SuspendCmd: '$SuspendCmd'."
 		    $SuspendCmd
 		Waked=
 

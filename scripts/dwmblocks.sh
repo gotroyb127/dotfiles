@@ -40,4 +40,3 @@ while true; do
 	Print
 	sleep .9
 done
-
