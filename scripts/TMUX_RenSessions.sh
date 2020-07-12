@@ -6,6 +6,6 @@ echo $sessions
 new=1
 for old in $sessions
 do
-  tmux rename -t $old $new
-  ((new++))
+	tmux rename -t $old $new
+	((new++))
 done

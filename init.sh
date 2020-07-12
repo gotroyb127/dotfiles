@@ -1,4 +1,5 @@
 HISTFILE="${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history"
+HISTSIZE=1000
 export HISTCONTROL="ignoredups:ignorespace"
 
 alias	='clear -x 2> /dev/null || clear'\
@@ -6,7 +7,7 @@ alias	='clear -x 2> /dev/null || clear'\
 	la='ls -al'\
 	vim='nvim'\
 	view='nvim -MR'\
-	mpvs='mpv --input-ipc-server=/tmp/mpvsocket'\
+	mpvs="mpv --input-ipc-server=$MPVSOCKET"\
 	CompileInstall='make clean && make && sudo make install && make clean'\
 	BuildLf='go mod vendor; version=r$pkgver ./gen/build.sh -mod=vendor -trimpath'\
 	mksh='env -i mksh'\

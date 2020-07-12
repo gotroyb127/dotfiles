@@ -3,7 +3,6 @@
 l='10'
 prompt='Choose option:'
 
-
 Opt0='0: rEBOOT'
 Opt1='1: pOWEROFF'
 Opt2='2: hIBERNATE'

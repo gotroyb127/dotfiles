@@ -1,11 +1,19 @@
 #!/bin/sh
 
-# Reads file names from stdin and selects them in lf.
+MAX=200
 
-N="
-"
+ToggleSel() {
+	lf -remote "send $id togglesel$F"
+	F= ; i=0
+}
+
+F= ; i=0
 while read -r file; do
 	[ -z "$file" ] && continue
-	lf -remote "send $id select '$file'${N}send $id toggle"
+
+	F="$F \"$file\""
+
+	[ "$((++i))" -ge $MAX ] &&
+	    ToggleSel
 done
-lf -remote "send $id select '$f'"
+ToggleSel

@@ -2,14 +2,14 @@
 
 Info=$(acpi -b)
 
-BAT="$(echo "$Info" | grep -E -o '[0-9]{2,}%' | tr -d '%' )"
+BAT="$(echo "$Info" | sed 's/.*[^0-9]\+\([0-9]\+\)%.*/\1/')"
 
-if [ "$(echo "$Info" | grep Charging | wc -l)" -ge 1 ]; then
-	BAT="$BAT"; Charg=''
-elif [ "$(echo "$Info" | grep "100"  | wc -l)" -ge 1 ]; then
+if $(echo "$Info" | grep -q "100"); then
 	BAT=" $BAT"; Charg=''
+elif $(echo "$Info" | grep -q Charging); then
+	BAT="$BAT"; Charg=''
 else
 	BAT="$BAT"; Charg='!'
 fi
 
-echo -n "${BAT}$Charg"
+printf "${BAT}$Charg"

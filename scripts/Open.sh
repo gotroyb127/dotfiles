@@ -1,42 +1,42 @@
 #!/bin/ksh
 
-N="
-"
+N='
+'
 IFS="$N"
-
 [[ -z $@ ]] && exit 1
 
-set -A Opener	zathura\
-		loimpress\
-		lowriter\
-		wine\
-		"sxiv$N-o"\
-		"timidity$N-in"\
-		"mpv$N--input-ipc-server=/tmp/mpvsocket"\
-		nvim
+set -A Opener\
+	zathura\
+	loimpress\
+	lowriter\
+	"sxiv$N-o"\
+	"timidity$N-in"\
+	"mpv$N--input-ipc-server=$MPVSOCKET"\
+	nvim
 
-set -A Group	'\.pdf$'\
-		'\.pptx$|\.ppt$'\
-		'\.odf$|\.odt$|\.doc$|\.docx$'\
-		'\.exe$'\
-		'\.png$|\.jpg$|\.webp$|\.svg$|\.tiff$'\
-		'\.mid$|\.MID$'\
-		'\.mp[34]$|\.mka$|\.ogg$|\.wav|\.mkv$'\
-		''
+set -A Group\
+	'*.pdf'\
+	'@(*.pptx|*.ppt)'\
+	'@(*.od[ft]|*.doc|*.docx)'\
+	'@(*.png|*.jpg|*.webp|*.svg|*.tiff)'\
+	'@(*.mid|*.MID)'\
+	'@(*.mp[34]|*.mk[av]|*.ogg|*.wav)'\
+	'@(*)'\
 
 for t in $@; do
 	i=0
 	[[ -d $t ]] && continue
-	until echo $t | grep -Eq "${Group[i]}"; do
+	until eval "[[ \$t = ${Group[i]} ]]"; do
 		((++i))
 	done
-	Groups[i]="${Groups[i]}$t$N"
+	Groups[i]="${Groups[i]}$t$N";
 done
 
-for i in $(seq 0 $((${#Group[@]}-1))); do
+i=-1; m="${#Group[@]}"
+while [[ $((i++)) -lt $m ]]; do
 	[[ -z ${Groups[i]} ]] && continue
 	echo ${Opener[i]} "$N${Groups[i]}" | pathi '/' 0
-	if [[ $i -le 4 ]]; then
+	if [[ $i -le 3 ]]; then
 		${Opener[i]} ${Groups[i]} 2> /dev/null |
 		    xsel -b &
 	else

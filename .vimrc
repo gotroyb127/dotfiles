@@ -24,7 +24,8 @@ else
 endif
 
 autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
-colorscheme elflord
+" colorscheme elflord
+colorscheme pablo
 syntax enable
 
 set statusline=\ %<%f\ (%F)\ %h%m%r%=\|%-14.(%4.l,%-6.(%c%V%)%6.L\|%)\ %P\ 
@@ -55,6 +56,8 @@ filetype indent off
 set autoindent
 set tabstop=8
 set shiftwidth=8
+autocmd FileType sh set tabstop=4
+autocmd FileType sh set shiftwidth=4
 
 " Faster multi window management inside vim
 nnoremap <M-q> <C-W>q

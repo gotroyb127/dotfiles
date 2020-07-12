@@ -1,7 +1,7 @@
 #!/bin/sh
 
-IFS="
-"
+IFS='
+'
 #export  SED_CMD=$'-e\ts/\ I[.] /\ 1. /g\t'\
 #\	\	$'-e\ts/\ II[.] /\ 2. /g\t'\
 #\	\	$'-e\ts/\ III[.] /\ 3. /g\t'\

@@ -31,8 +31,11 @@ Update() {
 
 date
 printf "\nCopying to $DEST:\n" | tilde
-for i in $(seq ${#Targets[@]}); do
-	t="${Targets[i-1]}"
+
+i=-1; M="${#Targets[@]}"
+while [ $((++i)) -lt $M ]; do
+	t="${Targets[i]}"
 	Update "$t" "$DEST" | tilde
 done
+
 echo

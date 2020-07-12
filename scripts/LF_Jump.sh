@@ -2,24 +2,14 @@
 
 echo -n "Jump to pattern: "
 read Pattern
-i=0
-#find "$PWD" $@ | grep "[^/]*$Pattern[^/]*$" | sort |&
-#while read -p Matches[i]; do
-#	((++i))
-#done
 
-IFS="
-"
-for Matches[i] in $(find "$PWD" $@ | grep "[^/]*$Pattern[^/]*$" | sort);
+i=0
+IFS='
+'
+for Matches[i] in $(unset IFS; LF_Pattern.sh $@ $Pattern);
 do
 	((++i))
 done
-
-#find "$PWD" $1 $2 | sort |&
-#while read -p f; do
-#	basename "$f" | grep -q "$Pattern" &&
-#	    Matches[i]="$f" && ((++i))
-#done
 
 [ "$i" -eq 0 ] && printf '\e[7;31;47m%s\e[0m' "Pattern not found" && exit 1
 [ "$i" -eq 1 ] && echo 'Only one match found.' && E=' ' || E=
@@ -34,7 +24,7 @@ c=0
 LfSelect
 [ -n "$E" ] && exit 0
 
-while echo -n "($((c+1))/$i)  [N/n]: " && read ans
+while echo -n "Matches for '$Pattern': ($((c+1))/$i) [N/n]: " && read ans
 do
 	case "$ans" in
 	(n*|j*)

@@ -1,10 +1,11 @@
 #!/bin/sh
 
-if [ "$1" = "-type" ]; then
-	f_args='-type f'
-	shift 2
-else
-	f_args=
-fi
+f_args=
+case "$1" in
+	(-type|-mindepth|-maxdepth)
+		f_args="$1 $2"
+		shift 2;;
+esac
+[ $# -ge 2 ] && { opts=$1; shift; }
 
-find "$PWD" $f_args | grep "[^/]*$@[^/]*$" | sort
+find "$PWD" -mindepth 1 $f_args | grep $opts "[^/]*$@[^/]*$" | sort

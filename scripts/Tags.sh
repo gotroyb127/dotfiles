@@ -1,6 +1,7 @@
 #!/bin/ksh
 
-IFS="${IFS#??}"
+IFS='
+'
 
 Title() { basename $1 | sed 's/.mp[34]//g'; }
 
