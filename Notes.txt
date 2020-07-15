@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
 # Commonly used packages
 moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) timidity++ ttf-fira-code ttf-nerd-fonts-?
@@ -21,7 +21,7 @@ sleep 1 && xdotool mousemove 1200 700 click 1 sleep 1 mousemove 100 950 click 1
 	PS1="${c1}[${c2}\u${c6}@${c3}\H${c7}:${c4}\w${c1}]$c5\$ ${end}"
 	unset c{1..7} end
 
-# Firefox diable ui animation: Go to about:config and add 
+# Firefox: diable ui animation: Go to about:config and add
 	ui.prefersReducedMotion equal to 1.
 
 # load vmware modules
@@ -79,4 +79,4 @@ tagutil -- can change metadata values
 - - - - - 
 
 # List of essential packages
-{linux,linux-firmware,base-devel,moreutiles,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils {xdotool,xsel,shotgun,clipmenu,dunst,highlight} ttf-{fira-code,nerd-fonts-symbols-mono}
+{linux,linux-firmware,base-devel,moreutiles,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils {xdotool,xsel,shotgun,clipmenu,dunst,highlight,mediainfo} ttf-{fira-code,nerd-fonts-symbols-mono}

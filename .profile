@@ -1,6 +1,4 @@
 #!/bin/sh
-# -_-
-#
 
 echo "Sourcing ~/.profile\t"
 

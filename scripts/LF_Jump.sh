@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo -n "Jump to pattern: "
+echo -n 'Jump to pattern: '
 read Pattern
 
 i=0

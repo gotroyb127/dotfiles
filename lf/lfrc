@@ -1,5 +1,5 @@
 #!/bin/sh
-# ^^^ trick vim to syntax highlihght
+# ^^^^^^^ trick vim to syntax highlihght
 
 set hidden
 set color256
@@ -15,15 +15,55 @@ set findlen 2
 set anchorfind
 set scrolloff 5
 set previewer ~/.local/etc/lf/scope.sh
-set promptfmt " \033[0;38;5;105m%w/\033[0;38;5;15m%f\033[0m"
 set shell ksh
 set ifs "\n"
 
 #cmd on-cd $cd "$(dirname "$f")"
-cmd open ${{ Open.sh "$f" }}
-cmd OpenSel ${{ Open.sh "$fx" }}
+cmd open          $Open.sh "$f"
+cmd OpenSel       $Open.sh "$fx"
+cmd EchoSelection !clear -x 2> /dev/null || clear; echo "$fx" | sort -n;
+cmd SelRecurs     &find "$f" -type f | sort | LF_Select.sh
+cmd REsel         &LF_Pattern.sh "$@" | LF_Select.sh
+cmd Resource      :source ~/.config/lf/lfrc
+cmd UpdateLMark   :cmd-insert ":mark-save\n'"; cmd-delete-home
 
-cmd SelRecurs &{{ find "$f" -mindepth 1 | sort | LF_Select.sh }}
+cmd Yankname &{{
+	[ -z "$f" ] && t="$PWD" || t="$f"
+	basename "$t" | tr -d '\n' | xsel
+	echo -n "$t" | xsel -b
+}}
+
+cmd SetPrompt &{{
+	ID="\033[38;5;123m$id"
+	CO="\033[38;5;252m:"
+	LV="\033[38;5;84m$LF_LEVEL"
+	W="\033[38;5;105m"
+	F="\033[38;5;15m"
+	N="\033[0m"
+
+#	unset ID id CO
+	lf -remote "send $id set promptfmt \
+	\"($ID$CO$LV$N) $W%w/$F%f\""
+}}
+
+cmd Recol &{{
+	w=$(tput cols)
+	N="$IFS"
+	if [ $w -le 75 ]; then
+		lf -remote "send $id set nopreview${N}send $id set ratios 1"
+	elif [ $w -le 220 ]; then
+		lf -remote "send $id set ratios 11:16${N}send $id set preview"
+	else
+		lf -remote "send $id set ratios 7:16${N}send $id set preview"
+	fi
+}}
+
+cmd Trash &{{
+	{ N="$IFS"
+	LF_Move.sh "mv${N}-v${N}--" "$TRASH" NO_DUPS
+	lf -remote "send load${N}"
+	} | LF_Log.sh
+}}
 
 cmd delete !{{
 	N="$IFS"
@@ -35,13 +75,6 @@ cmd delete !{{
 	[ ! -e "$TMPTRASH" ] && mkdir -p "$TMPTRASH" && chmod 777 "$TMPTRASH"
 	LF_Move.sh "mv${N}-v${N}--" "$TMPTRASH"
 	printf "\n--- Targets moved to $TMPTRASH. ---"
-}}
-
-cmd Trash &{{
-	{ N="$IFS"
-	LF_Move.sh "mv${N}-v${N}--" "$TRASH" NO_DUPS
-	lf -remote "send load${N}"
-	} | LF_Log.sh
 }}
 
 cmd paste &{{
@@ -62,37 +95,6 @@ cmd paste &{{
 	} | LF_Log.sh
 }}
 
-cmd Recol &{{
-	w=$(tput cols)
-	N="$IFS"
-	if [ $w -le 75 ]; then
-		lf -remote "send $id set nopreview${N}send $id set ratios 1"
-	elif [ $w -le 220 ]; then
-		lf -remote "send $id set ratios 11:16${N}send $id set preview"
-	else
-		lf -remote "send $id set ratios 7:16${N}send $id set preview"
-	fi
-}}
-
-cmd Yankname &{{
-	[ -z "$f" ] && t="$PWD" || t="$f"
-	basename "$t" | tr -d '\n' | xsel
-	echo -n "$t" | xsel -b
-}}
-
-cmd EchoSelection !clear -x 2> /dev/null || clear; echo "$fx" | sort -n;
-cmd REsel &LF_Pattern.sh $@ | LF_Select.sh
-
-cmd Resource :source ~/.config/lf/lfrc
-map R :{{
-	Resource
-	&sleep .5 && lf -remote "send $id echo 'Configuration file (~/.config/lf/lfrc) loaded.'"
-}}
-
-map C !vidir -v $fx
-
-map X !clear -x 2> /dev/null || clear; "$f"
-
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls -lhd "$f"
 map A !{{
 	clear -x 2> /dev/null || clear;
@@ -100,12 +102,10 @@ map A !{{
 	grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }'
 }}
 
-map Sp &xsel -o | LF_Select.sh
-map Sc &xsel -b -o | LF_Select.sh
-map Ss :EchoSelection
-map Sg :push :glob-select<space>
-map SG :push :glob-unselect<space>
-map Sr :push :REsel<space>
+map R :{{
+	Resource
+	&sleep .5 && lf -remote "send $id echo 'Configuration file (~/.config/lf/lfrc) loaded.'"
+}}
 
 map sn :set sortby natural
 map sN :set sortby name
@@ -114,23 +114,26 @@ map Jj %LF_Jump.sh -type f
 map Jd %LF_Jump.sh -type d
 map Ja %LF_Jump.sh
 
-map <delete> :Trash
+map i $nvim -MR "$f"
+map E :push $nvim<space>""<left>
+map D :push $mkdir<space>""<left>
+map x :push $chmod<space>+x<space>"$f"
+map X !clear -x 2> /dev/null || clear; "$f"
+map C !vidir -v $fx
+
+map <c-y> :up
+map <c-e> :down
+map <c-l> :Recol
+map <esc> :cmd-escape
+map <c-r> :redraw; reload
+map c     :clear; unselect
+
+map <delete>  :Trash
+map <c-space> :toggle; up
+map t :toggle
 map Y :Yankname; echo Filename Yanked.
 map V :SelRecurs
-map <c-space> :toggle; up
 map L :OpenSel
-
-map i $nvim -MR "$f"
-map E push $nvim<space>""<left>
-map D push $mkdir<space>""<left>
-map x push $chmod<space>+x<space>"$f"
-
-map <c-y> up
-map <c-e> down
-map <c-l> :Recol
-map <esc> cmd-escape
-map <c-r> :redraw; reload
-map c :clear; unselect
 
 map r
 map re :rename; cmd-word-back; cmd-left
@@ -144,16 +147,24 @@ map bn :set relativenumber!
 map bN :set number!
 map bi :set icons!
 
-map gr cd /
-map ge cd /etc
-map gT cd /tmp
-map gm cd /mnt
-map gl cd ~/.local
-map gc &lf -remote "send $id cd '${XDG_CONFIG_HOME:-\"$HOME/.config\"}'"
-map gs cd ~/.local/scripts
-map gt cd ~/.local/trash
-map gd cd ~/Documents
-map gD cd ~/Downloads
+map Sp &xsel -o | LF_Select.sh
+map Sc &xsel -bo | LF_Select.sh
+map Ss :EchoSelection
+map Sg :push :glob-select<space>
+map SG :push :glob-unselect<space>
+map Sr :push :REsel<space>
+
+map gr :UpdateLMark; cd /
+map ge :UpdateLMark; cd /etc
+map gT :UpdateLMark; cd /tmp
+map gm :UpdateLMark; cd /mnt
+map gh :UpdateLMark; cd
+map gl :UpdateLMark; cd ~/.local
+map gs :UpdateLMark; cd ~/.local/scripts
+map gt :UpdateLMark; cd ~/.local/trash
+map gd :UpdateLMark; cd ~/Documents
+map gD :UpdateLMark; cd ~/Downloads
+map gc :UpdateLMark; &lf -remote "send $id cd '${XDG_CONFIG_HOME:-\"$HOME/.config\"}'"
 
 set ratios 11:16
-Recol
+:Recol; SetPrompt

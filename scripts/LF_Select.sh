@@ -3,7 +3,7 @@
 MAX=200
 
 ToggleSel() {
-	lf -remote "send $id togglesel$F"
+	lf -remote "send $id toggle$F"
 	F= ; i=0
 }
 
@@ -15,5 +15,8 @@ while read -r file; do
 
 	[ "$((++i))" -ge $MAX ] &&
 	    ToggleSel
-done
+done << EOF
+$(sed 's/"/\\"/g')
+EOF
+
 ToggleSel

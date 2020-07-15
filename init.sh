@@ -2,7 +2,8 @@ HISTFILE="${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history"
 HISTSIZE=1000
 export HISTCONTROL="ignoredups:ignorespace"
 
-alias	='clear -x 2> /dev/null || clear'\
+alias \
+	='clear -x 2> /dev/null || clear'\
 	ls='ls --color=auto'\
 	la='ls -al'\
 	vim='nvim'\
@@ -26,18 +27,18 @@ set -o vi-tabcomplete
 #}
 
 hist () {
-	[ -n "$@" ] && grep "$@" "$HISTFILE"
+	[ $# -ge 1 ] && grep "$@" "$HISTFILE"
 }
 
 SET_PS1 () {
 # 8-bit (256-color) '\e[<args>m' arguments are `5;<n>` or `2;<r>;<g>;<b>`
 
 #	?='\[\e[38;2;;;m\]'
-	local B='\[\e[38;2;15;251;191m\]'
 #	local T='\[\e[38;2;255;207;240m\]'
+#	local U='\[\e[38;2;66;235;255m\]'
+#	local H='\[\e[38;2;255;253;154m\]'
+	local B='\[\e[38;2;15;251;191m\]'
 	local T='\[\e[38;2;255;255;190m\]'
-	local U='\[\e[38;2;66;235;255m\]'
-	local H='\[\e[38;2;255;253;154m\]'
 	local D='\[\e[38;2;100;205;255m\]'
 	local P='\[\e[38;2;0;255;255m\]'
 	local N='\[\e[0;0m\]'
@@ -47,16 +48,18 @@ SET_PS1 () {
 		local Sb='\[\e[1;31m\]'
 		local S='\[\e[0;31m\]'
 		local N='\[\e[0;0m\]'
-		[ "$s" -ne 0 ] && printf "$S[$Sb$s$S] "
+		[ "$s" -ne 0 ] && echo -n "$S[$Sb$s$S] "
 #		[ "$s" -ne 0 ] && printf "$N($Sb$s$N) "
 #		[ "$s" -ne 0 ] && printf "%s" "($s) "
 		return $s
 	}
 
+	LF_Lvl() {
+		echo -n "${LF_LEVEL:-0} "
+	}
+
 #	PS1="\e[${1:-2} q$B[$T\t$B] $U\u$N@$H\h $D\w\n\$(ExtStatus)$P> $N"
-	PS1="\e[${1:-2} q$B[$T\t$B] $D\w\n\$(ExtStatus)$P> $N"
-#	PS1="\e[${1:-2} q[\t] \u@\h \w\n\$(ExtStatus)\$ "
-#	PS1="$B[$N\t$B]$N \w\n\$(ExtStatus)> "
+	PS1="\e[${1:-2} q$B[$T\t$B] \$(LF_Lvl)$D\w\n\$(ExtStatus)$P> $N"
 }
 
 SET_PS1 4
