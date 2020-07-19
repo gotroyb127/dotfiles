@@ -6,7 +6,7 @@ read Pattern
 i=0
 IFS='
 '
-for Matches[i] in $(unset IFS; LF_Pattern.sh $@ $Pattern);
+for Matches[i] in $(unset IFS; LF_Pattern.sh "$@" $Pattern);
 do
 	((++i))
 done

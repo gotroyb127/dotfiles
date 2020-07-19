@@ -9,7 +9,7 @@ tilde() {
 
 DEST="$HOME/Documents/ConfigFiles"
 
-set -A Targets ~/.{config/{gsimplecal,zathura,dunst,lf,mpv,init.sh},local/scripts,tmux.conf,{vim,xinit,input}rc,profile} ~/{Notes,TODO}.txt
+set -A Targets ~/.{config/{gsimplecal,zathura,dunst,lf,mpv,init.sh,inputrc},local/scripts,tmux.conf,{vim,xinit}rc,profile} ~/{Notes,TODO}.txt
 
 Update() {
 	local bsnm="$(basename "$1")"

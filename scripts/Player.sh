@@ -52,7 +52,7 @@ case "$1" in
 	pause-after1)
 		Command '"set_property", "pause", false'
 		p="$(pgrep -f 'Player.sh pause-after1' | grep -v $$)"
-		[ -n "$p" ] && kill -9 $p
+		[ -n "$p" ] && kill $p
 		t="$(echo "$(Info playtime-remaining) - 0.5" | bc)"
 		notify-send "Pausing mpv after $(SecsToTime $t)" "$(date +'%-I:%-M:%-S %p.')"
 		sleep "$t" &&

@@ -1,11 +1,9 @@
 #!/bin/sh
 
-sessions=$(tmux ls | grep '^[0-9]\{1,\}:' | cut -f1 -d':' | sort -n)
-echo $sessions
+sessions=$(tmux ls | sed -n 's/^\([0-9]\+\):.*/\1/p' | sort -n)
 
-new=1
+new=0
 for old in $sessions
 do
-	tmux rename -t $old $new
-	((new++))
+	tmux rename -t $old $((++new))
 done

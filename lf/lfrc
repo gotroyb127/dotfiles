@@ -22,7 +22,7 @@ set ifs "\n"
 cmd open          $Open.sh "$f"
 cmd OpenSel       $Open.sh "$fx"
 cmd EchoSelection !clear -x 2> /dev/null || clear; echo "$fx" | sort -n;
-cmd SelRecurs     &find "$f" -type f | sort | LF_Select.sh
+cmd SelRecurs     &find "$f" | sort | LF_Select.sh
 cmd REsel         &LF_Pattern.sh "$@" | LF_Select.sh
 cmd Resource      :source ~/.config/lf/lfrc
 cmd UpdateLMark   :cmd-insert ":mark-save\n'"; cmd-delete-home
@@ -98,8 +98,21 @@ cmd paste &{{
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls -lhd "$f"
 map A !{{
 	clear -x 2> /dev/null || clear;
-	du -hd1 | sort -k 1 -rh && ls -aSlh |
-	grep -v '^d\|^l' | awk '{printf("%s\t%s \n", $5, $9) }'
+	ls_size() {
+		awk '/^[^dltσ]/ { printf $5"\t"; for(i=9; i<NF; ++i){printf $i"\t"} print $NF}'
+	}
+	[ -z "$fs" ] && {
+		du -hd1 | sort -rn
+		ls -Shla | ls_size
+		exit
+	}
+	for t in $(echo "$fs" | sed "s\`$PWD/\`\`"); do
+		[ -d $t ] && {
+			du -hd0 $t
+			continue
+		}
+		ls -Shl $t | ls_size
+	done
 }}
 
 map R :{{
@@ -123,7 +136,7 @@ map C !vidir -v $fx
 
 map <c-y> :up
 map <c-e> :down
-map <c-l> :Recol
+map <c-l> :Recol; SetPrompt
 map <esc> :cmd-escape
 map <c-r> :redraw; reload
 map c     :clear; unselect
@@ -166,5 +179,5 @@ map gd :UpdateLMark; cd ~/Documents
 map gD :UpdateLMark; cd ~/Downloads
 map gc :UpdateLMark; &lf -remote "send $id cd '${XDG_CONFIG_HOME:-\"$HOME/.config\"}'"
 
-set ratios 11:16
-:Recol; SetPrompt
+#&sleep 1; lf -remote "send $id :Recol; SetPrompt"
+Recol; SetPrompt

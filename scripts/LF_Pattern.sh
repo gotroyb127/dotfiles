@@ -6,6 +6,9 @@ case "$1" in
 		f_args="$1 $2"
 		shift 2;;
 esac
-[ $# -ge 2 ] && { opts=$1; shift; }
+case "$1" in
+(-*)
+	opts="$1"; shift;;
+esac
 
-find "$PWD" -mindepth 1 $f_args | grep $opts "[^/]*$@[^/]*$" | sort
+find "$PWD" -mindepth 1 $f_args | grep $opts -- "[^/]*$*[^/]*$" | sort -u

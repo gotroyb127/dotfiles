@@ -134,19 +134,19 @@ handle_mime() {
         text/* | */xml)
             ## Syntax highlight
             if [[ "$( stat --printf='%s' -- "${FILE_PATH}" )" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
-                exit 2
+#                exit 2
+                head -${PV_HEIGHT}
             fi
             if [[ "$( tput colors )" -ge 256 ]]; then
                 local highlight_format='xterm256'
             else
                 local highlight_format='ansi'
             fi
-	    [[ ${FILE_PATH} = *rc ]] && SYNTAX='--syntax=sh' || SYNTAX=
+            [[ ${FILE_PATH} = *rc ]] && SYNTAX='--syntax=sh' || SYNTAX=
             env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
                 --out-format="${highlight_format}" \
-		--line-range=1-${PV_HEIGHT} \
-		$SYNTAX\
-                --force -- "${FILE_PATH}" && exit 5
+                --line-range=1-${PV_HEIGHT} \
+                $SYNTAX --force -- "${FILE_PATH}" && exit 5
             env COLORTERM=8bit bat --color=always --style="plain" \
                 -- "${FILE_PATH}" && exit 5
             exit 2;;

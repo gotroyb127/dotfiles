@@ -16,10 +16,10 @@ log() { echo "$b0: $(date +%r) $1" >&2; }
 Waked() { [ "$(xssstate -s)" != 'on' ]; }
 NotWaked() { [ "$(xssstate -s)" = 'on' ]; }
 
-ToLock=3
-ToSusp=20
-SleepT=3
-BigSleepT=100
+ToLock=10
+ToSusp=600
+SleepT=30
+BigSleepT=30
 
 while true; do
 	Tim=$(xset q | grep timeout | awk '{print $2}')
