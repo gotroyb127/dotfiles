@@ -8,7 +8,8 @@ Hili() {
 case "$2" in
 [0-9])
 	C="$2"
-	exec Hili "$@";;
+	Hili "$@"
+	exit 0;;
 *)
 	C=2;;
 esac

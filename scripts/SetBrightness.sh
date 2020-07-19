@@ -3,9 +3,9 @@
 Dmenucmd() {
 	CurrBr=$(xbacklight)
 	if [ -z "$1" ]; then
-		printf '+5\n-5\n+1\n-1\n+10\n-10' | dmenu -l 7 -p "Adjust screen brightness($CurrBr): "
+		printf -- '+5\n-5\n+1\n-1\n+10\n-10' | dmenu -l 7 -p "Adjust screen brightness($CurrBr): "
 	else
-		printf '-5\n+5\n-1\n+1\n-10\n+10' | dmenu -l 7 -p "Adjust screen brightness($CurrBr): "
+		printf -- '-5\n+5\n-1\n+1\n-10\n+10' | dmenu -l 7 -p "Adjust screen brightness($CurrBr): "
 	fi
 }
 

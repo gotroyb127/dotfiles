@@ -22,10 +22,10 @@ Reset() {
 	printf "\n|-RR- \t\tTimeout reset: $DefTime\t${BlankStyle}blank\n"
 	printf "(II)\t"
 	killall -v -CONT "$Locker"
-	printf "---------------------------------------------------\n"
+	printf -- "---------------------------------------------------\n"
 }
 
-trap 'exit' SIGINT SIGTERM
+trap 'exit' 2 15
 trap 'Reset' exit
 
 Pause() {

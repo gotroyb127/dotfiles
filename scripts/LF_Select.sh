@@ -13,7 +13,7 @@ while read -r file; do
 
 	F="$F \"$file\""
 
-	[ "$((++i))" -ge $MAX ] &&
+	[ "$((i+=1))" -ge $MAX ] &&
 	    ToggleSel
 done << EOF
 $(sed 's/"/\\"/g')

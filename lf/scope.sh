@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 
 set -o noclobber -o noglob -o nounset
 IFS='

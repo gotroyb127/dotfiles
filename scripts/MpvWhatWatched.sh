@@ -12,4 +12,4 @@ for f in $(find ~/.config/mpv/watch_later -type f); do
 	done
 done
 echo "$box"
-read
+read _

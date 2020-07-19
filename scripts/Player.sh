@@ -10,8 +10,15 @@ Command() {
 }
 
 SecsToTime() {
-	echo "scale=0; t=$1/1; t/3600; (t/60)%60; t%60" | bc |
-	head -c -1 | tr '\n' ':' | sed 's/^0:\|0:0://g'
+	t=${1%.*}
+	s=$((t%60))
+	if [ "$((h = t/3600))" != 0 ]; then
+		echo "$h:$(( (t/60)%60 )):$s"
+	elif [ "$((m = (t/60)%60))" != 0 ]; then
+		echo "$m:$s"
+	else
+		echo "$s"
+	fi
 }
 
 Status() {

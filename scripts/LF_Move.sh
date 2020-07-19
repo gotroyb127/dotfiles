@@ -23,10 +23,10 @@ for i in $fx; do
 	read p s <<- EOF
 	$(echo "$i" | sed 's/\(.*\) (\([0-9]\+\))/\1\n\2/')
 	EOF
-	[ -z "$s" ] && s=1 || ((++s))
+	[ -z "$s" ] && s=1 || s=$((s+1))
 	newn="$DEST/$p ($s)"
 	while [ -e "$newn" ]; do
-		newn="$DEST/$p ($((++s)))"
+		newn="$DEST/$p ($((s+=1)))"
 	done
 	$OP "$d/$i" "$newn"
 done

@@ -1,16 +1,16 @@
 #!/bin/sh
 
-Title='shot_'$(date +'%Y-%m-%d(%H:%M:%S)')
+DEST="$HOME/Screenshots"
+Title="shot_$(date +'%Y-%m-%d(%H:%M:%S)')"
 
 if [ "$#" -le 0 ]; then
-	shotgun "$HOME/Screenshots/$Title.png"
-	notify-send -i "$HOME/Screenshots/$Title.png" "Screenshot saved."
+	shotgun "$DEST/$Title.png"
+	notify-send -i "$DEST/$Title.png" "Screenshot saved."
 	exit 0
 fi
 
-[ $1 != window ] && exit 0
+[ $1 != window ] && exit 1
 
 id=$(xdotool getwindowfocus)
-shotgun -i $id "$HOME/Screenshots/${Title}w.png";
-notify-send -i "$HOME/Screenshots/${Title}w.png" "Window-Screenshot saved."
-
+shotgun -i $id "$DEST/${Title}w.png";
+notify-send -i "$DEST/${Title}w.png" "Window-Screenshot saved."
