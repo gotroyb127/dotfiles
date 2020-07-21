@@ -2,7 +2,7 @@
 
 Info() {
 	printf '{ "command": ["get_property", "%s"] }\n' "$1" |
-	socat - "$MPVSOCKET" | jq ".data" | tr -d '"'
+	socat - "$MPVSOCKET" | jq -r '.data'
 }
 
 Command() {

@@ -6,7 +6,9 @@ set showcmd
 set hlsearch
 set incsearch
 set laststatus=2
+set loadplugins
 set relativenumber
+set clipboard=unnamed
 set guifont=Fira\ Code\ Medium\ 9
 
 " set scrolloff=5
@@ -19,24 +21,51 @@ if ! has("nvim")
 	let &t_EI = "\e[2 q"
 	set cursorlineopt=line
 	command! Resource source ~/.vimrc
+	autocmd VimEnter * silent execute '!printf "\033[2 q"'
+
+	nnoremap <Esc>q <C-W>q
+	nnoremap <Esc>j <C-W><C-J>
+	nnoremap <Esc>k <C-W><C-K>
+	nnoremap <Esc>l <C-W><C-L>
+	nnoremap <Esc>h <C-W><C-H>
+	nnoremap <Esc>= <C-W>+
+	nnoremap <Esc>- <C-W>-
+	nnoremap <Esc>, <C-W><
+	nnoremap <Esc>. <C-W>>
 else
+	nnoremap <M-q> <C-W>q
+	nnoremap <M-j> <C-W><C-J>
+	nnoremap <M-k> <C-W><C-K>
+	nnoremap <M-l> <C-W><C-L>
+	nnoremap <M-h> <C-W><C-H>
+	nnoremap <M-=> <C-W>+
+	nnoremap <M--> <C-W>-
+	nnoremap <M-,> <C-W><
+	nnoremap <M-.> <C-W>>
+
 	command! Resource source ~/.config/nvim/init.vim
 endif
 
-autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
-" colorscheme elflord
-colorscheme pablo
-syntax enable
+set ttimeout
+set ttimeoutlen=1
+set ttyfast
 
+if !exists("autocmds_loaded")
+	let autocmds_loaded = 1
+	autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
+	autocmd FileType sh,vim,python set tabstop=4
+	autocmd FileType sh,vim,python set shiftwidth=4
+endif
+
+syntax enable
+colorscheme pablo
 set statusline=\ %<%f\ (%F)\ %h%m%r%=\|%-14.(%4.l,%-6.(%c%V%)%6.L\|%)\ %P\ 
 
 " Show whitespace
 "¬—>·~><:→— ←—→
 set listchars=eol:$,tab:\ —→,trail:~,extends:>,precedes:<,space:·
-imap <F2> <C-o>:set list!<CR>
+imap <F2> <C-\><C-o>:set list!<CR>
 nmap <F2> :set list!<CR>
-
-autocmd VimEnter * silent execute '!echo -ne "\e[2 q"'
 
 inoremap <C-d> <Del>
 inoremap " ""<Left>
@@ -48,33 +77,29 @@ inoremap { {
 
 " Only works with autoident on
 inoremap {<C-j> {<CR><Tab>}<Left><CR><BS><Up><Right>
-" inoremap {<CR> {}<Left><Return><Return><Up><Tab>
-
 inoremap <C-f> <Esc>*Nea
 
-filetype indent off
+filetype plugin indent off
 set autoindent
 set tabstop=8
 set shiftwidth=8
-autocmd FileType sh set tabstop=4
-autocmd FileType sh set shiftwidth=4
 
 " Faster multi window management inside vim
-nnoremap <M-q> <C-W>q
-nnoremap <M-j> <C-W><C-J>
-nnoremap <M-k> <C-W><C-K>
-nnoremap <M-l> <C-W><C-L>
-nnoremap <M-h> <C-W><C-H>
-nnoremap <M-=> <C-W>+
-nnoremap <M--> <C-W>-
-nnoremap <M-,> <C-W><
-nnoremap <M-.> <C-W>>
+" nnoremap <M-q> <C-W>q
 
-vnoremap ( c(<Esc>pa)<Esc>
-vnoremap [ c[<Esc>pa]<Esc>
-vnoremap { c{<Esc>pa}<Esc>
-vnoremap ' c'<Esc>pa'<Esc>
-vnoremap " c"<Esc>pa"<Esc>
+function! Surround(lst)
+	let save = @"
+	silent normal gvy
+	let @" = a:lst[0] . @" . a:lst[-1]
+	silent normal gvp
+	let @" = save
+endfunction
+
+vnoremap ' <Esc>:call Surround(["'"])<CR>
+vnoremap " <Esc>:call Surround(['"'])<CR>
+vnoremap ( <Esc>:call Surround(['(', ')'])<CR>
+vnoremap { <Esc>:call Surround(['{', '}'])<CR>
+vnoremap [ <Esc>:call Surround(['[', ']'])<CR>
 vnoremap <C-c> "+y
 
 set splitbelow
@@ -83,9 +108,3 @@ set splitright
 " Clear highlighted search with [Ctrl]+[/]
 nmap <C-_> :noh<return>
 imap <C-_> <C-o>:noh<return>
-
-set ttimeout
-set ttimeoutlen=1
-set ttyfast
-
-set clipboard=unnamed

@@ -1,7 +1,7 @@
 #!/bin/sh
 # ^^^^^^^ trick vim to syntax highlihght
 
-set hidden
+set nohidden
 set color256
 set dircounts
 set incsearch
@@ -43,7 +43,7 @@ cmd SetPrompt &{{
 
 #	unset ID id CO
 	lf -remote "send $id set promptfmt \
-	\"($ID$CO$LV$N) $W%w/$F%f\""
+	\"($ID$CO$LV$N) $W%w$F%f\""
 }}
 
 cmd Recol &{{
@@ -159,6 +159,7 @@ map bv :set preview!
 map bn :set relativenumber!
 map bN :set number!
 map bi :set icons!
+map <bs> :set hidden!
 
 map Sp &xsel -o | LF_Select.sh
 map Sc &xsel -bo | LF_Select.sh

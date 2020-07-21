@@ -13,6 +13,7 @@ alias \
 	BuildLf='go mod vendor; version=r$pkgver ./gen/build.sh -mod=vendor -trimpath'\
 	mksh='env -i mksh'\
 	bash='env -i bash'\
+	dash='env -i dash'\
 
 set -o vi
 set -o vi-tabcomplete
