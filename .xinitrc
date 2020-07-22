@@ -3,7 +3,7 @@
 
 Start.sh &
 
-dwmblocks &
+sblocks &
 clipmenud &
 dunst 2> /dev/null &
 lxqt-policykit-agent 2> /dev/null &

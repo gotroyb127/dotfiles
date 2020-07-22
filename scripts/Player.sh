@@ -1,7 +1,9 @@
 #!/bin/sh
 
 Info() {
-	printf '{ "command": ["get_property", "%s"] }\n' "$1" |
+	for c in "$@"; do
+		printf '{ "command": ["get_property", "%s"] }\n' "$c"
+	done |
 	socat - "$MPVSOCKET" | jq -r '.data'
 }
 
@@ -11,14 +13,16 @@ Command() {
 
 SecsToTime() {
 	t=${1%.*}
+	m=$(( (t/60)%60 ))
 	s=$((t%60))
 	if [ "$((h = t/3600))" != 0 ]; then
-		echo "$h:$(( (t/60)%60 )):$s"
-	elif [ "$((m = (t/60)%60))" != 0 ]; then
-		echo "$m:$s"
+		o="$h:$m:$s"
+	elif [ "$m" != 0 ]; then
+		o="$m:$s"
 	else
-		echo "$s"
+		o="$s"
 	fi
+	eval "$2=\"$o\""
 }
 
 Status() {
@@ -27,11 +31,18 @@ Status() {
 		'false') [ "$(Info loop)" = true ] && p=  || p="";;
 		*) rm -f -- "$MPVSOCKET"; exit 1;;
 	esac
-	Title=$(Info media-title)
-	CurrTime=$(SecsToTime $(Info time-pos) )
-	Duration=$(SecsToTime $(Info duration) )
-	RemPlTime=$(SecsToTime $(Info playtime-remaining) )
-	Speed=$(Info speed)
+
+	for v in Title CurrTime Duration RemPlTime Speed; do
+		read $v
+	done <<- EOF
+	$(Info media-title time-pos duration playtime-remaining speed)
+	EOF
+
+	for v in "$CurrTime CurrTime" "$Duration Duration" "$RemPlTime RemPlTime"
+	do
+		SecsToTime $v
+	done
+
 	printf "%s" "$Title [$CurrTime . $Duration] (-$RemPlTime) x$Speed $p"
 }
 
@@ -46,9 +57,10 @@ case "$1" in
 	position+)  Command '"seek", '"$2" ;;
 	position-)  Command '"seek", -'"$2" ;;
 	position)
-		Secs=$(echo | dmenu -p "[$(SecsToTime $(Info time-pos)) / $(SecsToTime $(Info duration))"'] Jump to: '\
-		| TimeToSecs)
-		Command '"set_property", "time-pos", '"$Secs" ;;
+		SecsToTime $(Info time-pos) pos
+		SecsToTime $(Info duration) dur
+		secs=$(dmenu -p "[$pos / $dur"'] Jump to: ' < /dev/null | TimeToSecs)
+		Command '"set_property", "time-pos", '"$secs" ;;
 	speed+) Command '"add", "speed", '"$2";;
 	speed)  Command '"set_property", "speed", '"$2";;
 	speed-) Command '"add", "speed", -'"$2";;
@@ -58,10 +70,9 @@ case "$1" in
 		Command '"cycle", "pause"' ;;
 	pause-after1)
 		Command '"set_property", "pause", false'
-		p="$(pgrep -f 'Player.sh pause-after1' | grep -v $$)"
-		[ -n "$p" ] && kill $p
-		t="$(echo "$(Info playtime-remaining) - 0.5" | bc)"
-		notify-send "Pausing mpv after $(SecsToTime $t)" "$(date +'%-I:%-M:%-S %p.')"
+		pgrep -f 'Player.sh pause-after1' | grep -v $$ | xargs -r kill
+		SecsToTime "$(echo "$(Info playtime-remaining) - 0.5" | bc)" secs
+		notify-send "Pausing mpv after $secs" "$(date +'%-I:%-M:%-S %p.')"
 		sleep "$t" &&
 		Command '"set_property", "pause", true';;
 	loop)

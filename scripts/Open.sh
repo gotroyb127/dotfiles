@@ -20,7 +20,7 @@ set -A Group\
 	'@(*.od[ft]|*.doc|*.docx)'\
 	'@(*.png|*.jpg|*.webp|*.svg|*.tiff)'\
 	'@(*.mid|*.MID)'\
-	'@(*.mp[34]|*.mk[av]|*.ogg|*.wav)'\
+	'@(*.mp[34]|*.mk[av]|*.ogg|*.wav|*.webm)'\
 	'@(*)'\
 
 for t in $@; do

@@ -8,7 +8,7 @@ set incsearch
 set laststatus=2
 set loadplugins
 set relativenumber
-set clipboard=unnamed
+set clipboard+=unnamed
 set guifont=Fira\ Code\ Medium\ 9
 
 " set scrolloff=5
@@ -50,12 +50,13 @@ set ttimeout
 set ttimeoutlen=1
 set ttyfast
 
-if !exists("autocmds_loaded")
-	let autocmds_loaded = 1
+augroup AutoCmds
+	autocmd!
 	autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
-	autocmd FileType sh,vim,python set tabstop=4
-	autocmd FileType sh,vim,python set shiftwidth=4
-endif
+	autocmd FileType python filetype plugin off
+"	autocmd FileType man filetype plugin on
+"	autocmd FileType sh,vim,python set tabstop=4 shiftwidth=4
+augroup END
 
 syntax enable
 colorscheme pablo
@@ -79,7 +80,7 @@ inoremap { {
 inoremap {<C-j> {<CR><Tab>}<Left><CR><BS><Up><Right>
 inoremap <C-f> <Esc>*Nea
 
-filetype plugin indent off
+" filetype plugin indent off
 set autoindent
 set tabstop=8
 set shiftwidth=8
@@ -91,15 +92,15 @@ function! Surround(lst)
 	let save = @"
 	silent normal gvy
 	let @" = a:lst[0] . @" . a:lst[-1]
-	silent normal gvp
+	silent normal gv""p
 	let @" = save
 endfunction
 
-vnoremap ' <Esc>:call Surround(["'"])<CR>
-vnoremap " <Esc>:call Surround(['"'])<CR>
-vnoremap ( <Esc>:call Surround(['(', ')'])<CR>
-vnoremap { <Esc>:call Surround(['{', '}'])<CR>
-vnoremap [ <Esc>:call Surround(['[', ']'])<CR>
+vnoremap <leader>' <Esc>:call Surround(["'"])<CR>
+vnoremap <leader>" <Esc>:call Surround(['"'])<CR>
+vnoremap <leader>( <Esc>:call Surround(['(', ')'])<CR>
+vnoremap <leader>{ <Esc>:call Surround(['{', '}'])<CR>
+vnoremap <leader>[ <Esc>:call Surround(['[', ']'])<CR>
 vnoremap <C-c> "+y
 
 set splitbelow

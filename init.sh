@@ -11,8 +11,8 @@ alias \
 	mpvs="mpv --input-ipc-server=$MPVSOCKET"\
 	CompileInstall='make clean && make && sudo make install && make clean'\
 	BuildLf='go mod vendor; version=r$pkgver ./gen/build.sh -mod=vendor -trimpath'\
-	mksh='env -i mksh'\
-	bash='env -i bash'\
+	mksh='env -u HISTFILE -u ENV mksh'\
+	bash='bash +o history'\
 	dash='env -i dash'\
 
 set -o vi
@@ -44,6 +44,13 @@ SET_PS1 () {
 	local P='\[\e[38;2;0;255;255m\]'
 	local N='\[\e[0;0m\]'
 
+	local s='>'
+
+	if [ "$USER" = root ]; then
+		local D='\[\e[38;2;200;0;0m\]'
+		s='#'
+	fi
+
 	ExtStatus() {
 		local s=$?
 		local Sb='\[\e[1;31m\]'
@@ -60,7 +67,7 @@ SET_PS1 () {
 	}
 
 #	PS1="\e[${1:-2} q$B[$T\t$B] $U\u$N@$H\h $D\w\n\$(ExtStatus)$P> $N"
-	PS1="\e[${1:-2} q$B[$T\t$B] \$(LF_Lvl)$D\w\n\$(ExtStatus)$P> $N"
+	PS1="\e[${1:-2} q$B[$T\t$B] \$(LF_Lvl)$D\w\n\$(ExtStatus)$P$s $N"
 }
 
 SET_PS1 4

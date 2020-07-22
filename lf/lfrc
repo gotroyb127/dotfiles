@@ -60,6 +60,7 @@ cmd Recol &{{
 
 cmd Trash &{{
 	{ N="$IFS"
+	mkdir -p "$TRASH"
 	LF_Move.sh "mv${N}-v${N}--" "$TRASH" NO_DUPS
 	lf -remote "send load${N}"
 	} | LF_Log.sh
@@ -96,24 +97,7 @@ cmd paste &{{
 }}
 
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls -lhd "$f"
-map A !{{
-	clear -x 2> /dev/null || clear;
-	ls_size() {
-		awk '/^[^dltσ]/ { printf $5"\t"; for(i=9; i<NF; ++i){printf $i"\t"} print $NF}'
-	}
-	[ -z "$fs" ] && {
-		du -hd1 | sort -rn
-		ls -Shla | ls_size
-		exit
-	}
-	for t in $(echo "$fs" | sed "s\`$PWD/\`\`"); do
-		[ -d $t ] && {
-			du -hd0 $t
-			continue
-		}
-		ls -Shl $t | ls_size
-	done
-}}
+map A !clear -x 2> /dev/null || clear; LF_Du_fs.sh
 
 map R :{{
 	Resource
