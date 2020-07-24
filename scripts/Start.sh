@@ -22,6 +22,7 @@ xset s 900 600
 xset s noblank
 xset r rate 250 25
 setxkbmap -layout us,gr -option grp:alt_shift_toggle
+echo "$0: ----- KEYMAPS LOADED -----"
 
 # Show available updates on startup.
 [ -z "$1" ] &&

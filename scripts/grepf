@@ -2,7 +2,7 @@
 
 N='
 '
-IFS="$N"
+IFS=$N
 f_args=
 
 case "$1" in

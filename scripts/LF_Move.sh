@@ -2,9 +2,9 @@
 
 IFS='
 '
-OP="$1"
-DEST="$2"
-NO_DUPS="$3"
+OP=$1
+DEST=$2
+NO_DUPS=$3
 
 if [ -z "$DEST" -o -z "$OP" ]; then
 	echo "$0: Wrong arguments."

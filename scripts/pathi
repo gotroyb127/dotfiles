@@ -1,13 +1,13 @@
 #!/bin/sh
 
 Hili() {
-	RE="$1"
+	RE=$1
 	sed "s\`\($RE\)\`$(printf '\033[01;3'${C}m)\1$(printf '\033[0m')\`g"
 }
 
 case "$2" in
 [0-9])
-	C="$2"
+	C=$2
 	Hili "$@"
 	exit 0;;
 *)

@@ -9,7 +9,7 @@ Print() {
 	echo -n "$box"
 	for f in $(find ~/.config/mpv/watch_later -type f); do
 		for l in $(head -1 "$f"); do
-			i="${l#??}"
+			i=${l#??}
 			[ -e "$i" ] &&
 				echo "${i##*/}" ||
 				echo "$i"

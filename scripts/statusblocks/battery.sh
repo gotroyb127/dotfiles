@@ -2,7 +2,7 @@
 
 Info=$(acpi -b)
 
-BAT="$(echo "$Info" | sed 's/.*[^0-9]\+\([0-9]\+\)%.*/\1/')"
+BAT=$(echo "$Info" | sed 's/.*[^0-9]\+\([0-9]\+\)%.*/\1/')
 
 if $(echo "$Info" | grep -q "100"); then
 	BAT=" $BAT"; Charg=''

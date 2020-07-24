@@ -1,10 +1,11 @@
 HISTFILE="${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history"
+HISTCONTROL="ignoredups:ignorespace"
 HISTSIZE=1000
-export HISTCONTROL="ignoredups:ignorespace"
 
 alias \
 	='clear -x 2> /dev/null || clear'\
 	ls='ls --color=auto'\
+	ll='ls -l'\
 	la='ls -al'\
 	vim='nvim'\
 	view='nvim -MR'\

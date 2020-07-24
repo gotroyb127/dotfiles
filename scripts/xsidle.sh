@@ -3,14 +3,14 @@
 # Use xset s $time to control the timeout when this will run.
 #
 
-b0="$(basename $0)"
+b0=$(basename $0)
 if [ $# -lt 1 ];
 then
 	printf "usage: %s 'LockCmd' 'SuspendCmd'\n" "$b0" 1>&2
 	exit 1
 fi
-LockCmd="$1"
-SuspendCmd="$2"
+LockCmd=$1
+SuspendCmd=$2
 
 log() { echo "$b0: $(date +%r) $1" >&2; }
 Waked() { [ "$(xssstate -s)" != 'on' ]; }

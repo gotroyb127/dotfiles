@@ -32,7 +32,11 @@ if ! has("nvim")
 	nnoremap <Esc>- <C-W>-
 	nnoremap <Esc>, <C-W><
 	nnoremap <Esc>. <C-W>>
+
+	inoremap {<C-j> {}<Left><CR><C-O>O<Tab>
 else
+	command! Resource source ~/.config/nvim/init.vim
+
 	nnoremap <M-q> <C-W>q
 	nnoremap <M-j> <C-W><C-J>
 	nnoremap <M-k> <C-W><C-K>
@@ -43,7 +47,7 @@ else
 	nnoremap <M-,> <C-W><
 	nnoremap <M-.> <C-W>>
 
-	command! Resource source ~/.config/nvim/init.vim
+	inoremap {<C-j> {}<Left><CR><C-O>O
 endif
 
 set ttimeout
@@ -67,6 +71,13 @@ set statusline=\ %<%f\ (%F)\ %h%m%r%=\|%-14.(%4.l,%-6.(%c%V%)%6.L\|%)\ %P\
 set listchars=eol:$,tab:\ —→,trail:~,extends:>,precedes:<,space:·
 imap <F2> <C-\><C-o>:set list!<CR>
 nmap <F2> :set list!<CR>
+imap <F3> <C-\><C-o>:set paste!<CR>
+nmap <F3> :set paste!<CR>
+
+" Clear highlighted search with [Ctrl]+[/]
+imap <C-_> <C-o>:noh<return>
+nmap <C-_> :noh<return>
+
 
 inoremap <C-d> <Del>
 inoremap " ""<Left>
@@ -76,11 +87,11 @@ inoremap ) <Right>
 inoremap )) )
 inoremap { {
 
-" Only works with autoident on
-inoremap {<C-j> {<CR><Tab>}<Left><CR><BS><Up><Right>
+" Only works with `autoident on` and `filetype indent off`
 inoremap <C-f> <Esc>*Nea
 
 " filetype plugin indent off
+" filetype indent off
 set autoindent
 set tabstop=8
 set shiftwidth=8
@@ -96,8 +107,10 @@ function! Surround(lst)
 	let @" = save
 endfunction
 
+vnoremap <leader>n : norm 
 vnoremap <leader>' <Esc>:call Surround(["'"])<CR>
 vnoremap <leader>" <Esc>:call Surround(['"'])<CR>
+vnoremap <leader>` <Esc>:call Surround(['`'])<CR>
 vnoremap <leader>( <Esc>:call Surround(['(', ')'])<CR>
 vnoremap <leader>{ <Esc>:call Surround(['{', '}'])<CR>
 vnoremap <leader>[ <Esc>:call Surround(['[', ']'])<CR>
@@ -105,7 +118,3 @@ vnoremap <C-c> "+y
 
 set splitbelow
 set splitright
-
-" Clear highlighted search with [Ctrl]+[/]
-nmap <C-_> :noh<return>
-imap <C-_> <C-o>:noh<return>

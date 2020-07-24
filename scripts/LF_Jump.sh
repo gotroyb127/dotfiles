@@ -15,7 +15,7 @@ done
 [ "$i" -eq 1 ] && echo 'Only one match found.' && E=' ' || E=
 
 LfSelect() {
-	t="${Matches[c]}"
+	t=${Matches[c]}
 	lf -remote "send $id select '$t'"
 	[ -d "$t" ] || t=$(dirname "$t") && lf -remote "send $id select '$t'"
 }

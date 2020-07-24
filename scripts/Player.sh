@@ -4,7 +4,15 @@ Info() {
 	for c in "$@"; do
 		printf '{ "command": ["get_property", "%s"] }\n' "$c"
 	done |
-	socat - "$MPVSOCKET" | jq -r '.data'
+	socat - "$MPVSOCKET" 2> /dev/null | jq -r '.data'
+}
+
+SetInfoVars() {
+	for v in $1; do
+		read $v
+	done <<- EOF
+	$(Info $2)
+	EOF
 }
 
 Command() {
@@ -26,17 +34,15 @@ SecsToTime() {
 }
 
 Status() {
-	case "$(Info pause 2> /dev/null)" in
-		'true')  p="";;
-		'false') [ "$(Info loop)" = true ] && p=  || p="";;
-		*) rm -f -- "$MPVSOCKET"; exit 1;;
-	esac
+	SetInfoVars "pause loop Title       CurrTime Duration RemPlTime          Speed" \
+	            "pause loop media-title time-pos duration playtime-remaining speed"
+	[ $? != 0 ] && exit 1
 
-	for v in Title CurrTime Duration RemPlTime Speed; do
-		read $v
-	done <<- EOF
-	$(Info media-title time-pos duration playtime-remaining speed)
-	EOF
+	case "$pause" in
+		'true')  p='';;
+		'false') p='';;
+	esac
+	[ "$loop" = true ] && p="$p ()"
 
 	for v in "$CurrTime CurrTime" "$Duration Duration" "$RemPlTime RemPlTime"
 	do
@@ -57,8 +63,10 @@ case "$1" in
 	position+)  Command '"seek", '"$2" ;;
 	position-)  Command '"seek", -'"$2" ;;
 	position)
-		SecsToTime $(Info time-pos) pos
-		SecsToTime $(Info duration) dur
+		SetInfoVars "pos      dur" \
+			    "time-pos duration"
+		SecsToTime $pos pos
+		SecsToTime $dur dur
 		secs=$(dmenu -p "[$pos / $dur"'] Jump to: ' < /dev/null | TimeToSecs)
 		Command '"set_property", "time-pos", '"$secs" ;;
 	speed+) Command '"add", "speed", '"$2";;

@@ -2,7 +2,7 @@
 
 N='
 '
-IFS="$N"
+IFS=$N
 [[ -z $@ ]] && exit 1
 
 set -A Opener\
@@ -32,7 +32,7 @@ for t in $@; do
 	Groups[i]="${Groups[i]}$t$N";
 done
 
-i=-1; m="${#Group[@]}"
+i=-1; m=${#Group[@]}
 while [[ $((i++)) -lt $m ]]; do
 	[[ -z ${Groups[i]} ]] && continue
 	echo ${Opener[i]} "$N${Groups[i]}" | pathi '/' 0
