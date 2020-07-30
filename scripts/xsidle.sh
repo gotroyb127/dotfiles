@@ -3,7 +3,7 @@
 # Use xset s $time to control the timeout when this will run.
 #
 
-b0=$(basename $0)
+b0=${0##*/}
 if [ $# -lt 1 ];
 then
 	printf "usage: %s 'LockCmd' 'SuspendCmd'\n" "$b0" 1>&2

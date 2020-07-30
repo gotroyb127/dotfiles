@@ -6,13 +6,14 @@ IFS=$N
 [[ -z $@ ]] && exit 1
 
 set -A Opener\
-	zathura\
-	loimpress\
-	lowriter\
+	"zathura"\
+	"loimpress"\
+	"lowriter"\
 	"sxiv$N-o"\
 	"timidity$N-in"\
 	"mpv$N--input-ipc-server=$MPVSOCKET"\
-	nvim
+	"w3m$N-N"\
+	"nvim"
 
 set -A Group\
 	'*.pdf'\
@@ -21,6 +22,7 @@ set -A Group\
 	'@(*.png|*.jpg|*.webp|*.svg|*.tiff)'\
 	'@(*.mid|*.MID)'\
 	'@(*.mp[34]|*.mk[av]|*.ogg|*.wav|*.webm)'\
+	'@(*.html)'\
 	'@(*)'\
 
 for t in $@; do

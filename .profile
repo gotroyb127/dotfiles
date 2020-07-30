@@ -12,15 +12,22 @@ export XDG_LOG_HOME="$HOME/.local/var/log"
 export ENV="$XDG_CONFIG_HOME/init.sh"
 export PATH="$PATH:$HOME/.local/scripts"
 
-export TRASH="$HOME/.local/trash"
-export TMPTRASH="/tmp/trash"
-export STARTX_LOG="/tmp/startx(tty1).log"
-export MPVSOCKET='/tmp/mpvsocket'
-
 export EDITOR=nvim
 export PAGER=less
 export MANPAGER='nvim +Man!'
 export CM_SELECTIONS=clipboard
+
+export TRASH="$HOME/.local/trash"
+export TMPTRASH="/tmp/trash"
+export STARTX_LOG="/tmp/startx-auto.log"
+export MPVSOCKET='/tmp/mpvsocket'
+if which systemctl > /dev/null 2>&1; then
+	MACHINECTL=systemctl
+else
+	MACHINECTL=loginctl
+fi
+export MACHINECTL
+
 
 # keep ~/ clean
 export LESSHISTFILE='-'
@@ -39,8 +46,11 @@ export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;
 dir='';music='';midi='ﱘ';vid='辶';img='';book='';ex='';txt='';fi='';arc='';word='';ppt=''
 export LF_ICONS="tw=$dir :st=st :ow= :di=$dir :ln= :or= :pi=pi :so= :cd= :cd= :bd=bd :su=su :sg=sg :dt=dt :fi=$fi :ex=$ex :*.opus=$music :*.ogg=$music :*.m4a=$music :*.mp3=$music :*.midi=$midi :*.mid=$midi :*.MID=$midi :*.mkv=$vid:*.mp4=$vid:*.webm=$vid:*.mpeg=$vid:*.avi=$vid:*.jpg=$img :*.jpeg=$img :*.png=$img :*.pdf=$book :*.djvu=$book :*.epub=$book :*.txt=$txt :*.zip=$arc :*.rar=$arc :*.7z=$arc :*.gz=$arc :*.xz=$arc :*.exe= :*.doc=$word :*.docx=$word :*.odt=$word :*.ppt=$ppt :*.pptx=$ppt :*.py= :*.c=$txt :*.cpp=$txt :*.h=$txt :*.hpp=$txt :*.go=$txt :*.sh=$txt :*.fish=$txt :"
 
-if [ -z "$DISPLAY" -a "$(tty)" = /dev/tty1 ]; then
-	echo "Starting xorg..."
-	startx >> "$STARTX_LOG" 2>&1
+#if ! pgrep Xorg && [ $(id -u) != 0 -a -z "$DISPLAY" -a "$(tty)" = /dev/tty1 ]; then
+if [ $(id -u) != 0 -a -z "$DISPLAY" ]; then
+	if ! pgrep Xorg > /dev/null; then
+		echo "Starting X.org..."
+		startx >> "$STARTX_LOG" 2>&1
+	fi
 fi
 echo "---> Sourced ~/.profile"

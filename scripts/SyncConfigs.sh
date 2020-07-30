@@ -12,7 +12,7 @@ DEST="$HOME/Documents/ConfigFiles"
 set -A Targets ~/.{config/{gsimplecal,zathura,dunst,lf,mpv,init.sh,inputrc},local/scripts,tmux.conf,{vim,xinit}rc,profile} ~/{Notes,TODO}.txt
 
 Update() {
-	local bsnm=$(basename "$1")
+	local bsnm=${1##*/}
 	if [ -f "$1" -a "$1" -nt "$2/$bsnm" ]; then
 		cp -pv "$1" "$2"
 		return 0
@@ -30,7 +30,7 @@ Update() {
 }
 
 date
-printf "\nCopying to $DEST:\n" | tilde
+printf %s "\nCopying to $DEST:\n" | tilde
 
 i=-1; M=${#Targets[@]}
 while [ $((++i)) -lt $M ]; do

@@ -78,5 +78,17 @@ tagutil -- can change metadata values
 	done
 - - - - - 
 
+# Downloading an Entire Web Site with wget
+# from https://www.linuxjournal.com/content/downloading-entire-web-site-wget.
+#	example: www.skarnet.org
+	wget \
+	-recursive \
+	--no-clobber \
+	--page-requisites \
+	--html-extension \
+	--convert-links \
+	--domains skarnet.org\
+	--no-parent \
+
 # List of essential packages
 {linux,linux-firmware,base-devel,moreutiles,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils {xdotool,xsel,shotgun,clipmenu,dunst,highlight,mediainfo} ttf-{fira-code,nerd-fonts-symbols-mono}

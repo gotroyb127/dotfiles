@@ -1,6 +1,10 @@
+# only usefull when the shells is in interactive mode
+[ "${-#*i*}" = "$-" ] && exit 5
+
 HISTFILE="${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history"
 HISTCONTROL="ignoredups:ignorespace"
 HISTSIZE=1000
+#export SHELL_LVL=$((${SHELL_LVL-0}+1))
 
 alias \
 	='clear -x 2> /dev/null || clear'\
@@ -10,14 +14,14 @@ alias \
 	vim='nvim'\
 	view='nvim -MR'\
 	mpvs="mpv --input-ipc-server=$MPVSOCKET"\
-	CompileInstall='make clean && make && sudo make install && make clean'\
-	BuildLf='go mod vendor; version=r$pkgver ./gen/build.sh -mod=vendor -trimpath'\
+	ksh='SHELL_LVL=$((SHELL_LVL+1)) ksh'\
 	mksh='env -u HISTFILE -u ENV mksh'\
 	bash='bash +o history'\
 	dash='env -i dash'\
+	CompileInstall='make clean && make && sudo make install && make clean'\
+	BuildLf='go mod vendor; ./gen/build.sh -mod=vendor -trimpath'\
 
-set -o vi
-set -o vi-tabcomplete
+set -o vi -o vi-tabcomplete
 
 ## Functions to automate de-bloat on Android with adb
 #AdbGetFocus() {
@@ -30,6 +34,10 @@ set -o vi-tabcomplete
 
 hist () {
 	[ $# -ge 1 ] && grep "$@" "$HISTFILE"
+}
+
+mantopdf() {
+	groff -m man "$1" -Tpdf 2> /dev/null | zathura - 2> /dev/null
 }
 
 SET_PS1 () {
@@ -63,12 +71,13 @@ SET_PS1 () {
 		return $s
 	}
 
-	LF_Lvl() {
-		echo -n "${LF_LEVEL:-0} "
+	Lvls() {
+		echo -n "${SHELL_LVL}${LF_LEVEL:-0} "
+#		echo -n "${SHELL_LVL} "
 	}
 
 #	PS1="\e[${1:-2} q$B[$T\t$B] $U\u$N@$H\h $D\w\n\$(ExtStatus)$P> $N"
-	PS1="\e[${1:-2} q$B[$T\t$B] \$(LF_Lvl)$D\w\n\$(ExtStatus)$P$s $N"
+	PS1="\e[${1:-2} q$B[$T\t$B] \$(Lvls)$D\w\n\$(ExtStatus)$P$s $N"
 }
 
 SET_PS1 4

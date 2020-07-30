@@ -112,6 +112,7 @@ map Jd %LF_Jump.sh -type d
 map Ja %LF_Jump.sh
 
 map i $nvim -MR "$f"
+map I $LF_Scope.sh "$f" | nl | less -R
 map E :push $nvim<space>""<left>
 map D :push $mkdir<space>""<left>
 map x :push $chmod<space>+x<space>"$f"
@@ -154,6 +155,7 @@ map Sr :push :REsel<space>
 
 map gr :UpdateLMark; cd /
 map ge :UpdateLMark; cd /etc
+map gb :UpdateLMark; cd /bin
 map gv :UpdateLMark; cd /var
 map gT :UpdateLMark; cd /tmp
 map gm :UpdateLMark; cd /mnt

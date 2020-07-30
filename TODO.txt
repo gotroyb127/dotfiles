@@ -1,0 +1,2 @@
+edit /etc/rc.local
+NOTE: removed binfmt from boot bundle.

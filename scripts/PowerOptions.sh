@@ -2,6 +2,7 @@
 
 l='10'
 prompt='Choose option:'
+ctl=${MACHINECTL:-systemctl}
 
 Opt0='0: rEBOOT'
 Opt1='1: pOWEROFF'
@@ -10,15 +11,6 @@ Opt3='3: sUSPEND'
 Opt4='4: eXIT'
 Opt5='5: lOCK SCREEN'
 Option=$(printf "$Opt5\n$Opt4\n$Opt3\n$Opt2\n$Opt1\n$Opt0\n" | dmenu -l $l -p "$prompt" )
-
-oIFS=$IFS
-IFS=:
-if find $PATH -maxdepth 1 | grep -q systemctl; then
-	ctl=systemctl
-else
-	ctl=loginctl
-fi
-IFS=$oIFS
 
 case "$Option" in
 	("$Opt0") $ctl reboot;;

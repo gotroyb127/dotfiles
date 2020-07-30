@@ -1,6 +1,6 @@
 #!/bin/ksh
 
-set -o noclobber -o noglob -o nounset
+set -o noclobber -o noglob -o nounset -o pipefail
 IFS='
 '
 
@@ -9,7 +9,9 @@ FILE_PATH="${1}"         # Full path of the highlighted file
 PV_WIDTH="$(( $(tput cols)*11 / 16 -3 ))"          # Width of the preview pane (number of fitting characters)
 #PV_WIDTH="${3}"          # Width of the preview pane (number of fitting characters)
 ## shellcheck disable=SC2034 # PV_HEIGHT is provided for convenience and unused
+set +o nounset
 PV_HEIGHT="${2}"         # Height of the preview pane (number of fitting characters)
+set -o nounset
 #IMAGE_CACHE_PATH="${4}"  # Full path that should be used to cache image preview
 #PV_IMAGE_ENABLED="${5}"  # 'True' if image previews are enabled, 'False' otherwise.
 #PV_IMAGE_ENABLED="False"  # 'True' if image previews are enabled, 'False' otherwise.
