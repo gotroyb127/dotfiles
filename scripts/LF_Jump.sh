@@ -6,7 +6,7 @@ read Pattern
 i=0
 IFS='
 '
-for Matches[i] in $(unset IFS; LF_Pattern.sh "$@" $Pattern);
+for Matches[i] in $(unset IFS; LF_Pattern.sh "$@" $Pattern)
 do
 	((++i))
 done
@@ -28,15 +28,19 @@ while echo -n "Matches for '$Pattern': ($((c+1))/$i) [N/n]: " && read ans
 do
 	case "$ans" in
 	(n*|j*)
-		c=$(( (c+1) %i ));;
+		c=$(( (c+1) %i ))
+	;;
 	(N*|k*)
 		((--c))
-		[ "$c" -lt 0 ] && c=$((i-1));;
+		[ "$c" -lt 0 ] && c=$((i-1))
+	;;
 	(a)
 		lf -remote "send $id select '$f'"
-		break;;
+		break
+	;;
 	(q)
-		break;;
+		break
+	;;
 	esac
 	LfSelect
 done

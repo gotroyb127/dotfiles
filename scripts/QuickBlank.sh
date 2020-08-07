@@ -1,5 +1,6 @@
 #!/bin/sh
 
+Status=
 NewTime=${1:-10}
 [ -n "$2" ] && NewBlank=no
 Locker='xsidle.sh'
@@ -14,15 +15,18 @@ Set() {
 	printf "|-SS- \t\tTimeout changed: $NewTime\t${NewBlank}blank\n"
 	printf "(II)\t"
 	killall -v -STOP "$Locker"
+	Status=S
 }
 
 Reset() {
+	[ "x$Status" = xR ] && return 0
 	xset s $DefTime 
 	xset s ${BlankStyle}blank
 	printf "\n|-RR- \t\tTimeout reset: $DefTime\t${BlankStyle}blank\n"
 	printf "(II)\t"
 	killall -v -CONT "$Locker"
 	printf -- "---------------------------------------------------\n"
+	Status=R
 }
 
 trap 'exit' 2 15
@@ -33,7 +37,8 @@ Pause() {
 	[ "$An" = q ] && exit 0
 }
 
-while true; do
+while true
+do
 	Set;	Pause
 	Reset;	Pause
 done

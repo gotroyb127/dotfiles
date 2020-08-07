@@ -16,14 +16,18 @@ synclient TapButton1=1\
 	HorizTwoFingerScroll=1\
 	PalmDetect=1\
 
-# Xotg settings
+# Xorg settings
 xset m 11/2 0
 xset s 900 600
 xset s noblank
 xset r rate 250 25
+
+xmodmap -e 'keycode 108 = Super_R'
 setxkbmap -layout us,gr -option grp:alt_shift_toggle
+
+[ $# -ge 1 ] && exit 0
+
 echo "$0: ----- KEYMAPS LOADED -----"
 
 # Show available updates on startup.
-[ -z "$1" ] &&
 AutoUpdate.sh

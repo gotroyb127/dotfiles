@@ -1,2 +1,6 @@
-edit /etc/rc.local
-NOTE: removed binfmt from boot bundle.
+Player.sh: pause-after1: improve other running instances's detection.
+
+----- S6: -----
+--> edited /etc/rc.local
+--> fdclosed 1,2 of acpid
+--> removed binfmt from boot bundle.

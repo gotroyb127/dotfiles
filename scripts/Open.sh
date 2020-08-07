@@ -25,23 +25,27 @@ set -A Group\
 	'@(*.html)'\
 	'@(*)'\
 
-for t in $@; do
+for t in $@
+do
 	i=0
 	[[ -d $t ]] && continue
-	until eval "[[ \$t = ${Group[i]} ]]"; do
+	until eval "[[ \$t = ${Group[i]} ]]"
+	do
 		((++i))
 	done
 	Groups[i]="${Groups[i]}$t$N";
 done
 
 i=-1; m=${#Group[@]}
-while [[ $((i++)) -lt $m ]]; do
+while [[ $((i++)) -lt $m ]]
+do
 	[[ -z ${Groups[i]} ]] && continue
 	echo ${Opener[i]} "$N${Groups[i]}" | pathi '/' 0
-	if [[ $i -le 3 ]]; then
+	if [[ $i -le 3 ]]
+	then
 		${Opener[i]} ${Groups[i]} 2> /dev/null |
 		    xsel -b &
 	else
-		${Opener[i]} ${Groups[i]}
+		exec ${Opener[i]} ${Groups[i]}
 	fi
 done

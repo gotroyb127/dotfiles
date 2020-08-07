@@ -1,22 +1,37 @@
 #!/bin/sh
 
-Dmenucmd() {
-	CurrBr=$(xbacklight)
-	if [ -z "$1" ]; then
-		printf -- '+5\n-5\n+1\n-1\n+10\n-10' | dmenu -l 7 -p "Adjust screen brightness($CurrBr): "
-	else
-		printf -- '-5\n+5\n-1\n+1\n-10\n+10' | dmenu -l 7 -p "Adjust screen brightness($CurrBr): "
-	fi
+echostr() {
+	for a in "$@"
+	do
+		echo "$f$a"
+		echo "$s$a"
+	done
 }
 
-ans=5
-while true; do
+Dmenucmd() {
+	CurrBr=$(xbacklight)
+	f=${1%?}
+	s=${1#?}
+	echostr $2 1 5 10 | dmenu -f -l 8 -p "Adjust screen brightness ($CurrBr): "
+}
+
+last='+- 5'
+while true
+do
 	ans=$(Dmenucmd $last)
-	[ -z "$ans" ] && exit 0;
+	num=${ans#?}
 	case "$ans" in
-		'-'[0-9]*) xbacklight -dec "$(echo "$ans" | tr -d '+-')"; last='-' ;;
-		'+'[0-9]*) xbacklight -inc "$(echo "$ans" | tr -d '+-')"; last= ;;
-		*)         xbacklight -set "$ans" ;;
+	('-'[0-9]*)
+		xbacklight -dec "$num"; last="-+ $num"
+	;;
+	('+'[0-9]*)
+		xbacklight -inc "$num"; last="+- $num"
+	;;
+	([0-9]*)
+		xbacklight -set "$ans"
+	;;
+	('')
+		exit 0
+	;;
 	esac
 done
-

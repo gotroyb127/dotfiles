@@ -1,24 +1,39 @@
 #!/bin/sh
 
-l='10'
-prompt='Choose option:'
 ctl=${MACHINECTL:-systemctl}
+Option=$(dmenu -l 10 -p 'Choose option:' << EOF
+0: rEBOOT
+1: pOWEROFF
+2: hIBERNATE
+3: sUSPEND
+4: eXIT
+5: lOCK SCREEN
+EOF
+)
 
-Opt0='0: rEBOOT'
-Opt1='1: pOWEROFF'
-Opt2='2: hIBERNATE'
-Opt3='3: sUSPEND'
-Opt4='4: eXIT'
-Opt5='5: lOCK SCREEN'
-Option=$(printf "$Opt5\n$Opt4\n$Opt3\n$Opt2\n$Opt1\n$Opt0\n" | dmenu -l $l -p "$prompt" )
-
-case "$Option" in
-	("$Opt0") $ctl reboot;;
-	("$Opt1") $ctl poweroff;;
-	("$Opt2") slock $ctl hibernate;;
-	("$Opt3") slock $ctl suspend;;
-	("$Opt4") pkill -15 -t tty"$XDG_VTNR" 'dwm$';;
-	("$Opt5") slock & sleep 1 && xset s activate;;
-	'screen nolock'|*6*)  sleep .5 && xset s activate;;
-	'suspend nolock'|*7*) $ctl suspend;;
+case ${Option%%:*} in
+(0)
+	$ctl reboot
+;;
+(1)
+	$ctl poweroff
+;;
+(2)
+	slock $ctl hibernate
+;;
+(3)
+	slock $ctl suspend
+;;
+(4)
+	pkill -15 -t tty"$XDG_VTNR" 'dwm$'
+;;
+(5)
+	slock & sleep 1 && xset s activate
+;;
+(6)
+	sleep .5 && xset s activate
+;;
+(7)
+	$ctl suspend
+;;
 esac

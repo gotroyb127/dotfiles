@@ -1,32 +1,38 @@
 #!/bin/sh
 
-Socat() { socat - "$MPVSOCKET" 2> /dev/null; }
+set -e
+#b0=${0##*/}
+Command()     { printf '{ "command": [%s] }\n' "$1" | Socat > /dev/null; }
+Notify()      { notify-send -t 2000 "$1" "$(date +'%-I:%-M:%-S %p.')"; }
+ResyncPause() { pkill -USR1 -f "$0 pause-after1"; }
+Socat()       { socat - "$MPVSOCKET" 2> /dev/null; }
+
 Info() {
-	for c in "$@"; do
+	for c in "$@"
+	do
 		printf '{ "command": ["get_property", "%s"] }\n' "$c"
 	done |
 	Socat | jq -r '.data'
 }
 
 SetInfoVars() {
-	for v in $1; do
+	for v in $1
+	do
 		read $v
 	done <<- EOF
 	$(Info $2)
 	EOF
 }
 
-Command() {
-	printf '{ "command": [%s] }\n' "$1" | Socat > /dev/null
-}
-
 SecsToTime() {
 	t=${1%.*}
 	m=$(( (t/60)%60 ))
 	s=$((t%60))
-	if [ "$((h = t/3600))" != 0 ]; then
+	if [ "$((h = t/3600))" != 0 ]
+	then
 		o="$h:$m:$s"
-	elif [ "$m" != 0 ]; then
+	elif [ "$m" != 0 ]
+	then
 		o="$m:$s"
 	else
 		o="$s"
@@ -35,28 +41,26 @@ SecsToTime() {
 }
 
 Status() {
+	[ ! -S "$MPVSOCKET" ] && exit
 	SetInfoVars "pause loop Title       CurrTime Duration RemPlTime          Speed" \
 	            "pause loop media-title time-pos duration playtime-remaining speed"
-	[ $? != 0 ] && {
-		rm -f "$MPVSOCKET"
-		exit 1
-	}
 
-	case "$pause" in
+	case $pause in
 	(true)
-		p='';;
+		p=''
+	;;
 	(false)
-		p='';;
+		p=''
+	;;
 	esac
 	l=
-	case "$loop" in
+	case $loop in
 	(true)
-		l=" ()";;
-#		l=" ( ﯢ)";;
+		l=" ()"
+	;;
 	([0-9]*)
-		l=" ($loop)";;
-#	(false)
-#		p="$p (:稜)";;
+		l=" ($loop)"
+	;;
 	esac
 
 	for v in "$CurrTime CurrTime" "$Duration Duration" "$RemPlTime RemPlTime"
@@ -73,66 +77,108 @@ TimeToSecs() {
 	| bc
 }
 
-case "$1" in
-	(status)
-		Status;;
-	(position-)
-		Command '"seek", -'"$2";;
-	(position)
-		SetInfoVars "pos      dur" \
-		            "time-pos duration"
-		SecsToTime $pos pos
-		SecsToTime $dur dur
-		secs=$(dmenu -p "[$pos / $dur"'] Jump to: ' < /dev/null | TimeToSecs)
-		Command '"set_property", "time-pos", '"$secs";;
-	(position+)
-		Command '"seek", '"$2";;
-	(speed-)
-		Command '"add", "speed", -'"$2";;
-	(speed)
-		Command '"set_property", "speed", '"$2";;
-	(speed+)
-		Command '"add", "speed", '"$2";;
-	(play)
-		Command '"set_property", "pause", false';;
-	(pause)
-		Command '"set_property", "pause", true';;
-	(play-pause)
-		Command '"cycle", "pause"';;
-	(pause-after1)
+case $1 in
+(status)
+	Status
+;;
+(position-)
+	Command '"seek", -'"$2"
+	ResyncPause &
+;;
+(position)
+	SetInfoVars "pos      dur" \
+		    "time-pos duration"
+	SecsToTime $pos pos
+	SecsToTime $dur dur
+	secs=$(dmenu -p "[$pos / $dur"'] Jump to: ' < /dev/null | TimeToSecs)
+	Command '"set_property", "time-pos", '"$secs"
+	ResyncPause &
+;;
+(position+)
+	Command '"seek", '"$2"
+	ResyncPause &
+;;
+(speed-)
+	Command '"add", "speed", -'"$2"
+	ResyncPause &
+;;
+(speed)
+	Command '"set_property", "speed", '"$2"
+	ResyncPause &
+;;
+(speed+)
+	Command '"add", "speed", '"$2"
+	ResyncPause &
+;;
+(play)
+	Command '"set_property", "pause", false'
+	ResyncPause &
+;;
+(pause)
+	Command '"set_property", "pause", true'
+	ResyncPause &
+;;
+(play-pause)
+	Command '"cycle", "pause"'
+	ResyncPause &
+;;
+(pause-after1)
+	trap "exec \"$0\" pause-after1 -" USR1
+
+	# cancel any pending pause and exit
+	others=$(pgrep -f "$0 pause-after1" | wc -l)
+	pgrep -f "$0 pause-after1" | grep -v $$ | xargs -r kill -15
+	[ "$others" -gt 3 ] && {
+		Notify "Mpv pause canceled."
+		exit 1
+	}
+
+	secs="$(echo "$(Info playtime-remaining) - 0.5" | bc)"
+
+	# Notify at first spawn
+	[ -z "$2" ] && {
 		Command '"set_property", "pause", false'
-
-		others=$(pgrep -f "$0 pause-after1" | wc -l)
-		pgrep -f "$0 pause-after1" | grep -v $$ | xargs -r kill -15
-		[ "$others" -gt 2 ] && {
-			notify-send "Mpv pause canceled."
-			exit 1
-		}
-
-		secs="$(echo "$(Info playtime-remaining) - 0.5" | bc)"
 		SecsToTime $secs time
-		notify-send "Pausing mpv after $time" "$(date +'%-I:%-M:%-S %p.')"
-		sleep "$secs" && Command '"set_property", "pause", true';;
-	(loop-)
-		if [ $(Info loop) = true -a "$2" != 0 ]; then
-			Command '"set_property", "loop", 0'
-		else
-			Command '"add", "loop", -'"$2"
-		fi;;
-	(loop)
-		Command '"set_property", "loop", '"$2";;
-	(loop+)
-		Command '"add", "loop", '"$2";;
-	(next)
-		Command '"playlist-next"';;
-	(prev*)
-		Command '"playlist-prev"';;
-	(quit-wl)
-		Command '"quit-watch-later"';;
-	(quit)
-		Command '"quit"';;
-	(*)
-		"$@";;
+		Notify "Pausing mpv after $time"
+	}
+
+	( sleep "$secs"
+		Command '"set_property", "pause", true'
+		Notify "Mpv paused."
+	) & wait
+	exit
+;;
+(loop-)
+	if [ $(Info loop) = true -a "$2" != 0 ]
+	then
+		Command '"set_property", "loop", 0'
+	else
+		Command '"add", "loop", -'"$2"
+	fi
+;;
+(loop)
+	Command '"set_property", "loop", '"$2"
+;;
+(loop+)
+	Command '"add", "loop", '"$2"
+;;
+(next)
+	Command '"playlist-next"'
+	ResyncPause &
+;;
+(prev*)
+	Command '"playlist-prev"'
+	ResyncPause &
+;;
+(quit-wl)
+	Command '"quit-watch-later"'
+;;
+(quit)
+	Command '"quit"'
+;;
+(*)
+	"$@"
+;;
 esac
 
 # Commands

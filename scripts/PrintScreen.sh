@@ -1,9 +1,10 @@
 #!/bin/sh
 
 DEST="$HOME/Screenshots"
-Title="shot_$(date +'%Y-%m-%d(%H:%M:%S)')"
+Title="shot_$(date +'%Y%m%d_%H%M%S')"
 
-if [ "$#" -le 0 ]; then
+if [ "$#" -le 0 ]
+then
 	shotgun "$DEST/$Title.png"
 	notify-send -i "$DEST/$Title.png" "Screenshot saved."
 	exit 0

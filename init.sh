@@ -1,27 +1,31 @@
-# only usefull when the shells is in interactive mode
-[ "${-#*i*}" = "$-" ] && exit 5
+# only usefull when the shell is interactive
+[ "${-#*i}" = "$-" ] && return
 
-HISTFILE="${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history"
-HISTCONTROL="ignoredups:ignorespace"
+set -o vi -o vi-tabcomplete
+
+HISTFILE=${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history
+HISTCONTROL='ignoredups:ignorespace'
 HISTSIZE=1000
-#export SHELL_LVL=$((${SHELL_LVL-0}+1))
+[ -z "$LF_LEVEL" ] &&
+	let LF_LEVEL=1 ||
+	let LF_LEVEL++
+export LF_LEVEL
 
 alias \
 	='clear -x 2> /dev/null || clear'\
 	ls='ls --color=auto'\
 	ll='ls -l'\
 	la='ls -al'\
+	lA='ls -Al'\
 	vim='nvim'\
 	view='nvim -MR'\
 	mpvs="mpv --input-ipc-server=$MPVSOCKET"\
-	ksh='SHELL_LVL=$((SHELL_LVL+1)) ksh'\
-	mksh='env -u HISTFILE -u ENV mksh'\
-	bash='bash +o history'\
-	dash='env -i dash'\
+	SU='sudo ksh -il'\
+	mksh='HISTFILE= ENV= mksh'\
+	dash='HISTFILE= ENV= dash'\
+	bash='HISTFILE= ENV= bash'\
 	CompileInstall='make clean && make && sudo make install && make clean'\
 	BuildLf='go mod vendor; ./gen/build.sh -mod=vendor -trimpath'\
-
-set -o vi -o vi-tabcomplete
 
 ## Functions to automate de-bloat on Android with adb
 #AdbGetFocus() {
@@ -29,8 +33,7 @@ set -o vi -o vi-tabcomplete
 #	echo "$F" 1>&2; echo "$F"
 #}
 #AdbUnistall() {
-#	adb shell pm uninstall -k --user 0 $1
-#}
+#	adb shell pm uninstall -k --user 0 W}
 
 hist () {
 	[ $# -ge 1 ] && grep "$@" "$HISTFILE"
@@ -54,8 +57,10 @@ SET_PS1 () {
 	local N='\[\e[0;0m\]'
 
 	local s='>'
+	local LVL=$LF_LEVEL
 
-	if [ "$USER" = root ]; then
+	if [ "$USER" = root ]
+	then
 		local D='\[\e[38;2;200;0;0m\]'
 		s='#'
 	fi
@@ -64,20 +69,12 @@ SET_PS1 () {
 		local s=$?
 		local Sb='\[\e[1;31m\]'
 		local S='\[\e[0;31m\]'
-		local N='\[\e[0;0m\]'
 		[ "$s" -ne 0 ] && echo -n "$S[$Sb$s$S] "
-#		[ "$s" -ne 0 ] && printf "$N($Sb$s$N) "
-#		[ "$s" -ne 0 ] && printf "%s" "($s) "
 		return $s
 	}
 
-	Lvls() {
-		echo -n "${SHELL_LVL}${LF_LEVEL:-0} "
-#		echo -n "${SHELL_LVL} "
-	}
-
 #	PS1="\e[${1:-2} q$B[$T\t$B] $U\u$N@$H\h $D\w\n\$(ExtStatus)$P> $N"
-	PS1="\e[${1:-2} q$B[$T\t$B] \$(Lvls)$D\w\n\$(ExtStatus)$P$s $N"
+	PS1="\e[${1:-2} q$B[$T\t$B] $LVL $D\w\n\$(ExtStatus)$P$s $N"
 }
 
 SET_PS1 4

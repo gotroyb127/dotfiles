@@ -49,9 +49,11 @@ cmd SetPrompt &{{
 cmd Recol &{{
 	w=$(tput cols)
 	N="$IFS"
-	if [ $w -le 75 ]; then
+	if [ $w -le 75 ]
+	then
 		lf -remote "send $id set nopreview${N}send $id set ratios 1"
-	elif [ $w -le 220 ]; then
+	elif [ $w -le 220 ]
+	then
 		lf -remote "send $id set ratios 11:16${N}send $id set preview"
 	else
 		lf -remote "send $id set ratios 7:16${N}send $id set preview"
@@ -83,10 +85,12 @@ cmd paste &{{
 	load=$(lf -remote 'load')
 	mode=$(echo "$load" | sed -n '1p')
 	list=$(echo "$load" | sed '1d')
-	if [[ $mode = copy ]]; then
+	if [[ $mode = copy ]]
+	then
 		OP="cp${N}-Rv${N}--"
 		DUPS=
-	elif [[ $mode = move ]]; then
+	elif [[ $mode = move ]]
+	then
 		OP="mv${N}-v${N}--"
 		DUPS=NO
 	fi
@@ -113,6 +117,7 @@ map Ja %LF_Jump.sh
 
 map i $nvim -MR "$f"
 map I $LF_Scope.sh "$f" | nl | less -R
+map W !:
 map E :push $nvim<space>""<left>
 map D :push $mkdir<space>""<left>
 map x :push $chmod<space>+x<space>"$f"

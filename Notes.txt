@@ -91,4 +91,4 @@ tagutil -- can change metadata values
 	--no-parent \
 
 # List of essential packages
-{linux,linux-firmware,base-devel,moreutiles,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils {xdotool,xsel,shotgun,clipmenu,dunst,highlight,mediainfo} ttf-{fira-code,nerd-fonts-symbols-mono}
+{linux,linux-firmware,base-devel,moreutiles,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils {xdotool,xsel,shotgun,unclutter,clipmenu,dunst,highlight,mediainfo} ttf-{fira-code,nerd-fonts-symbols-mono}

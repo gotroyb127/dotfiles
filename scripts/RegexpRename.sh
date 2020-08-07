@@ -14,7 +14,8 @@ IFS='
 #\	\	$'-e\ts/\ X[.] /\ 10. /g\t'\
 #\	\	$'-e\ts/\ XI[.] /\ 11. /g\t'
 
-for i in $(find "$1" -type f | sort -n); do
+for i in $(find "$1" -type f | sort -n)
+do
 #	mv -iv "$i" "$(dirname $i)/$(basename $i | sed $SED_CMD )"
 	echo "$i:\n"$(dirname $i)/$(basename $i | sed $SED_CMD )""
 #	echo "Testing: 1 I I. 2 II II. 3 III III. " | sed $SED_CMD

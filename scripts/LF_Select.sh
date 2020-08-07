@@ -8,7 +8,8 @@ ToggleSel() {
 }
 
 F= ; i=0
-while read -r file; do
+while read -r file
+do
 	[ -z "$file" ] && continue
 
 	F="$F \"$file\""
