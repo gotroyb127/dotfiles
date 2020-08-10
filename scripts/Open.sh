@@ -16,7 +16,7 @@ set -A Opener\
 	"nvim"
 
 set -A Group\
-	'*.pdf'\
+	'@(*.pdf)'\
 	'@(*.pptx|*.ppt)'\
 	'@(*.od[ft]|*.doc|*.docx)'\
 	'@(*.png|*.jpg|*.webp|*.svg|*.tiff)'\

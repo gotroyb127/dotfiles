@@ -1,5 +1,5 @@
 # only usefull when the shell is interactive
-[ "${-#*i}" = "$-" ] && return
+[ -z "${-##*c*}" ] && return
 
 set -o vi -o vi-tabcomplete
 
@@ -17,10 +17,12 @@ alias \
 	ll='ls -l'\
 	la='ls -al'\
 	lA='ls -Al'\
+	LF='let --LF_LEVEL; exec lf'\
 	vim='nvim'\
 	view='nvim -MR'\
 	mpvs="mpv --input-ipc-server=$MPVSOCKET"\
 	SU='sudo ksh -il'\
+	LOG='vim "$STARTX_LOG"'\
 	mksh='HISTFILE= ENV= mksh'\
 	dash='HISTFILE= ENV= dash'\
 	bash='HISTFILE= ENV= bash'\
@@ -35,7 +37,7 @@ alias \
 #AdbUnistall() {
 #	adb shell pm uninstall -k --user 0 W}
 
-hist () {
+hist() {
 	[ $# -ge 1 ] && grep "$@" "$HISTFILE"
 }
 
@@ -43,7 +45,7 @@ mantopdf() {
 	groff -m man "$1" -Tpdf 2> /dev/null | zathura - 2> /dev/null
 }
 
-SET_PS1 () {
+SET_PS1() {
 # 8-bit (256-color) '\e[<args>m' arguments are `5;<n>` or `2;<r>;<g>;<b>`
 
 #	?='\[\e[38;2;;;m\]'
@@ -73,8 +75,16 @@ SET_PS1 () {
 		return $s
 	}
 
+
 #	PS1="\e[${1:-2} q$B[$T\t$B] $U\u$N@$H\h $D\w\n\$(ExtStatus)$P> $N"
 	PS1="\e[${1:-2} q$B[$T\t$B] $LVL $D\w\n\$(ExtStatus)$P$s $N"
+}
+
+INFO() {
+	local U='\033[38;2;66;235;255m'
+	local H='\033[38;2;255;253;154m'
+	local N='\033[0;0m'
+	echo "$U$USER$N@$H$(hostname) " >&2
 }
 
 SET_PS1 4

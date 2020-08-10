@@ -16,9 +16,4 @@ case $Info in
 ;;
 esac
 
-#if $(echo "$Info" | grep -q "100"); then
-#elif $(echo "$Info" | grep -q Charging); then
-#else
-#fi
-
 printf "${BAT}$Charg"

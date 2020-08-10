@@ -21,7 +21,7 @@ mute=${mute%]}
 }
 
 MicMute=$(amixer get Capture)
-[ -n "${MicMute##*\[on]*}" ] && mic=' '
+[ -z "${MicMute##*\[on]*}" ] && mic=' '
 
 
 printf %s "$mic$vol$VOL$warn"

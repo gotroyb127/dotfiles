@@ -22,7 +22,7 @@ xset s 900 600
 xset s noblank
 xset r rate 250 25
 
-xmodmap -e 'keycode 108 = Super_R'
+#xmodmap -e 'keycode 108 = Super_R'
 setxkbmap -layout us,gr -option grp:alt_shift_toggle
 
 [ $# -ge 1 ] && exit 0
