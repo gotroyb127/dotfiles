@@ -4,7 +4,7 @@ set -e
 #b0=${0##*/}
 Command()     { printf '{ "command": [%s] }\n' "$1" | Socat > /dev/null; }
 Notify()      { notify-send -t 2000 "$1" "$(date +'%-I:%-M:%-S %p.')"; }
-ResyncPause() { pkill -USR1 -f "$0 pause-after1"; }
+ResyncPause() { pkill -USR1 -f "$0 pause-after"; }
 Socat()       { socat - "$MPVSOCKET" 2> /dev/null; }
 
 Info() {
@@ -122,31 +122,45 @@ case $1 in
 	Command '"cycle", "pause"'
 	ResyncPause &
 ;;
-(pause-after1)
-	trap "exec \"$0\" pause-after1 -" USR1
+(pause-after)
+	shift
+	trap 'exec "$0" pause-after $n -' USR1
 
-	# cancel any pending pause and exit
-	others=$(pgrep -f "$0 pause-after1" | wc -l)
-	pgrep -f "$0 pause-after1" | grep -v $$ | xargs -r kill -15
-	[ "$others" -gt 3 ] && {
-		Notify "Mpv pause canceled."
-		exit 1
-	}
-
-	secs="$(echo "$(Info playtime-remaining) - 0.5" | bc)"
-
-	# Notify at first spawn
+	# At first spawn
 	[ -z "$2" ] && {
+		# cancel any pending pause and exit
+		others=$(pgrep -f "$0 pause-after" | wc -l)
+		pgrep -f "$0 pause-after" | grep -v $$ | xargs -r kill -15
+		[ "$others" -gt 3 ] && {
+			Notify "Mpv pause canceled."
+			exit 1
+		}
+
+		# Notify at first spawn
+		secs="$(echo "$(Info playtime-remaining) - 0.5" | bc)"
 		Command '"set_property", "pause", false'
 		SecsToTime $secs time
-		Notify "Pausing mpv after $time"
+		Notify "Pausing mpv after $time."
 	}
 
-	( sleep "$secs"
-		Command '"set_property", "pause", true'
-		Notify "Mpv paused."
-	) & wait
-	exit
+	n=$(($1 + 1))
+	while [ $((n -= 1)) -gt 0 ]
+	do
+		if [ $n -ne 1 ]
+		then
+			secs=$(echo "$(Info playtime-remaining) + 1" | bc)
+			( sleep $secs
+			) & wait $!
+		else
+			secs=$(echo "$(Info playtime-remaining) - 0.5" | bc)
+			( sleep "$secs"
+				Command '"set_property", "pause", true'
+				Notify "Mpv paused."
+			) & wait $!
+		fi
+	done
+
+	exit 0
 ;;
 (loop-)
 	if [ $(Info loop) = true -a "$2" != 0 ]

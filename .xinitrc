@@ -1,7 +1,7 @@
 #!/bin/sh
 # ^^^^^^^ probably ignored
 
-Start.sh &
+Start.sh -u &
 
 clipmenud &
 pulseaudio -D &
@@ -10,7 +10,7 @@ lxqt-policykit-agent 2> /dev/null &
 xsidle.sh 'slock' "$MACHINECTL suspend" 600 &
 unclutter --timeout 1 --ignore-scrolling &
 
-sblocks &
+sleep 1 && sblocks &
 
 sleep 4 && pgrep Xorg > /dev/null && xset s off &
 

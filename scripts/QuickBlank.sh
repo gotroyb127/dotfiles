@@ -33,8 +33,9 @@ trap 'exit' 2 15
 trap 'Reset' exit
 
 Pause() {
-	An=$(bash -c 'read -sn1 An && echo $An')
-	[ "$An" = q ] && exit 0
+	read ans
+	[ -n "$ans" ] && [ -z "${ans#q*}" ] &&
+		exit 0
 }
 
 while true
@@ -42,4 +43,3 @@ do
 	Set;	Pause
 	Reset;	Pause
 done
-

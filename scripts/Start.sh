@@ -1,7 +1,9 @@
 #!/bin/sh
 
 # Synaptic settings for touchpad
-synclient TapButton1=1\
+#	TapButton1=1
+synclient \
+	TapButton1=0\
 	TapButton2=3\
 	TapButton3=2\
 	HorizTwoFingerScroll=on\
@@ -25,9 +27,10 @@ xset r rate 250 25
 #xmodmap -e 'keycode 108 = Super_R'
 setxkbmap -layout us,gr -option grp:alt_shift_toggle
 
-[ $# -ge 1 ] && exit 0
+sleep 1 && amixer -q set Capture nocap &
 
-echo "$0: ----- KEYMAPS LOADED -----"
+echo "${0##*/}: ----- KEYMAPS LOADED -----"
 
+[ "X$1" != 'X-u' ] && exit 0
 # Show available updates on startup.
 AutoUpdate.sh

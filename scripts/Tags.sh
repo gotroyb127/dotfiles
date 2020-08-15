@@ -5,19 +5,16 @@ IFS='
 
 Title() { basename $1 | sed 's/.mp[34]//g'; }
 
-if [ -n "$1" ]
-then
-	Folder=$1
-else
-	printf %s "Are you sure you want to retag every file in ~/Music??? [Y/n] "
-	read ans
-	[ "$ans" != Y ] && exit 1
-	Folder="$HOME/Music"
-fi
+Tag() {
+	for i in $(find $1 -type f)
+	do
+		mat2 --inplace "$i"
+		tagutil set:title=$(Title "$i") "$i"
+		tagutil "$i"
+	done
+}
 
-for i in $(find $Folder -type f )
+for dir in $@
 do
-	mat2 --inplace "$i"
-	tagutil set:title=$(Title "$i") "$i"
-	tagutil "$i"
+	[ -d $dir ] && Tag $dir
 done

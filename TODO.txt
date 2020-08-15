@@ -1,6 +1,16 @@
-Player.sh: pause-after1: improve other running instances's detection.
+Player.sh: implement 'Player.sh pause-after n', n = { 1, 2, ...}
+
+find a way to properly display $(xprop -root WM_NAME | sed 's/.*"\(.*\)"/\1/')
+
+Maybe?: Have an array Type that stores how the Opener is launched: [async, async-clip, fg]
+
+??? Player.sh: pause-after1: improve other running instances's detection.
 
 ----- S6: -----
 --> edited /etc/rc.local
+--> edited mount-sysfs/up:
+	-	foreground { mountpoint -q /sys/firmware/efi/efivars }
+	+	if -n { mountpoint -q /sys/firmware/efi/efivars }
 --> fdclosed 1,2 of acpid
+--> fdclosed 1,2 of sysctl
 --> removed binfmt from boot bundle.

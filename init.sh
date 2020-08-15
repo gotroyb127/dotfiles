@@ -1,7 +1,7 @@
 # only usefull when the shell is interactive
 [ -z "${-##*c*}" ] && return
 
-set -o vi -o vi-tabcomplete
+set -o notify -o vi -o vi-tabcomplete
 
 HISTFILE=${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history
 HISTCONTROL='ignoredups:ignorespace'
@@ -17,7 +17,7 @@ alias \
 	ll='ls -l'\
 	la='ls -al'\
 	lA='ls -Al'\
-	LF='let --LF_LEVEL; exec lf'\
+	LF='let --LF_LEVEL; exec "$0" -ic lf'\
 	vim='nvim'\
 	view='nvim -MR'\
 	mpvs="mpv --input-ipc-server=$MPVSOCKET"\
@@ -43,6 +43,14 @@ hist() {
 
 mantopdf() {
 	groff -m man "$1" -Tpdf 2> /dev/null | zathura - 2> /dev/null
+}
+
+PLAYER() {
+	while true
+	do
+		echo -n "\n$(Player.sh status)\t\t\t\t\t\t"
+		sleep .9743
+	done
 }
 
 SET_PS1() {
@@ -87,5 +95,5 @@ INFO() {
 	echo "$U$USER$N@$H$(hostname) " >&2
 }
 
-SET_PS1 4
+SET_PS1 2
 PS2=

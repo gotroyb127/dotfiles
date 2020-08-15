@@ -6,4 +6,3 @@ then
 else
 	tmux new -s Music '$SHELL -ic "lf ~/Music"' \; splitw -dvl 15 MpvWhatWatched.sh
 fi
-

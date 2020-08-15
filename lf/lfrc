@@ -117,6 +117,7 @@ map Ja %LF_Jump.sh
 
 map i $nvim -MR "$f"
 map I $LF_Scope.sh "$f" | nl | less -R
+map w $exec $SHELL
 map W !:
 map E :push $nvim<space>""<left>
 map D :push $mkdir<space>""<left>

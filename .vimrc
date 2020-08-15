@@ -5,6 +5,7 @@ set number
 set showcmd
 set hlsearch
 set incsearch
+set autochdir
 set laststatus=2
 set loadplugins
 set relativenumber
@@ -12,7 +13,6 @@ set clipboard+=unnamed
 set guifont=Fira\ Code\ Medium\ 9
 
 " set scrolloff=5
-" set autochdir
 set mouse=a
 set cursorline
 if ! has("nvim")

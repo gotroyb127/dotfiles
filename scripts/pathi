@@ -2,23 +2,22 @@
 
 Hili() {
 	RE=$1
-	sed "s\`\($RE\)\`$(printf "\\033[01;3${C}m%s\033[0m" '\1')\`g"
+	sed "s\`\($RE\)\`$(printf "\033[01;3${C}m%s\033[0m" '\1')\`g"
 }
 
-case $2 in
-([0-9])
-	C=$2
-	Hili "$@"
-	exit 0
+case $1 in
+(--c[0-9])
+	C=${1#--c}
+	shift
 ;;
 (*)
 	C=2
 ;;
 esac
 
-if [ $# -eq 2 ]
+if [ $# -ge 2 ]
 then
 	"$@" | Hili "$2"
 else
-	Hili "$@"
+	Hili "$1"
 fi
