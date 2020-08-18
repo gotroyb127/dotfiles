@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ls_size() {
-	awk '/^[^dltσ]/ { printf $5"\t"; for(i=9; i<NF; ++i){printf $i"\t"} print $NF}'
+	awk '/^[^dltσ]/ { printf $5"\t"; for(i=9; i<NF; ++i){printf $i" "} print $NF}'
 }
 
 [ -z "$fs" ] && {

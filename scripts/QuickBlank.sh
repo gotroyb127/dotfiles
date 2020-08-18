@@ -22,10 +22,10 @@ Reset() {
 	[ "x$Status" = xR ] && return 0
 	xset s $DefTime 
 	xset s ${BlankStyle}blank
-	printf "\n|-RR- \t\tTimeout reset: $DefTime\t${BlankStyle}blank\n"
+	printf "|-RR- \t\tTimeout reset: $DefTime\t${BlankStyle}blank\n"
 	printf "(II)\t"
 	killall -v -CONT "$Locker"
-	printf -- "---------------------------------------------------\n"
+	printf -- "\n---------------------------------------------------\n"
 	Status=R
 }
 
@@ -34,7 +34,7 @@ trap 'Reset' exit
 
 Pause() {
 	read ans
-	[ -n "$ans" ] && [ -z "${ans#q*}" ] &&
+	[ -n "$ans" ] && [ -z "${ans##q*}" ] &&
 		exit 0
 }
 

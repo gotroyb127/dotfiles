@@ -2,6 +2,7 @@
 
 set ruler
 set number
+set title
 set showcmd
 set hlsearch
 set incsearch
@@ -77,7 +78,6 @@ nmap <F3> :set paste!<CR>
 " Clear highlighted search with [Ctrl]+[/]
 imap <C-_> <C-o>:noh<return>
 nmap <C-_> :noh<return>
-
 
 inoremap <C-d> <Del>
 inoremap " ""<Left>

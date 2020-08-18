@@ -101,7 +101,7 @@ cmd paste &{{
 }}
 
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls -lhd "$f"
-map A !clear -x 2> /dev/null || clear; LF_Du_fs.sh
+map A !clear -x 2> /dev/null || clear; LF_Du.sh
 
 map R :{{
 	Resource

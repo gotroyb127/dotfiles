@@ -23,7 +23,8 @@ alias \
 	mpvs="mpv --input-ipc-server=$MPVSOCKET"\
 	SU='sudo ksh -il'\
 	LOG='vim "$STARTX_LOG"'\
-	mksh='HISTFILE= ENV= mksh'\
+	PLAYER='sblocks-player'\
+	mksh='HISTFILE= ENV= mksh -o vi'\
 	dash='HISTFILE= ENV= dash'\
 	bash='HISTFILE= ENV= bash'\
 	CompileInstall='make clean && make && sudo make install && make clean'\
@@ -43,14 +44,6 @@ hist() {
 
 mantopdf() {
 	groff -m man "$1" -Tpdf 2> /dev/null | zathura - 2> /dev/null
-}
-
-PLAYER() {
-	while true
-	do
-		echo -n "\n$(Player.sh status)\t\t\t\t\t\t"
-		sleep .9743
-	done
 }
 
 SET_PS1() {
@@ -85,10 +78,10 @@ SET_PS1() {
 
 
 #	PS1="\e[${1:-2} q$B[$T\t$B] $U\u$N@$H\h $D\w\n\$(ExtStatus)$P> $N"
-	PS1="\e[${1:-2} q$B[$T\t$B] $LVL $D\w\n\$(ExtStatus)$P$s $N"
+	PS1="\e[${1:-2} q$B[$T\D{%-I:%-M:%-S}$B] $LVL $D\w\n\$(ExtStatus)$P$s $N"
 }
 
-INFO() {
+WHO() {
 	local U='\033[38;2;66;235;255m'
 	local H='\033[38;2;255;253;154m'
 	local N='\033[0;0m'

@@ -137,9 +137,13 @@ case $1 in
 		}
 
 		# Notify at first spawn
-		secs="$(echo "$(Info playtime-remaining) - 0.5" | bc)"
 		Command '"set_property", "pause", false'
-		SecsToTime $secs time
+		[ "$1" -eq 1 ] && {
+			secs=$(echo "$(Info playtime-remaining) - 0.5" | bc)
+			SecsToTime $secs time
+		} || {
+			time=$1
+		}
 		Notify "Pausing mpv after $time."
 	}
 

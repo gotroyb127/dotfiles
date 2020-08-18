@@ -11,7 +11,7 @@ cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
 cache=$cachedir/AutoUpdated
 Invl=5
 
-cday="$(date +%j)"
+cday=$(date +%j)
 
 case $1 in
 (-f)
@@ -24,7 +24,7 @@ esac
 
 if [ -f "$cache" ]
 then
-	passed="$((cday - $(cat "$cache")))"
+	passed=$((cday - $(cat "$cache")))
 	echo "Days passed since last auto-update: $passed."
 	[ "$passed" -ge "$Invl" -o "$passed" -le -"$Invl" ] &&
 	Updating=True
