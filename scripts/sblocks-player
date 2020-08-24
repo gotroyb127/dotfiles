@@ -1,15 +1,20 @@
-#!/bin/sh
+#!/bin/ksh
 
 a=25
-while [ $((a += 1)) -le 33 ]
+while [ $((a += 1)) -le 32 ]
 do
 	trap ':' $a
 done
-trap 'continue' 30
+trap ':' 30
 
-xdotool getactivewindow windowsize 1500 40 windowmove 240 170
+#xdotool getactivewindow windowsize 1500 40 windowmove 240 170
+xdotool getactivewindow windowsize 1260 31 windowmove 243 250
+
+b='    '
+typeset -R"$((COLS - ${#b} +1))" S 2> /dev/null || b='\t\t\t\t\t\t\t\t'
 while true
 do
-	echo -n "\n$(Player.sh status)\t\t\t\t\t\t\t\t"
+	S=$(Player.sh status)
+	echo -n "\n$S$b"
 	sleep .9735 & wait $!
 done

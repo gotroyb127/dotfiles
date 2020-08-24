@@ -1,6 +1,6 @@
 #!/bin/sh
 
 printf ' '
-[ "$(xkblayout-state print %s)" = 'gr' ] &&
+[ "$(xkblayout)" = 'Gre' ] &&
 	printf 'el' ||
 	printf 'us'

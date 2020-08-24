@@ -1,7 +1,23 @@
 #!/bin/ksh
 
-echo -n 'Jump to pattern: '
-read Pattern
+Read() {
+	echo -n "$1"
+	shift
+	read "$@"
+}
+
+lfselect() {
+	lf -remote "send $id select '$1'"
+}
+
+Select() {
+	t=${Matches[c]}
+	[ ! -d "$t" ] &&
+		t=${t%/*}
+	lfselect "$t"
+}
+
+Read 'Jump to pattern: ' Pattern
 
 i=0
 IFS='
@@ -11,36 +27,43 @@ do
 	((++i))
 done
 
-[ "$i" -eq 0 ] && printf '\e[7;31;47m%s\e[0m' "Pattern not found" && exit 1
-[ "$i" -eq 1 ] && echo 'Only one match found.' && E=' ' || E=
-
-LfSelect() {
-	t=${Matches[c]}
-	lf -remote "send $id select '$t'"
-	[ -d "$t" ] || t=$(dirname "$t") && lf -remote "send $id select '$t'"
-}
+if [ "$i" -eq 0 ]
+then
+	printf '\e[7;31;47m%s\e[0m' "Pattern not found"
+	exit 1
+elif [ "$i" -eq 1 ]
+then
+	echo 'Only one match found.'
+	E=' '
+else
+	E=
+fi
 
 c=0
-LfSelect
+Select
 [ -n "$E" ] && exit 0
 
-while echo -n "Matches for '$Pattern': ($((c+1))/$i) [N/n]: " && read ans
+while Read "Matches for '$Pattern': ($((c+1))/$i) [N/n]: " ans
 do
 	case "$ans" in
-	(n*|j*)
+	(n|j)
 		c=$(( (c+1) %i ))
 	;;
-	(N*|k*)
+	(N|k)
 		((--c))
 		[ "$c" -lt 0 ] && c=$((i-1))
 	;;
+	(s)
+		lfselect "${Matches[c]}"
+		break
+	;;
 	(a)
-		lf -remote "send $id select '$f'"
+		lfselect "$f"
 		break
 	;;
 	(q)
 		break
 	;;
 	esac
-	LfSelect
+	Select
 done

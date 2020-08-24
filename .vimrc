@@ -1,21 +1,47 @@
-" vimrc
+" ~/.vimrc
 
 set ruler
 set number
 set title
 set showcmd
+set mouse=a
 set hlsearch
 set incsearch
 set autochdir
+
+set splitbelow
+set splitright
+
 set laststatus=2
-set loadplugins
 set relativenumber
 set clipboard+=unnamed
 set guifont=Fira\ Code\ Medium\ 9
-
 " set scrolloff=5
-set mouse=a
+
+" filetype plugin indent off
+" filetype indent off
+set loadplugins
+set autoindent
+set tabstop=8
+set shiftwidth=8
+
+set ttimeout
+set ttimeoutlen=1
+set ttyfast
+
+syntax enable
+set statusline=\ %<%f\ (%F)\ %h%m%r%=\|%-14.(%4.l,%-6.(%c%V%)%6.L\|%)\ %P\ 
+
 set cursorline
+augroup AutoCmds
+	autocmd!
+	autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
+	autocmd FileType python filetype plugin off
+"	autocmd FileType man filetype plugin on
+"	autocmd FileType sh,vim,python set tabstop=4 shiftwidth=4
+augroup END
+colorscheme pablo
+
 if ! has("nvim")
 	let &t_SI = "\e[6 q"
 	let &t_SR = "\e[4 q"
@@ -51,22 +77,6 @@ else
 	inoremap {<C-j> {}<Left><CR><C-O>O
 endif
 
-set ttimeout
-set ttimeoutlen=1
-set ttyfast
-
-augroup AutoCmds
-	autocmd!
-	autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
-	autocmd FileType python filetype plugin off
-"	autocmd FileType man filetype plugin on
-"	autocmd FileType sh,vim,python set tabstop=4 shiftwidth=4
-augroup END
-
-syntax enable
-colorscheme pablo
-set statusline=\ %<%f\ (%F)\ %h%m%r%=\|%-14.(%4.l,%-6.(%c%V%)%6.L\|%)\ %P\ 
-
 " Show whitespace
 "¬—>·~><:→— ←—→
 set listchars=eol:$,tab:\ —→,trail:~,extends:>,precedes:<,space:·
@@ -90,15 +100,6 @@ inoremap { {
 " Only works with `autoident on` and `filetype indent off`
 inoremap <C-f> <Esc>*Nea
 
-" filetype plugin indent off
-" filetype indent off
-set autoindent
-set tabstop=8
-set shiftwidth=8
-
-" Faster multi window management inside vim
-" nnoremap <M-q> <C-W>q
-
 function! Surround(lst)
 	let save = @"
 	silent normal gvy
@@ -107,14 +108,12 @@ function! Surround(lst)
 	let @" = save
 endfunction
 
-vnoremap <leader>n : norm 
+nnoremap <leader>e :e!<CR>
+vnoremap <leader>n :norm 
 vnoremap <leader>' <Esc>:call Surround(["'"])<CR>
 vnoremap <leader>" <Esc>:call Surround(['"'])<CR>
 vnoremap <leader>` <Esc>:call Surround(['`'])<CR>
 vnoremap <leader>( <Esc>:call Surround(['(', ')'])<CR>
 vnoremap <leader>{ <Esc>:call Surround(['{', '}'])<CR>
 vnoremap <leader>[ <Esc>:call Surround(['[', ']'])<CR>
-vnoremap <C-c> "+y
-
-set splitbelow
-set splitright
+" vnoremap <C-c> "+y

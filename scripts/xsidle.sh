@@ -22,12 +22,11 @@ BigSleepT=50
 
 while true
 do
-	Tim=$(xset q | awk '/timeout/{print $2}')
-	tosleep=$(($(xssstate -t) / 1000))
+	ToSleep=$(($(xssstate -t) / 1000))
 	if [ "$(xssstate -s)" = 'disabled' ]
 	then
 		sleep $BigSleepT
-	elif [ $tosleep -eq 0 ]
+	elif [ $ToSleep -eq 0 ]
 	then
 		log "Screensaver activated."
 		sleep $ToLock
@@ -47,6 +46,6 @@ do
 			sleep $SleepT
 		done
 	else
-		sleep $tosleep
+		sleep $ToSleep
 	fi
 done

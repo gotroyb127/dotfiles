@@ -16,16 +16,18 @@ set anchorfind
 set scrolloff 7
 set previewer LF_Scope.sh
 set shell ksh
+set shellopts '-f'
+set filesep "\n"
 set ifs "\n"
 
 #cmd on-cd $cd "$(dirname "$f")"
-cmd open          $Open.sh "$f"
-cmd OpenSel       $Open.sh "$fx"
-cmd EchoSelection !clear -x 2> /dev/null || clear; echo "$fx" | sort -n;
-cmd SelRecurs     &find "$f" | sort | LF_Select.sh
-cmd REsel         &LF_Pattern.sh "$@" | LF_Select.sh
-cmd Resource      :source ~/.config/lf/lfrc
-cmd UpdateLMark   :cmd-insert ":mark-save\n'"; cmd-delete-home
+cmd open        $Open.sh "$f"
+cmd OpenSel     $Open.sh "$fx"
+cmd EchoSel     !clear -x 2> /dev/null || clear; echo "$fs"
+cmd SelRecurs   &find "$f" | sort "$@" | LF_Select.sh
+cmd REsel       &LF_Pattern.sh "$@" | LF_Select.sh
+cmd Resource    :source ~/.config/lf/lfrc
+cmd UpdateLMark :cmd-insert ":mark-save\n'"; cmd-delete-home
 
 cmd Yankname &{{
 	[ -z "$f" ] && t="$PWD" || t="$f"
@@ -111,6 +113,12 @@ map R :{{
 map sn :set sortby natural
 map sN :set sortby name
 
+map v
+map vv :invert
+map vr :set reverse!; invert; set reverse!;
+map Vv :SelRecurs
+map Vr :SelRecurs -r
+
 map Jj %LF_Jump.sh -type f
 map Jd %LF_Jump.sh -type d
 map Ja %LF_Jump.sh
@@ -135,8 +143,8 @@ map c     :clear; unselect
 map <delete>  :Trash
 map <c-space> :toggle; up
 map t :toggle
+map T :toggle; up
 map Y :Yankname; echo Filename Yanked.
-map V :SelRecurs
 map L :OpenSel
 
 map r
@@ -152,9 +160,9 @@ map bN :set number!
 map bi :set icons!
 map <bs> :set hidden!
 
-map Sp &xsel -o | LF_Select.sh
+map Sp &xsel -o  | LF_Select.sh
 map Sc &xsel -bo | LF_Select.sh
-map Ss :EchoSelection
+map Ss :EchoSel
 map Sg :push :glob-select<space>
 map SG :push :glob-unselect<space>
 map Sr :push :REsel<space>

@@ -59,7 +59,7 @@ then
 		echo "Continuing to login shell."
 	;;
 	(j)
-		exec tmux
+		tmux attach
 	;;
 	esac
 fi

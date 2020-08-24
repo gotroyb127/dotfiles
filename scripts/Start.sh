@@ -24,6 +24,8 @@ xset s 900 600
 xset s noblank
 xset r rate 250 25
 
+[ $(pgrep Xorg | wc -l) -gt 1 ] && xset s off
+
 #xmodmap -e 'keycode 108 = Super_R'
 setxkbmap -layout us,gr -option grp:alt_shift_toggle
 

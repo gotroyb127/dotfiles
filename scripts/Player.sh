@@ -198,33 +198,3 @@ case $1 in
 	"$@"
 ;;
 esac
-
-# Commands
-#	seek
-#	cycle
-#	add
-#	playlist-next
-#	playlist-prev
-#	playlist-unshuffle
-#	playlist-shuffle
-#	quit
-
-## Interesting Properties:
-#	filename{,/no-ext}
-#	title
-#	media-title
-#	duration
-#	time-pos
-#	time-remaining
-#	percent-pos
-#	playtime-remaining
-#	playback-time
-#	?core-idle
-#	playlist-pos-1
-#
-#	RemTime=$(Info time-remaining)
-#	MetaDataTitle=$(Info media-title)
-#	RemPlTime=$(Info playtime-remaining)
-#	Perc=$(Info percent-pos | sed 's/\.[0-9]*//g')
-#	Title=$(Info filename/no-ext)
-

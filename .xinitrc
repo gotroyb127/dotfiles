@@ -12,7 +12,5 @@ unclutter --timeout 1 --ignore-scrolling &
 
 sleep 1 && sblocks &
 
-sleep 4 && pgrep Xorg > /dev/null && xset s off &
-
 # start window manager
 exec dwm
