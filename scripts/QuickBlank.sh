@@ -29,7 +29,7 @@ Reset() {
 	Status=R
 }
 
-trap 'exit' 2 15
+trap 'exit 0' 2 15
 trap 'Reset' exit
 
 Pause() {

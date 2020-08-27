@@ -116,8 +116,8 @@ map sN :set sortby name
 map v
 map vv :invert
 map vr :set reverse!; invert; set reverse!;
-map Vv :SelRecurs
-map Vr :SelRecurs -r
+map Vv :SelRecurs; down
+map Vr :SelRecurs -r; up
 
 map Jj %LF_Jump.sh -type f
 map Jd %LF_Jump.sh -type d

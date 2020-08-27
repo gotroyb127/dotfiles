@@ -10,8 +10,9 @@ ls_size() {
 	exit
 }
 
-for t in $(echo "$fs" | sed "s\`$PWD/\`\`")
+for t in $fs
 do
+	t=${t#"$PWD/"}
 	[ -d $t ] && {
 		du -hd0 $t
 		continue

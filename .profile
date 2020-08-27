@@ -48,18 +48,18 @@ then
 	printf "Options: [s]hell, [t]mux, [X]org: "
 	read ans
 	case "$ans" in
-	(t|T)
+	(t|T|j)
 		tmux
+	;;
+	([tT]a)
+		tmux attach
 	;;
 	(x|X|'')
 		echo "Starting X.org..."
 		startx >> "$STARTX_LOG" 2>&1
 	;;
-	(s|s)
+	(s|S)
 		echo "Continuing to login shell."
-	;;
-	(j)
-		tmux attach
 	;;
 	esac
 fi

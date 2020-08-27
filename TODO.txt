@@ -8,7 +8,10 @@ Maybe?: Have an array Type that stores how the Opener is launched: [async, async
 ??? Player.sh: pause-after1: improve other running instances's detection.
 
 ----- S6: -----
-TODO edited /etc/rc.local
+/etc/issue:
+\S \r (\l)
+
+--> edited /etc/rc.local
 --> edited mount-sysfs/up:
 	-	foreground { mountpoint -q /sys/firmware/efi/efivars }
 	+	if -n { mountpoint -q /sys/firmware/efi/efivars }

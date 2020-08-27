@@ -3,12 +3,11 @@
 a=25
 while [ $((a += 1)) -le 32 ]
 do
-	trap ':' $a
+	trap '' $a
 done
 trap ':' 30
 
-#xdotool getactivewindow windowsize 1500 40 windowmove 240 170
-xdotool getactivewindow windowsize 1260 31 windowmove 243 250
+xdotool getactivewindow windowsize 1260 31 windowmove 243 -3
 
 b='    '
 typeset -R"$((COLS - ${#b} +1))" S 2> /dev/null || b='\t\t\t\t\t\t\t\t'

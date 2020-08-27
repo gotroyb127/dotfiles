@@ -12,9 +12,11 @@ lfselect() {
 
 Select() {
 	t=${Matches[c]}
-	[ ! -d "$t" ] &&
-		t=${t%/*}
 	lfselect "$t"
+	[ ! -d "$t" ] && {
+		t=${t%/*}
+		lfselect "$t"
+	}
 }
 
 Read 'Jump to pattern: ' Pattern
