@@ -25,8 +25,8 @@ xset s noblank
 xset r rate 250 25
 
 [ $(pgrep Xorg | wc -l) -gt 1 ] && {
-	pgrep QuickBlank.sh ||
-		st QuickBlank.sh off
+	pgrep QuickBlank ||
+		st QuickBlank off
 }
 
 #xmodmap -e 'keycode 108 = Super_R'
@@ -35,7 +35,3 @@ setxkbmap -layout us,gr -option grp:alt_shift_toggle
 sleep 1 && amixer -q set Capture nocap &
 
 echo "${0##*/}: ----- KEYMAPS LOADED -----"
-
-[ "X$1" != 'X-u' ] && exit 0
-# Show available updates on startup.
-AutoUpdate.sh

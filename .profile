@@ -32,7 +32,6 @@ export TMUX_TMPDIR=$XDG_RUNTIME_DIR
 export XAUTHORITY=$XDG_RUNTIME_DIR/Xauthority
 export GOPATH=${XDG_DATA_HOME:-$HOME/.local/share}/go
 export WGETRC=${XDG_CONFIG_HOME:-$HOME/.config}/wget/wgetrc
-export INPUTRC=${XDG_CONFIG_HOME:-$HOME/.config}/inputrc
 export GNUPGHOME=${XDG_DATA_HOME:-$HOME/.local/share}/gnupg
 export WINEPREFIX=${XDG_DATA_HOME:-$HOME/.local/share}/wine
 export GTK2_RC_FILES=${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc-2.0

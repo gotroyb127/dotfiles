@@ -13,14 +13,11 @@ Invl=5
 
 cday=$(date +%j)
 
-case $1 in
-(-f)
+[ "X$1" = X-f ] && {
 	Updating=True
-;;
-(*)
+} || {
 	Updating=
-;;
-esac
+}
 
 if [ -f "$cache" ]
 then

@@ -14,7 +14,7 @@ set period 1
 set findlen 2
 set anchorfind
 set scrolloff 7
-set previewer LF_Scope.sh
+set previewer LF_Scope
 set shell ksh
 set shellopts '-f'
 set filesep "\n"
@@ -24,8 +24,8 @@ set ifs "\n"
 cmd open        $Open.sh "$f"
 cmd OpenSel     $Open.sh "$fx"
 cmd EchoSel     !clear -x 2> /dev/null || clear; echo "$fs"
-cmd SelRecurs   &find "$f" | sort "$@" | LF_Select.sh
-cmd REsel       &LF_Pattern.sh "$@" | LF_Select.sh
+cmd SelRecurs   &find "$f" | sort "$@" | LF_Select
+cmd REsel       &LF_Pattern "$@" | LF_Select
 cmd Resource    :source ~/.config/lf/lfrc
 cmd UpdateLMark :cmd-insert ":mark-save\n'"; cmd-delete-home
 
@@ -65,9 +65,9 @@ cmd Recol &{{
 cmd Trash &{{
 	{ N="$IFS"
 	mkdir -p "$TRASH"
-	LF_Move.sh "mv${N}-v${N}--" "$TRASH" NO_DUPS
+	LF_Move "mv${N}-v${N}--" "$TRASH" NO_DUPS
 	lf -remote "send load${N}"
-	} | LF_Log.sh
+	} | LF_Log
 }}
 
 cmd delete !{{
@@ -78,7 +78,7 @@ cmd delete !{{
 	read ans
 	[[ $ans = !(y|Y) ]] && echo 'Aborted.' && exit 0;
 	[ ! -e "$TMPTRASH" ] && mkdir -p "$TMPTRASH" && chmod 777 "$TMPTRASH"
-	LF_Move.sh "mv${N}-v${N}--" "$TMPTRASH"
+	LF_Move "mv${N}-v${N}--" "$TMPTRASH"
 	printf "\n--- Targets moved to $TMPTRASH. ---"
 }}
 
@@ -97,13 +97,13 @@ cmd paste &{{
 		DUPS=NO
 	fi
 	export fx="$list"
-	LF_Move.sh "$OP" $PWD $DUPS | sed "s!'$HOME!'~!g"
+	LF_Move "$OP" $PWD $DUPS | sed "s!'$HOME!'~!g"
 	lf -remote "send load${N}send clear"
-	} | LF_Log.sh
+	} | LF_Log
 }}
 
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls -lhd "$f"
-map A !clear -x 2> /dev/null || clear; LF_Du.sh
+map A !clear -x 2> /dev/null || clear; LF_Du
 
 map R :{{
 	Resource
@@ -119,12 +119,12 @@ map vr :set reverse!; invert; set reverse!;
 map Vv :SelRecurs; down
 map Vr :SelRecurs -r; up
 
-map Jj %LF_Jump.sh -type f
-map Jd %LF_Jump.sh -type d
-map Ja %LF_Jump.sh
+map Jj %LF_Jump -type f
+map Jd %LF_Jump -type d
+map Ja %LF_Jump
 
 map i $nvim -MR "$f"
-map I $LF_Scope.sh "$f" | nl | less -R
+map I $LF_Scope "$f" | nl | less -R
 map w $exec $SHELL
 map W !:
 map E :push $nvim<space>""<left>
@@ -160,8 +160,8 @@ map bN :set number!
 map bi :set icons!
 map <bs> :set hidden!
 
-map Sp &xsel -o  | LF_Select.sh
-map Sc &xsel -bo | LF_Select.sh
+map Sp &xsel -o  | LF_Select
+map Sc &xsel -bo | LF_Select
 map Ss :EchoSel
 map Sg :push :glob-select<space>
 map SG :push :glob-unselect<space>

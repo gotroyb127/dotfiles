@@ -1,7 +1,8 @@
 #!/bin/sh
 # ^^^^^^^ probably ignored
 
-Start.sh -u &
+Xstart &
+AutoUpdate &
 
 clipmenud &
 pulseaudio -D &
