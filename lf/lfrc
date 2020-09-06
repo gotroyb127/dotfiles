@@ -2,13 +2,12 @@
 # ^^^^^^^ trick vim to syntax highlihght
 
 set nohidden
-set color256
 set dircounts
 set incsearch
 set info size
 set icons
 set number
-set drawbox
+set nodrawbox
 set relativenumber
 set period 1
 set findlen 2
@@ -107,7 +106,7 @@ map A !clear -x 2> /dev/null || clear; LF_Du
 
 map R :{{
 	Resource
-	&sleep .5 && lf -remote "send $id echo 'Configuration file (~/.config/lf/lfrc) loaded.'"
+	&sleep .1 && lf -remote "send $id echo 'Configuration file (~/.config/lf/lfrc) loaded.'"
 }}
 
 map sn :set sortby natural

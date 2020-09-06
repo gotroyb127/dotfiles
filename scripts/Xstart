@@ -23,15 +23,25 @@ xset m 11/2 0
 xset s 900 600
 xset s noblank
 xset r rate 250 25
-
-[ $(pgrep Xorg | wc -l) -gt 1 ] && {
-	pgrep QuickBlank ||
-		st QuickBlank off
-}
+xset -dpms
 
 #xmodmap -e 'keycode 108 = Super_R'
 setxkbmap -layout us,gr -option grp:alt_shift_toggle
 
+if [ "X$1" != 'X-a' ]
+then
+	echo "${0##*/}: ----- X keymaps loaded. -----"
+	exit 0
+fi
+
+[ $(pgrep Xorg | wc -l) -gt 1 ] && {
+	D=-1
+	while [ "$((D += 1))" -le "${DISPLAY#:}" ]
+	do
+		DISPLAY=":$D" xset s off
+	done
+}
+
 sleep 1 && amixer -q set Capture nocap &
 
-echo "${0##*/}: ----- KEYMAPS LOADED -----"
+echo "${0##*/}: ----- X settings loaded. -----"

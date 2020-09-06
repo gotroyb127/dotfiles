@@ -1,7 +1,4 @@
 #!/bin/sh
-#
-# Use xset s $time to control the timeout when this will run.
-#
 
 b0=${0##*/}
 if [ $# -lt 1 ]
@@ -14,11 +11,11 @@ SuspendCmd=$2
 ToSusp=${3:-600}
 
 log() { echo "$b0: $(date +%r): $1" >&2; }
-Waked() { [ "$(xssstate -s)" != 'on' ]; }
+Waked() { log "state: $(xssstate -s)."; [ "$(xssstate -s)" != 'on' -o "$(xset q | awk '/timeout/{print $2}')" = 0 ]; }
 
 ToLock=10
-SleepT=30
-BigSleepT=50
+SleepT=5
+BigSleepT=30
 
 while true
 do

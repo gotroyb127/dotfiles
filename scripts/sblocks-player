@@ -7,7 +7,7 @@ do
 done
 trap ':' 30
 
-xdotool getactivewindow windowsize 1260 31 windowmove 243 -3
+xdotool getactivewindow windowsize 1260 31 windowmove 255 -3
 
 b='    '
 typeset -R"$((COLS - ${#b} +1))" S 2> /dev/null || b='\t\t\t\t\t\t\t\t'

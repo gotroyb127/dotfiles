@@ -1,7 +1,6 @@
 #!/bin/sh
-# ^^^^^^^ probably ignored
 
-Xstart &
+Xstart -a &
 AutoUpdate &
 
 clipmenud &
@@ -11,7 +10,7 @@ lxqt-policykit-agent 2> /dev/null &
 xsidle.sh 'slock' "$MACHINECTL suspend" 600 &
 unclutter --timeout 1 --ignore-scrolling &
 
-sleep 1 && sblocks &
+sblocks &
 
 # start window manager
 exec dwm

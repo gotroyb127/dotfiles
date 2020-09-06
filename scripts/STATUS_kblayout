@@ -1,6 +1,9 @@
 #!/bin/sh
 
-printf ' '
-[ "$(xkblayout)" = 'Gre' ] &&
-	printf 'el' ||
-	printf 'us'
+if [ "$(xkblayout)" = 'Gre' ]
+then
+	L='el'
+else
+	L='us'
+fi
+printf "  $L"

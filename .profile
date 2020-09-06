@@ -42,7 +42,8 @@ export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;
 dir='';music='';midi='ﱘ';vid='辶';img='';book='';ex='';txt='';fi='';arc='';word='';ppt=''
 export LF_ICONS="tw=$dir :st=st :ow= :di=$dir :ln= :or= :pi=pi :so= :cd= :cd= :bd=bd :su=su :sg=sg :dt=dt :fi=$fi :ex=$ex :*.opus=$music :*.ogg=$music :*.m4a=$music :*.mp3=$music :*.midi=$midi :*.mid=$midi :*.MID=$midi :*.mkv=$vid:*.mp4=$vid:*.webm=$vid:*.mpeg=$vid:*.avi=$vid:*.jpg=$img :*.jpeg=$img :*.png=$img :*.pdf=$book :*.djvu=$book :*.epub=$book :*.txt=$txt :*.zip=$arc :*.rar=$arc :*.7z=$arc :*.gz=$arc :*.xz=$arc :*.exe= :*.doc=$word :*.docx=$word :*.odt=$word :*.ppt=$ppt :*.pptx=$ppt :*.py= :*.c=$txt :*.cpp=$txt :*.h=$txt :*.hpp=$txt :*.go=$txt :*.sh=$txt :*.fish=$txt :"
 
-if [ $(id -u) != 0 -a -z "$DISPLAY" ]
+TTY=$(tty)
+if [ $(id -u) != 0 -a -z "${TTY##/dev/tty*}" ]
 then
 	printf "Options: [s]hell, [t]mux, [X]org: "
 	read ans
@@ -62,4 +63,5 @@ then
 	;;
 	esac
 fi
+unset TTY
 echo '---> Sourced ~/.profile'

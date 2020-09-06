@@ -35,15 +35,13 @@ then
 	exit 1
 elif [ "$i" -eq 1 ]
 then
+	lfselect "${Matches[0]}"
 	echo 'Only one match found.'
-	E=' '
-else
-	E=
+	exit 0
 fi
 
 c=0
 Select
-[ -n "$E" ] && exit 0
 
 while Read "Matches for '$Pattern': ($((c+1))/$i) [N/n]: " ans
 do

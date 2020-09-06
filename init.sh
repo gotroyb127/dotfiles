@@ -17,7 +17,6 @@ alias \
 	ll='ls -l'\
 	la='ls -al'\
 	lA='ls -Al'\
-	LF='let --LF_LEVEL; exec "$0" -ic lf'\
 	vim='nvim'\
 	view='nvim -MR'\
 	mpvs="mpv --input-ipc-server=$MPVSOCKET"\
@@ -38,7 +37,9 @@ alias \
 #AdbUnistall() {
 #	adb shell pm uninstall -k --user 0 W}
 
-hist() {
+LF() { let --LF_LEVEL; exec "$0" -ic "lf $1"; }
+exec_ksh() { let --LF_LEVEL; exec ksh "$@"; }
+Hist() {
 	[ $# -ge 1 ] && grep "$@" "$HISTFILE"
 }
 

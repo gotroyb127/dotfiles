@@ -14,11 +14,12 @@ VOL=${VOL##* \[}
 mute=${all##* \[}
 mute=${mute%]}
 
-[ "$mute" = 'on' ] && {
+if [ "$mute" = 'on' ]
+then
 	vol="墳 "; warn=' '
-} || {
+else
 	vol="ﱝ "; warn='!'
-}
+fi
 
 MicMute=$(amixer get Capture)
 [ -z "${MicMute##*\[on]*}" ] && mic=' '

@@ -16,7 +16,9 @@ esac
 
 if [ $# -ge 2 ]
 then
-	"$@" | Hili "$2"
+	RE=$2
+	[ -n "$2" ] && [ "X${2%%-*}" = X ] && RE=$3
+	"$@" | Hili "$RE"
 else
 	Hili "$1"
 fi

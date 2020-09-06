@@ -69,27 +69,27 @@ tagutil -- can change metadata values
 
 ### Mpv
 ## Commands
-#	seek
-#	cycle
-#	add
-#	playlist-next
-#	playlist-prev
-#	playlist-unshuffle
-#	playlist-shuffle
-#	quit
+	seek
+	cycle
+	add
+	playlist-next
+	playlist-prev
+	playlist-unshuffle
+	playlist-shuffle
+	quit
 
 ## Interesting Properties:
-#	filename{,/no-ext}
-#	title
-#	media-title
-#	duration
-#	time-pos
-#	time-remaining
-#	percent-pos
-#	playtime-remaining
-#	playback-time
-#	?core-idle
-#	playlist-pos-1
+	filename{,/no-ext}
+	title
+	media-title
+	duration
+	time-pos
+	time-remaining
+	percent-pos
+	playtime-remaining
+	playback-time
+	?core-idle
+	playlist-pos-1
 
 # Regexp rename example
 - - - - - 

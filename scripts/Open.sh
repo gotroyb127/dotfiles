@@ -3,7 +3,20 @@
 N='
 '
 IFS=$N
-[[ -z $@ ]] && exit 1
+[[ -z $@ ]] && {
+	echo 'No targets given.' >&2
+	exit 100
+}
+
+set -A Group\
+	'@(*.pdf|*.djvu)'\
+	'@(*.pptx|*.ppt)'\
+	'@(*.od[ft]|*.doc|*.docx)'\
+	'@(*.png|*.jpg|*.webp|*.svg|*.tiff|*.gif)'\
+	'@(*.mid|*.MID)'\
+	'@(*.mp[34]|*.mk[av]|*.ogg|*.wav|*.webm)'\
+	'@(*.html)'\
+	'@(*)'\
 
 set -A Opener\
 	"zathura"\
@@ -15,23 +28,16 @@ set -A Opener\
 	"w3m$N-N"\
 	"nvim"
 
-set -A Group\
-	'@(*.pdf)'\
-	'@(*.pptx|*.ppt)'\
-	'@(*.od[ft]|*.doc|*.docx)'\
-	'@(*.png|*.jpg|*.webp|*.svg|*.tiff)'\
-	'@(*.mid|*.MID)'\
-	'@(*.mp[34]|*.mk[av]|*.ogg|*.wav|*.webm)'\
-	'@(*.html)'\
-	'@(*)'\
-
 for t in $@
 do
 	i=0
 	[[ -d $t ]] && continue
 	until eval "[[ \$t = ${Group[i]} ]]"
 	do
-		((++i))
+		if [ $((i += 1)) -ge ${#Group[@]} ]
+		then
+			continue 2
+		fi
 	done
 	Groups[i]="${Groups[i]}$t$N";
 done
@@ -41,7 +47,7 @@ while [[ $((i++)) -lt $m ]]
 do
 	[[ -z ${Groups[i]} ]] && continue
 
-	echo ${Opener[i]} "$N${Groups[i]}" | pathi --c0 '/'
+	echo ${Opener[i]} "$N${Groups[i]}" | sed "s!^$HOME!~!" | pathi --c0 '/'
 
 	if [[ $i -le 2 ]]
 	then

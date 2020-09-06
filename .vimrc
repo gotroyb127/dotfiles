@@ -40,6 +40,8 @@ augroup AutoCmds
 "	autocmd FileType man filetype plugin on
 "	autocmd FileType sh,vim,python set tabstop=4 shiftwidth=4
 augroup END
+" "colorscheme elflord
+" "colorscheme ron
 colorscheme pablo
 
 if ! has("nvim")

@@ -21,7 +21,7 @@ set guioptions vh
 set statusbar-home-tilde
 set window-title-home-tilde
 set window-title-basename
-set window-title-page false
+set window-title-page
 
 set font "DejaVu Sans Semi-Condensed 10"
 
