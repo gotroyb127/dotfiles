@@ -156,6 +156,16 @@ do
 		shift 2
 	;;
 	(position)
+		Command '"set_property", "time-pos", '"$2"
+		ResyncPause &
+		shift 2
+	;;
+	(position+)
+		Command '"seek", '"$2"
+		ResyncPause &
+		shift 2
+	;;
+	(positionm)
 		SetInfoVars "pos      dur" \
 			    "time-pos duration"
 		SecsToTime $pos pos
@@ -164,11 +174,6 @@ do
 		Command '"set_property", "time-pos", '"$secs"
 		ResyncPause &
 		shift 1
-	;;
-	(position+)
-		Command '"seek", '"$2"
-		ResyncPause &
-		shift 2
 	;;
 	(speed-)
 		Command '"add", "speed", -'"$2"

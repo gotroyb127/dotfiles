@@ -6,7 +6,7 @@ BAT=$(echo "$Info" | sed 's/.*[^0-9]\+\([0-9]\+\)%.*/\1/')
 
 case $Info in
 (*100*)
-	BAT=" $BAT"; Charg=''
+	BAT="$BAT"; Charg=''
 ;;
 (*Charging*)
 	BAT="$BAT"; Charg=''
@@ -16,4 +16,4 @@ case $Info in
 ;;
 esac
 
-printf "${BAT}$Charg"
+printf "$BAT$Charg"

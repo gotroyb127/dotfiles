@@ -4,6 +4,8 @@ Maybe?: Have an array Type that stores how the Opener is launched: [async, async
 
 ???: find a way to properly display $(xprop -root WM_NAME | sed 's/.*"\(.*\)"/\1/')
 
+--->: dunst{,ify}: use the -A (action) feature
+
 ----- S6: -----
 /etc/issue:
 \S \r (\l)

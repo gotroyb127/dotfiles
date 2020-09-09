@@ -23,7 +23,7 @@ set window-title-home-tilde
 set window-title-basename
 set window-title-page
 
-set font "DejaVu Sans Semi-Condensed 10"
+set font "DejaVu Sans 11"
 
 map <Esc> abort
 

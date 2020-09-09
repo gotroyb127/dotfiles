@@ -1,17 +1,23 @@
 #!/bin/sh
-
+notify-send -i
 DEST="$HOME/Screenshots"
 Title="shot_$(date +'%Y%m%d_%H%M%S')"
 
+Notify() {
+	dunstify -t 3000 -i "$1" "$2"
+}
+
 if [ "$#" -le 0 ]
 then
-	shotgun "$DEST/$Title.png"
-	notify-send -i "$DEST/$Title.png" "Screenshot saved."
+	fname="$DEST/$Title.png"
+	shotgun "$fname"
+	Notify "$fname" "Screenshot saved."
 	exit 0
 fi
 
 [ $1 != window ] && exit 1
 
 id=$(xdotool getwindowfocus)
-shotgun -i $id "$DEST/${Title}w.png";
-notify-send -t 3000 -i "$DEST/${Title}w.png" "Window-Screenshot saved."
+fname="$DEST/${Title}w.png"
+shotgun -i $id "$fname";
+Notify "$fname" "Window-Screenshot saved."

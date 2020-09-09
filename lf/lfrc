@@ -69,19 +69,24 @@ cmd Trash &{{
 	} | LF_Log
 }}
 
-cmd delete !{{
-	N="$IFS"
-	[ -z "$TMPTRASH" ] && echo "error: TMPTRASH enviroment variable is not set."
+cmd rm !{{
 	clear -x 2> /dev/null || clear
-	printf "---\tFiles to be deleted:\t---\n\n$(echo "$fx" | sed "s!^$HOME!~!")\n\nDelete? [Y/n]: "
+	printf "--- Files to be removed: ---\n\n%s\n\nDelete? [Y/n]: " "$fx" \
+		| sed "s!^$HOME!~!" | pathi --c0 '/'
 	read ans
-	[[ $ans = !(y|Y) ]] && echo 'Aborted.' && exit 0;
-	[ ! -e "$TMPTRASH" ] && mkdir -p "$TMPTRASH" && chmod 777 "$TMPTRASH"
-	LF_Move "mv${N}-v${N}--" "$TMPTRASH"
-	printf "\n--- Targets moved to $TMPTRASH. ---"
+	if [ "$ans" != y ]
+	then
+		messg='Aborted'
+	elif echo; rm -vfR $fx
+	then
+		messg='DONE'
+	else
+		messg='SOME ERROR OCCURED'
+	fi
+	printf "\n--- $messg ---\n"
 }}
 
-cmd paste &{{
+cmd Paste &{{
 	{ N="$IFS"
 	load=$(lf -remote 'load')
 	mode=$(echo "$load" | sed -n '1p')
@@ -126,6 +131,7 @@ map i $nvim -MR "$f"
 map I $LF_Scope "$f" | nl | less -R
 map w $exec $SHELL
 map W !:
+map p :Paste
 map E :push $nvim<space>""<left>
 map D :push $mkdir<space>""<left>
 map x :push $chmod<space>+x<space>"$f"
@@ -145,6 +151,7 @@ map t :toggle
 map T :toggle; up
 map Y :Yankname; echo Filename Yanked.
 map L :OpenSel
+map K :set nopreview; set ratios 1
 
 map r
 map re :rename; cmd-word-back; cmd-left
@@ -157,7 +164,6 @@ map bv :set preview!
 map bn :set relativenumber!
 map bN :set number!
 map bi :set icons!
-map <bs> :set hidden!
 
 map Sp &xsel -o  | LF_Select
 map Sc &xsel -bo | LF_Select

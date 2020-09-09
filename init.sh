@@ -26,6 +26,7 @@ alias \
 	mksh='HISTFILE= ENV= mksh -o vi'\
 	dash='HISTFILE= ENV= dash'\
 	bash='HISTFILE= ENV= bash'\
+	youtube-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s'"\
 	CompileInstall='make clean && make && sudo make install && make clean'\
 	BuildLf='go mod vendor; ./gen/build.sh -mod=vendor -trimpath'\
 
@@ -38,10 +39,8 @@ alias \
 #	adb shell pm uninstall -k --user 0 W}
 
 LF() { let --LF_LEVEL; exec "$0" -ic "lf $1"; }
+Hist() { [ $# -ge 1 ] && grep "$@" "$HISTFILE"; }
 exec_ksh() { let --LF_LEVEL; exec ksh "$@"; }
-Hist() {
-	[ $# -ge 1 ] && grep "$@" "$HISTFILE"
-}
 
 mantopdf() {
 	groff -m man "$1" -Tpdf 2> /dev/null | zathura - 2> /dev/null
