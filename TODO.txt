@@ -1,8 +1,8 @@
-Maybe?: Have an array Type that stores how the Opener is launched: [async, async-clip, fg]
+TODO: Player.sh: see 'keep-open' option (probably a PauseAfter rewrite)
+
+???: Have an array Type that stores how the Opener is launched: [async, async-clip, fg]
 
 ??? Player.sh: pause-after1: improve other running instances's detection.
-
-???: find a way to properly display $(xprop -root WM_NAME | sed 's/.*"\(.*\)"/\1/')
 
 --->: dunst{,ify}: use the -A (action) feature
 

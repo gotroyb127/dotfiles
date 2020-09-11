@@ -1,5 +1,4 @@
 #!/bin/sh
-# ^^^^^^^ trick vim to syntax highlihght
 
 set nohidden
 set dircounts
@@ -19,14 +18,14 @@ set shellopts '-f'
 set filesep "\n"
 set ifs "\n"
 
-#cmd on-cd $cd "$(dirname "$f")"
-cmd open        $Open.sh "$f"
-cmd OpenSel     $Open.sh "$fx"
-cmd EchoSel     !clear -x 2> /dev/null || clear; echo "$fs"
-cmd SelRecurs   &find "$f" | sort "$@" | LF_Select
-cmd REsel       &LF_Pattern "$@" | LF_Select
-cmd Resource    :source ~/.config/lf/lfrc
-cmd UpdateLMark :cmd-insert ":mark-save\n'"; cmd-delete-home
+#cmd on-cd
+cmd open      $Open.sh "$f"
+cmd OpenSel   $Open.sh "$fx"
+cmd EchoSel   !clear -x 2> /dev/null || clear; echo "$fs"
+cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
+cmd REsel     &LF_Pattern "$@" | LF_Toggle
+cmd Resource  :source ~/.config/lf/lfrc
+cmd Ulm       :mark-save "'"
 
 cmd Yankname &{{
 	[ -z "$f" ] && t="$PWD" || t="$f"
@@ -42,7 +41,6 @@ cmd SetPrompt &{{
 	F="\033[38;5;15m"
 	N="\033[0m"
 
-#	unset ID id CO
 	lf -remote "send $id set promptfmt \
 	\"($ID$CO$LV$N) $W%w$F%f\""
 }}
@@ -53,11 +51,11 @@ cmd Recol &{{
 	if [ $w -le 75 ]
 	then
 		lf -remote "send $id set nopreview${N}send $id set ratios 1"
-	elif [ $w -le 220 ]
+	elif [ $w -le 160 ]
 	then
-		lf -remote "send $id set ratios 11:16${N}send $id set preview"
+		lf -remote "send $id set ratios 14:16${N}send $id set preview"
 	else
-		lf -remote "send $id set ratios 7:16${N}send $id set preview"
+		lf -remote "send $id set ratios 9:16${N}send $id set preview"
 	fi
 }}
 
@@ -131,6 +129,7 @@ map i $nvim -MR "$f"
 map I $LF_Scope "$f" | nl | less -R
 map w $exec $SHELL
 map W !:
+map q :Ulm; quit
 map p :Paste
 map E :push $nvim<space>""<left>
 map D :push $mkdir<space>""<left>
@@ -165,25 +164,25 @@ map bn :set relativenumber!
 map bN :set number!
 map bi :set icons!
 
-map Sp &xsel -o  | LF_Select
-map Sc &xsel -bo | LF_Select
+map Sp &xsel -o  | LF_Toggle
+map Sc &xsel -bo | LF_Toggle
 map Ss :EchoSel
 map Sg :push :glob-select<space>
 map SG :push :glob-unselect<space>
 map Sr :push :REsel<space>
 
-map gr :UpdateLMark; cd /
-map ge :UpdateLMark; cd /etc
-map gb :UpdateLMark; cd /bin
-map gv :UpdateLMark; cd /var
-map gT :UpdateLMark; cd /tmp
-map gm :UpdateLMark; cd /mnt
-map gh :UpdateLMark; cd
-map gl :UpdateLMark; cd ~/.local
-map gs :UpdateLMark; cd ~/.local/scripts
-map gt :UpdateLMark; cd ~/.local/trash
-map gd :UpdateLMark; cd ~/Documents
-map gD :UpdateLMark; cd ~/Downloads
-map gc :UpdateLMark; &lf -remote "send $id cd '${XDG_CONFIG_HOME:-\"$HOME/.config\"}'"
+map gr :Ulm; cd /
+map ge :Ulm; cd /etc
+map gb :Ulm; cd /bin
+map gv :Ulm; cd /var
+map gT :Ulm; cd /tmp
+map gm :Ulm; cd /mnt
+map gh :Ulm; cd ~
+map gl :Ulm; cd ~/.local
+map gs :Ulm; cd ~/.local/scripts
+map gt :Ulm; cd ~/.local/trash
+map gd :Ulm; cd ~/Documents
+map gD :Ulm; cd ~/Downloads
+map gc :Ulm; &lf -remote "send $id cd '${XDG_CONFIG_HOME:-\"$HOME/.config\"}'"
 
 Recol; SetPrompt

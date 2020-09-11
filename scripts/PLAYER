@@ -1,0 +1,13 @@
+#!/bin/sh
+
+xdotool getactivewindow windowsize 1260 31 windowmove 255 -3
+
+sleep .01
+COLS=$(tput cols)
+
+sblocks -p |
+while read l
+do
+	l=${l%  *}
+	printf "\n%${COLS}s" "${l%  *}  "
+done

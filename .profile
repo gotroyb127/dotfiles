@@ -12,8 +12,9 @@ export XDG_LOG_HOME=$HOME/.local/var/log
 export ENV=$XDG_CONFIG_HOME/init.sh
 export PATH=$PATH:$HOME/.local/scripts
 
-export EDITOR=nvim
 export PAGER=less
+export EDITOR=nvim
+export OPENER=Open.sh
 export MANPAGER='nvim +Man!'
 export CM_SELECTIONS=clipboard
 

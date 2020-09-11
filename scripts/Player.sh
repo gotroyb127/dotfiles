@@ -41,7 +41,9 @@ Info() {
 
 PauseAfter() {
 	shift
+	trap 'exit 0' TERM
 	trap 'exec "$0" pause-after $n -' USR1
+	dt='0.5'
 
 	# At first spawn
 	[ -z "$2" ] && {
@@ -59,7 +61,7 @@ PauseAfter() {
 		Command '"set_property", "pause", false'
 		if [ "$1" -eq 1 ]
 		then
-			secs=$(echo "$(Info playtime-remaining) - 0.5" | bc)
+			secs=$(echo "$(Info playtime-remaining) - $dt" | bc)
 			SecsToTime $secs time
 		else
 			time=$1
@@ -72,11 +74,11 @@ PauseAfter() {
 	do
 		if [ $n -ne 1 ]
 		then
-			secs=$(echo "$(Info playtime-remaining) + 1" | bc)
+			secs=$(echo "$(Info playtime-remaining) + $dt" | bc)
 			( sleep $secs
 			) & wait $!
 		else
-			secs=$(echo "$(Info playtime-remaining) - 0.5" | bc)
+			secs=$(echo "$(Info playtime-remaining) - $dt" | bc)
 			( sleep "$secs"
 				Command '"set_property", "pause", true'
 				Notify "Mpv paused."

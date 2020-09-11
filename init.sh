@@ -22,7 +22,7 @@ alias \
 	mpvs="mpv --input-ipc-server=$MPVSOCKET"\
 	SU='sudo ksh -il'\
 	LOG='vim "$STARTX_LOG"'\
-	PLAYER='COLS=$COLUMNS sblocks-player'\
+	LOGIN='exec_ksh -l'\
 	mksh='HISTFILE= ENV= mksh -o vi'\
 	dash='HISTFILE= ENV= dash'\
 	bash='HISTFILE= ENV= bash'\

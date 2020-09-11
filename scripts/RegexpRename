@@ -24,7 +24,7 @@ do
 			for (w = 0; w < NF; ++w) {
 				for (i in Out) {
 					if (Out[i]"." == $w)
-						$w = i
+						$w = i"."
 				}
 			}
 		print

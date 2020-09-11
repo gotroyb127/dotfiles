@@ -44,6 +44,7 @@ augroup END
 " "colorscheme ron
 colorscheme pablo
 
+map Y y$
 if ! has("nvim")
 	let &t_SI = "\e[6 q"
 	let &t_SR = "\e[4 q"
@@ -111,6 +112,7 @@ function! Surround(lst)
 endfunction
 
 nnoremap <leader>e :e!<CR>
+nnoremap <leader>E :set write modifiable noreadonly<CR>
 vnoremap <leader>n :norm 
 vnoremap <leader>' <Esc>:call Surround(["'"])<CR>
 vnoremap <leader>" <Esc>:call Surround(['"'])<CR>

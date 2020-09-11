@@ -27,6 +27,10 @@ set font "DejaVu Sans 11"
 
 map <Esc> abort
 
+map r     recolor
+map R     rotate
+map <C-r> reload
+
 map u scroll half-up
 map d scroll half-down
 map U scroll up

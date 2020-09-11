@@ -3,7 +3,7 @@
 IFS='
 '
 
-Title() { basename $1 | sed 's/.mp[34]//g'; }
+Title() { echo "${1##*/}" | sed 's/\.mp[34]$//g'; }
 
 Tag() {
 	for i in $(find $1 -type f)
@@ -14,7 +14,7 @@ Tag() {
 	done
 }
 
-for dir in $@
+for fname in $@
 do
-	[ -d $dir ] && Tag $dir
+	[ -d "$fname" -o -f "$fname" ] && Tag $fname
 done

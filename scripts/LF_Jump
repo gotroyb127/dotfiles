@@ -15,8 +15,8 @@ Select() {
 	lfselect "$t"
 	[ ! -d "$t" ] && {
 		t=${t%/*}
-		lfselect "$t"
 	}
+	lfselect "$t"
 }
 
 Read 'Jump to pattern: ' Pattern
@@ -43,27 +43,34 @@ fi
 c=0
 Select
 
-while Read "Matches for '$Pattern': ($((c+1))/$i) [N/n]: " ans
+while Read "Matches for '$Pattern': ($((c+1))/$i) [j/k]: " ans
 do
-	case "$ans" in
-	(n|j)
-		c=$(( (c+1) %i ))
-	;;
-	(N|k)
-		((--c))
-		[ "$c" -lt 0 ] && c=$((i-1))
-	;;
-	(s)
-		lfselect "${Matches[c]}"
-		break
-	;;
-	(a)
-		lfselect "$f"
-		break
-	;;
-	(q)
-		break
-	;;
-	esac
+	while [ ${#ans} -gt 0 ]
+	do
+		case "$ans" in
+		(*([0-9])j*)
+			n=${ans%%j*}; n=${n:-1}; ans=j${ans#*j}
+			c=$(( (c+n) % i ))
+		;;
+		(*([0-9])k*)
+			n=${ans%%k*}; n=${n:-1}; ans=k${ans#*k}
+			c=$(( (c-n) % i ))
+			[ $c -lt 0 ] && c=$((c+i))
+		;;
+		(s*)
+			lfselect "${Matches[c]}"
+			break 2
+		;;
+		(a*)
+			lfselect "$f"
+			break 2
+		;;
+		(q*)
+			break 2
+		;;
+		esac
+
+		ans=${ans#?}
+	done
 	Select
 done
