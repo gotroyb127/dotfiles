@@ -1,12 +1,6 @@
 #!/bin/ksh
 
-tilde() {
-	while read -r line
-	do
-		echo "$line" |
-		sed "s!'$HOME!'~!g"
-	done
-}
+tilde() { sed "s!'$HOME!'~!g"; }
 
 DEST="$HOME/Documents/ConfigFiles"
 
@@ -34,7 +28,7 @@ Update() {
 }
 
 date
-printf %s "\nCopying to $DEST:\n" | tilde
+printf "\n%s\n" "Copying to $DEST:" | tilde
 
 i=-1; M=${#Targets[@]}
 while [ $((++i)) -lt $M ]

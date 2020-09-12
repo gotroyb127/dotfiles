@@ -21,7 +21,7 @@ set ifs "\n"
 #cmd on-cd
 cmd open      $Open.sh "$f"
 cmd OpenSel   $Open.sh "$fx"
-cmd EchoSel   !clear -x 2> /dev/null || clear; echo "$fs"
+cmd EchoSel   !LF_Clear; echo "$fs" | LF_Fihi
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle
 cmd Resource  :source ~/.config/lf/lfrc
@@ -68,14 +68,14 @@ cmd Trash &{{
 }}
 
 cmd rm !{{
-	clear -x 2> /dev/null || clear
+	LF_Clear
 	printf "--- Files to be removed: ---\n\n%s\n\nDelete? [Y/n]: " "$fx" \
-		| sed "s!^$HOME!~!" | pathi --c0 '/'
+		| LF_Fihi
 	read ans
 	if [ "$ans" != y ]
 	then
 		messg='Aborted'
-	elif echo; rm -vfR $fx
+	elif rm -vfR $fx | LF_Log
 	then
 		messg='DONE'
 	else
@@ -86,26 +86,32 @@ cmd rm !{{
 
 cmd Paste &{{
 	{ N="$IFS"
+	if [ "X$1" = 'X--inside' -a -d "$f" ]
+	then
+		DEST=$f
+	else
+		DEST=$PWD
+	fi
 	load=$(lf -remote 'load')
 	mode=$(echo "$load" | sed -n '1p')
 	list=$(echo "$load" | sed '1d')
-	if [[ $mode = copy ]]
+	if [ $mode = copy ]
 	then
 		OP="cp${N}-Rv${N}--"
 		DUPS=
-	elif [[ $mode = move ]]
+	elif [ $mode = move ]
 	then
 		OP="mv${N}-v${N}--"
 		DUPS=NO
 	fi
 	export fx="$list"
-	LF_Move "$OP" $PWD $DUPS | sed "s!'$HOME!'~!g"
+	LF_Move "$OP" $DEST $DUPS | sed "s!'$HOME!'~!g"
 	lf -remote "send load${N}send clear"
 	} | LF_Log
 }}
 
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls -lhd "$f"
-map A !clear -x 2> /dev/null || clear; LF_Du
+map A !LF_Clear; LF_Du
 
 map R :{{
 	Resource
@@ -117,9 +123,11 @@ map sN :set sortby name
 
 map v
 map vv :invert
-map vr :set reverse!; invert; set reverse!;
-map Vv :SelRecurs; down
-map Vr :SelRecurs -r; up
+map vr :set reverse!; invert; set reverse!
+map Vv :SelRecurs
+map VV :SelRecurs; down
+map Vr :SelRecurs -r
+map VR :SelRecurs -r; up
 
 map Jj %LF_Jump -type f
 map Jd %LF_Jump -type d
@@ -131,10 +139,11 @@ map w $exec $SHELL
 map W !:
 map q :Ulm; quit
 map p :Paste
+map P :Paste --inside
 map E :push $nvim<space>""<left>
 map D :push $mkdir<space>""<left>
 map x :push $chmod<space>+x<space>"$f"
-map X !clear -x 2> /dev/null || clear; "$f"
+map X !LF_Clear; "$f"
 map C !vidir -v $fx
 
 map <c-y> :up

@@ -14,7 +14,7 @@ IFS='
 #\	\	$'-e\ts/\ X[.] /\ 10. /g\t'\
 #\	\	$'-e\ts/\ XI[.] /\ 11. /g\t'
 
-for f in $(find "$1" -type f | sort)
+for f in $(find "$@" -type f | sort)
 do
 	bname=$(echo "${f##*/}" | awk '
 		BEGIN {
@@ -31,9 +31,5 @@ do
 		}'
 	)
 	mv -vi "$f" "${f%/*}/$bname"
-
-#	mv -iv "$i" "$(dirname $i)/$(basename $i | sed $SED_CMD )"
-#	echo "$i:\n"$(dirname $i)/$(basename $i | sed $SED_CMD )""
-#	echo "Testing: 1 I I. 2 II II. 3 III III. " | sed $SED_CMD
 done
 

@@ -47,14 +47,14 @@ while [[ $((i++)) -lt $m ]]
 do
 	[[ -z ${Groups[i]} ]] && continue
 
-	echo ${Opener[i]} "$N${Groups[i]}" | sed "s!^$HOME!~!" | pathi --c0 '/'
+	echo ${Opener[i]} "$N${Groups[i]}" | LF_Fihi
 
 	if [[ $i -le 2 ]]
 	then
 		${Opener[i]} ${Groups[i]} 2> /dev/null &
 	elif [[ $i -le 3 ]]
 	then
-		${Opener[i]} ${Groups[i]} 2> /dev/null | xsel -b &
+		${Opener[i]} ${Groups[i]} 2> /dev/null | LF_Toggle &
 	else
 		${Opener[i]} ${Groups[i]}
 	fi

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rsync -a --partial-dir=/run/user/$(id -u) --temp-dir=/tmp --info=stats,skip,del,progress2 "$@"
