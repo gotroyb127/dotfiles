@@ -22,10 +22,14 @@ set ifs "\n"
 cmd open      $Open.sh "$f"
 cmd OpenSel   $Open.sh "$fx"
 cmd EchoSel   !LF_Clear; echo "$fs" | LF_Fihi
+cmd Ulm       :mark-save "'"
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle
-cmd Resource  :source ~/.config/lf/lfrc
-cmd Ulm       :mark-save "'"
+cmd Resource  &{{
+	f="$XDG_CONFIG_HOME/lf/lfrc"
+	lf -remote "send $id source '$f'"
+	lf -remote "send $id echo 'Configuration file ($(echo "$f" | LF_Fihi)) loaded.'"
+}}
 
 cmd Yankname &{{
 	[ -z "$f" ] && t="$PWD" || t="$f"
@@ -112,11 +116,7 @@ cmd Paste &{{
 
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls -lhd "$f"
 map A !LF_Clear; LF_Du
-
-map R :{{
-	Resource
-	&sleep .1 && lf -remote "send $id echo 'Configuration file (~/.config/lf/lfrc) loaded.'"
-}}
+map R :Resource
 
 map sn :set sortby natural
 map sN :set sortby name
@@ -134,7 +134,7 @@ map Jd %LF_Jump -type d
 map Ja %LF_Jump
 
 map i $nvim -MR "$f"
-map I $LF_Scope "$f" | nl | less -R
+map I $lf_ratios= LF_Scope "$f" | nl | less -R
 map w $exec $SHELL
 map W !:
 map q :Ulm; quit
@@ -144,7 +144,7 @@ map E :push $nvim<space>""<left>
 map D :push $mkdir<space>""<left>
 map x :push $chmod<space>+x<space>"$f"
 map X !LF_Clear; "$f"
-map C !vidir -v $fx
+map C !printf %s "$fx" | vidir -v -
 
 map <c-y> :up
 map <c-e> :down

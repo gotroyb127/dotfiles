@@ -1,3 +1,10 @@
 #!/bin/sh
 
-sed "s!$HOME!~!" | pathi --c0 '/'
+tilde() { sed "s!$HOME!~!" ; }
+
+if [ "X$1" = 'X-n' ]
+then
+	tilde
+else
+	tilde | pathi --c0 '/'
+fi

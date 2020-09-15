@@ -1,17 +1,12 @@
 {
 	"name": "Vimium C",
-	"@time": "5/6/2020, 12:36:21 PM",
-	"time": 1588757781908,
+	"@time": "9/15/2020, 2:12:15 PM",
+	"time": 1600168335732,
 	"environment": {
-		"extension": "1.83.0",
+		"extension": "1.85.2",
 		"platform": "linux"
 	},
-	"exclusionRules": [
-		{
-			"pattern": "^https?://www\\.youtube\\.com/*",
-			"passKeys": "0 < > "
-		}
-	],
+	"exclusionRules": [],
 	"extAllowList": "#",
 	"ignoreKeyboardLayout": true,
 	"keyMappings": [

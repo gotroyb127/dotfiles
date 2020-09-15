@@ -12,9 +12,9 @@ set -A Group\
 	'@(*.pdf|*.djvu)'\
 	'@(*.pptx|*.ppt)'\
 	'@(*.od[ft]|*.doc|*.docx)'\
-	'@(*.png|*.jpg|*.webp|*.svg|*.tiff|*.gif)'\
+	'@(*.png|*.jp*(e)g|*.JPG|*.webp|*.svg|*.tiff|*.gif)'\
 	'@(*.mid|*.MID)'\
-	'@(*.mp[34]|*.mk[av]|*.ogg|*.wav|*.webm)'\
+	'@(*.mp[34]|*.MP[34]|*.mk[av]|*.ogg|*.wav|*.webm)'\
 	'@(*.html)'\
 	'@(*)'\
 

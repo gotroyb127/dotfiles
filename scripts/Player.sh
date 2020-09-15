@@ -85,8 +85,6 @@ PauseAfter() {
 			) & wait $!
 		fi
 	done
-
-	exit 0
 }
 
 SetInfoVars() {
@@ -209,7 +207,10 @@ do
 	;;
 	(pause-after)
 		PauseAfter "$@"
-		shift $#
+		shift 2
+		[ "X$1" = 'X-' ] && {
+			shift 1
+		}
 	;;
 	(loop-)
 		if [ $(Info loop) = true -a "$2" != 0 ]
