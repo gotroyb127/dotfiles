@@ -18,11 +18,10 @@ set shellopts '-f'
 set filesep "\n"
 set ifs "\n"
 
-#cmd on-cd
 cmd open      $Open.sh "$f"
 cmd OpenSel   $Open.sh "$fx"
 cmd EchoSel   !LF_Clear; echo "$fs" | LF_Fihi
-cmd Ulm       :mark-save "'"
+cmd Ulm       &LF_MarkSave \'
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle
 cmd Resource  &{{
