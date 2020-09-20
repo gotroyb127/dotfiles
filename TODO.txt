@@ -1,8 +1,9 @@
-TODO: Player.sh: see 'keep-open' option (probably a PauseAfter rewrite)
+????: see /etc/s6/sv/rc-local/up
 
-???: Have an array Type that stores how the Opener is launched: [async, async-clip, fg]
+????: Have an array Type that stores how the Opener is launched: [async, async-clip, fg]
 
-??? Player.sh: pause-after1: improve other running instances's detection.
+????: Player.sh: see 'keep-open' option (probably a PauseAfter rewrite)
+???? Player.sh: pause-after1: improve other running instances's detection.
 
 --->: dunst{,ify}: use the -A (action) feature
 
@@ -17,7 +18,6 @@ TODO: Player.sh: see 'keep-open' option (probably a PauseAfter rewrite)
 --> edited mount-sysfs/up:
 	-	foreground { mountpoint -q /sys/firmware/efi/efivars }
 	+	if -n { mountpoint -q /sys/firmware/efi/efivars }
---> removed binfmt from boot bundle.
 OLD:
 --> acpid:
 +	redirfd -w 1 /dev/null
@@ -25,3 +25,4 @@ OLD:
 --> sysctl:
 +	redirfd -w 1 /dev/null
  	fdmove -c 2 1
+--> removed binfmt from boot bundle.

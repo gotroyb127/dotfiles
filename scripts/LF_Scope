@@ -74,41 +74,44 @@ handle_extension() {
 	;;
 
 	## OpenDocument
-	odt|ods|odp|sxw)
+	(odt|ods|odp|sxw)
 		## Preview as text conversion
 		odt2txt "${FILE_PATH}" && exit 5
 		## Preview as markdown conversion
 		pandoc -s -t markdown -- "${FILE_PATH}" && exit 5
-		exit 1;;
+		exit 1
+	;;
 
 	## XLSX
-	xlsx)
+	(xlsx)
 		## Preview as csv conversion
 		## Uses: https://github.com/dilshod/xlsx2csv
 		xlsx2csv -- "${FILE_PATH}" && exit 5
-		exit 1;;
+		exit 1
+	;;
 
 	## HTML
-	htm|html|xhtml)
+	(htm|html|xhtml)
 		## Preview as text conversion
 		w3m -dump "${FILE_PATH}" && exit 5
 		lynx -dump -- "${FILE_PATH}" && exit 5
 		elinks -dump "${FILE_PATH}" && exit 5
 		pandoc -s -t markdown -- "${FILE_PATH}" && exit 5
-		;;
+	;;
 
 	## JSON
-	json)
+	(json)
 		jq --color-output . "${FILE_PATH}" && exit 5
-		;;
+	;;
 
 	## Direct Stream Digital/Transfer (DSDIFF) and wavpack aren't detected
 	## by file(1).
-	dff|dsf|wv|wvc)
+	(dff|dsf|wv|wvc)
 		mediainfo "${FILE_PATH}" && exit 5
 		exiftool "${FILE_PATH}" && exit 5
-		;; # Continue with next handler on failure
+	;;
 	esac
+	# Continue with next handler on failure
 }
 
 handle_mime() {
@@ -193,7 +196,7 @@ handle_fallback() {
 	exit 1
 }
 
-MIMETYPE=$( file --dereference --brief --mime-type -- "${FILE_PATH}")
+MIMETYPE=$(file --dereference --brief --mime-type -- "${FILE_PATH}")
 handle_extension
 handle_mime "${MIMETYPE}"
 handle_fallback

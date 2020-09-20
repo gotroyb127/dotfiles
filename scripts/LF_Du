@@ -1,16 +1,23 @@
 #!/bin/sh
 
+set -f
 IFS='
 '
 
 ls_size() {
-	awk '/^[^dltσ]/ { printf $5"\t"; for(i=9; i<NF; ++i){printf $i" "} print $NF}'
+	awk '/^[^dltσ]/ {
+		printf $5"\t"
+		for (i=9; i<NF; ++i) {
+			printf $i" "
+		}
+		print $NF
+	}'
 }
 
 [ -z "$fs" ] && {
 	du -hd1 | sort -hr
 	ls -Shla | ls_size
-	exit
+	exit 0
 }
 
 for t in $fs

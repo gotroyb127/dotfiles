@@ -4,7 +4,7 @@ Xstart -a &
 AutoUpdate &
 
 clipmenud &
-pulseaudio -D &
+pgrep pulseaudio || pulseaudio -D &
 dunst 2> /dev/null &
 lxqt-policykit-agent 2> /dev/null &
 xsidle.sh 'slock' "$MACHINECTL suspend" 600 &

@@ -27,7 +27,6 @@ Update() {
 	    done
 }
 
-date
 printf "\n%s\n" "Copying to $DEST:" | tilde
 
 i=-1; M=${#Targets[@]}

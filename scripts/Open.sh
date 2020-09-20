@@ -1,5 +1,6 @@
 #!/bin/ksh
 
+set -f
 N='
 '
 IFS=$N

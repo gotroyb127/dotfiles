@@ -1,5 +1,6 @@
 #!/bin/sh
 
+set -f
 IFS='
 '
 OP=$1
@@ -14,9 +15,9 @@ fi
 
 for i in $fx
 do
-	d=$(dirname "$i")
+	d=${i%/*}
 	[ -n "$NODUPS" -a "$d" = "$DEST" ] && continue
-	i=$(basename "$i")
+	i=${i##*/}
 
 	if [ ! -e "$DEST/$i" ]
 	then

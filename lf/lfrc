@@ -21,7 +21,8 @@ set ifs "\n"
 cmd open      $Open.sh "$f"
 cmd OpenSel   $Open.sh "$fx"
 cmd EchoSel   !LF_Clear; echo "$fs" | LF_Fihi
-cmd Ulm       &LF_MarkSave \'
+cmd Ulm       :mark-save; push '
+#'
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle
 cmd Resource  &{{
@@ -179,18 +180,18 @@ map Sg :push :glob-select<space>
 map SG :push :glob-unselect<space>
 map Sr :push :REsel<space>
 
-map gr :Ulm; cd /
-map ge :Ulm; cd /etc
-map gb :Ulm; cd /bin
-map gv :Ulm; cd /var
-map gT :Ulm; cd /tmp
-map gm :Ulm; cd /mnt
-map gh :Ulm; cd ~
-map gl :Ulm; cd ~/.local
-map gs :Ulm; cd ~/.local/scripts
-map gt :Ulm; cd ~/.local/trash
-map gd :Ulm; cd ~/Documents
-map gD :Ulm; cd ~/Downloads
-map gc :Ulm; &lf -remote "send $id cd '${XDG_CONFIG_HOME:-\"$HOME/.config\"}'"
+map gr cd /
+map ge cd /etc
+map gb cd /bin
+map gv cd /var
+map gT cd /tmp
+map gm cd /mnt
+map gh cd ~
+map gl cd ~/.local
+map gs cd ~/.local/scripts
+map gt cd ~/.local/trash
+map gd cd ~/Documents
+map gD cd ~/Downloads
+map gc &lf -remote "send $id cd '${XDG_CONFIG_HOME:-\"$HOME/.config\"}'"
 
 Recol; SetPrompt
