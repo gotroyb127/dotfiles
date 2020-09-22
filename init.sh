@@ -47,46 +47,67 @@ mantopdf() {
 }
 
 SET_PS1() {
-# 8-bit (256-color) '\e[<args>m' arguments are `5;<n>` or `2;<r>;<g>;<b>`
+#	?='\[\033[38;2;;;m\]'
+	local B='\[\033[38;2;15;251;191m\]'
+	local T='\[\033[38;2;255;200;170m\]'
+#	local T='\[\033[38;2;255;255;190m\]'
+	local L='\[\033[38;5;84m\]'
+	local H='\[\033[38;2;8;255;166m\]'
+#	local H='\[\033[38;2;255;207;240m\]'
+	local U='\[\033[38;2;66;235;255m\]'
+	local D='\[\033[38;5;105m\]'
+#	local D='\[\033[38;2;100;205;255m\]'
+	local P='\[\033[38;2;0;255;255m\]'
+	local N='\[\033[0;0m\]'
 
-#	?='\[\e[38;2;;;m\]'
-#	local T='\[\e[38;2;255;207;240m\]'
-#	local U='\[\e[38;2;66;235;255m\]'
-#	local H='\[\e[38;2;255;253;154m\]'
-	local B='\[\e[38;2;15;251;191m\]'
-	local T='\[\e[38;2;255;255;190m\]'
-	local D='\[\e[38;2;100;205;255m\]'
-	local P='\[\e[38;2;0;255;255m\]'
-	local N='\[\e[0;0m\]'
-
+	local C=
+	local W=
 	local s='>'
 	local LVL=$LF_LEVEL
 
 	if [ "$USER" = root ]
 	then
-		local D='\[\e[38;2;200;0;0m\]'
+		D='\[\033[38;2;255;0;0m\]'
 		s='#'
 	fi
+	while [ $# -gt 0 ]
+	do
+		case $1 in
+		(-w)
+			W="$U\u$N@$H\h "
+			shift 1
+		;;
+		(-c[0-9])
+			C="\033[${1#-c} q"
+			shift 1
+		;;
+		(-c)
+			C="\033[${2} q"
+			shift 2
+		;;
+		(*)
+			shift 1
+		;;
+		esac
+	done
 
 	ExtStatus() {
 		local s=$?
-		local Sb='\[\e[1;31m\]'
-		local S='\[\e[0;31m\]'
+		local Sb='\[\033[1;31m\]'
+		local S='\[\033[0;31m\]'
 		[ "$s" -ne 0 ] && echo -n "$S[$Sb$s$S] "
 		return $s
 	}
 
-
-#	PS1="\e[${1:-2} q$B[$T\t$B] $U\u$N@$H\h $D\w\n\$(ExtStatus)$P> $N"
-	PS1="\e[${1:-2} q$B[$T\D{%-I:%-M:%-S}$B] $LVL $D\w\n\$(ExtStatus)$P$s $N"
+	PS1="$C$B[$T\D{%-I:%-M:%-S}$B] $L$LVL $W$D\w\n\$(ExtStatus)$P$s $N"
 }
 
 WHO() {
 	local U='\033[38;2;66;235;255m'
 	local H='\033[38;2;255;253;154m'
 	local N='\033[0;0m'
-	echo "$U$USER$N@$H$(hostname) " >&2
+	echo "$U$USER$N@$H$(hostname)"
 }
 
-SET_PS1 2
+SET_PS1
 PS2=

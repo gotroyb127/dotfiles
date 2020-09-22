@@ -38,15 +38,15 @@ cmd Yankname &{{
 }}
 
 cmd SetPrompt &{{
-	ID="\033[38;5;123m$id"
+	ID="\033[38;2;255;200;170m$id"
 	CO="\033[38;5;252m:"
 	LV="\033[38;5;84m$LF_LEVEL"
+	P="\033[38;2;90;255;230m"
 	W="\033[38;5;105m"
 	F="\033[38;5;15m"
 	N="\033[0m"
 
-	lf -remote "send $id set promptfmt \
-	\"($ID$CO$LV$N) $W%w$F%f\""
+	lf -remote "send $id set promptfmt \"$P[$ID$CO$LV$P] $W%w$F%f\""
 }}
 
 cmd Recol &{{

@@ -6,7 +6,9 @@ moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) timid
 #
 sleep 1 && xdotool mousemove 1200 700 click 1 sleep 1 mousemove 100 950 click 1
 
+# 8-bit (256-color) '\e[<args>m' arguments are `5;<n>` or `2;<r>;<g>;<b>`
 # Copied from the depreciated .bashrc
+
 	# for i in $(seq 256); do echo -en "\t\e[1;38;5;${i}m$i"; done
 	c1='\[\033[1;38;5;111m\]'
 	c2='\[\033[1;38;5;45m\]'
@@ -20,6 +22,8 @@ sleep 1 && xdotool mousemove 1200 700 click 1 sleep 1 mousemove 100 950 click 1
 
 	PS1="${c1}[${c2}\u${c6}@${c3}\H${c7}:${c4}\w${c1}]$c5\$ ${end}"
 	unset c{1..7} end
+# lfrc
+	ID="\033[38;5;123m$id"
 
 # Firefox: diable ui animation: Go to about:config and add
 	ui.prefersReducedMotion equal to 1.
@@ -111,4 +115,4 @@ tagutil -- can change metadata values
 	--no-parent \
 
 # List of essential packages
-{linux,linux-firmware,base-devel,moreutiles,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils {xdotool,xsel,shotgun,unclutter,clipmenu,dunst,highlight,mediainfo} ttf-{fira-code,nerd-fonts-symbols-mono}
+{linux,linux-firmware,base-devel,moreutils,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils {xdotool,xsel,shotgun,unclutter,clipmenu,dunst,highlight,mediainfo} ttf-{fira-code,nerd-fonts-symbols-mono}

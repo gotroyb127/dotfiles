@@ -1,7 +1,8 @@
 #!/bin/sh
 
-#read VOL mute << EOF
 #$(amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].* \[\(o[nf]*\)\]/\1 \2/')
+#read VOL mute << EOF
+#$(amixer get Master | sed -n '7s/.*\[\([0-9]*\)%\].* \[\(o[nf]*\)\]/\1 \2/p')
 #EOF
 
 #MicMute=$(amixer get Capture | tail -1)
@@ -23,6 +24,5 @@ fi
 
 MicMute=$(amixer get Capture)
 [ -z "${MicMute##*\[on]*}" ] && mic=' '
-
 
 printf %s "$mic$vol$VOL$warn"

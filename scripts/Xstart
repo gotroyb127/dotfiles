@@ -46,6 +46,7 @@ fi
 	done
 }
 
-sleep 1 && amixer -q set Capture nocap &
+amixer -q set Capture nocap &
+amixer -Mq set Master 40%
 
 echo "${0##*/}: ----- X settings loaded. -----"
