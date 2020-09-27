@@ -26,9 +26,14 @@ ResyncPause() {
 }
 
 TimeToSecs() {
-	sed -e 's/^\([0-9]*\):\([0-9]*\)$/\1*60+\2/g' \
-	    -e 's/^\([0-9]*\):\([0-9]*\):\([0-9]*\)$/\1*3600+\2*60+\3/g' \
-	| bc
+	awk '{
+		Secs = 0
+		n = split($0, TimeArr, ":")
+		for (i = n; i > 0; --i) {
+			Secs += TimeArr[i] * ( 60 ^ (n-i) )
+		}
+		print Secs
+	}'
 }
 
 Info() {
@@ -36,7 +41,7 @@ Info() {
 	do
 		printf '{ "command": ["get_property", "%s"] }\n' "$c"
 	done |
-	Socat | jq -r '.data'
+	Socat | jq -cr '.data'
 }
 
 PauseAfter() {
@@ -46,28 +51,30 @@ PauseAfter() {
 	dt='0.5'
 
 	# At first spawn
-	[ -z "$2" ] && {
+	if [ -z "$2" ]
+	then
 		# cancel any pending pause and exit
 		others=$(pgrep -f "$0 pause-after" | wc -l)
 		pgrep -f "$0 pause-after" | grep -v $$ | xargs -r kill
 
-		[ "$others" -gt 3 ] && {
+		if [ "$others" -gt 3 ]
+		then
 			ResyncPause CONT &
 			Notify "Mpv pause canceled."
 			exit 1
-		}
+		fi
 
 		# Notify at first spawn
 		Command '"set_property", "pause", false'
 		if [ "$1" -eq 1 ]
 		then
 			secs=$(echo "$(Info playtime-remaining) - $dt" | bc)
-			SecsToTime $secs time
+			SecsToTime time $secs
 		else
 			time=$1
 		fi
 		Notify "Pausing mpv after $time."
-	}
+	fi
 
 	n=$(($1 + 1))
 	while [ $((n -= 1)) -gt 0 ]
@@ -79,12 +86,58 @@ PauseAfter() {
 			) & wait $!
 		else
 			secs=$(echo "$(Info playtime-remaining) - $dt" | bc)
-			( sleep "$secs"
+			( sleep $secs
 				Command '"set_property", "pause", true'
 				Notify "Mpv paused."
 			) & wait $!
 		fi
 	done
+}
+
+PlaylistInfo() {
+	SetInfoVars "N            PL       CurrTime Speed"\
+	            "playlist-pos playlist time-pos speed"
+	PL=$(printf '%s\n' "$PL" | jq -r '.[] | .filename')
+
+	read BD TD RT <<- EOF
+	$(printf '%s\n' "$PL" |
+		while read -r fname
+		do
+			ffprobe -v error -show_entries format=duration \
+				-of default=noprint_wrappers=1:nokey=1 "$fname"
+		done | awk '
+		BEGIN {
+			TD = c = 0
+			BD = '"$CurrTime"'
+		} {
+			TD += $1
+			if (++c == '"$N"')
+				BD = int(TD + BD)
+		} END {
+			RT = int((TD - BD) / '"$Speed"')
+			print BD, TD, RT
+		}'
+	)
+	EOF
+
+	SetTimeVars BD $BD TD $TD RT $RT
+	st="[$BD . $TD] (-$RT) x$Speed"
+
+	printf '%s\n' "$PL" | awk '
+	BEGIN {
+		c = 0; N='"$N"'
+		s = "'"$st"'"
+	} {
+		if (c == N) {
+			printf "\n%s\n\n",$0
+		}
+		else
+			print
+		c += 1
+	} END {
+		cols = '"$(tput cols)"'
+		printf "%-"int((cols-length(s))/2)"s%s\n", "("N+1"/"c")", s
+	}' | LF_Fihi
 }
 
 SetInfoVars() {
@@ -96,10 +149,19 @@ SetInfoVars() {
 	EOF
 }
 
+SetTimeVars() {
+	while [ $# -gt 0 ]
+	do
+		SecsToTime "$1" "$2"
+		shift 2
+	done
+}
+
+
 SecsToTime() {
-	t=${1%.*}
+	t=${2%.*}
 	m=$(( (t/60)%60 ))
-	s=$((t%60))
+	s=$(( t%60 ))
 	if [ "$((h = t/3600))" != 0 ]
 	then
 		o="$h:$m:$s"
@@ -109,7 +171,7 @@ SecsToTime() {
 	else
 		o="$s"
 	fi
-	eval "$2=\"$o\""
+	eval "$1=\"$o\""
 }
 
 Status() {
@@ -135,12 +197,10 @@ Status() {
 	;;
 	esac
 
-	for v in "$CurrTime CurrTime" "$Duration Duration" "$RemPlTime RemPlTime"
-	do
-		SecsToTime $v
-	done
+	SetTimeVars CurrTime $CurrTime Duration $Duration RemPlTime $RemPlTime
 
-	printf "%s" "$Title [$CurrTime . $Duration] (-$RemPlTime) x$Speed $p$l"
+	printf "%.70s [%s . %s] (-%s) x%s %s" "$Title" "$CurrTime" "$Duration" \
+	       "$RemPlTime" "$Speed" "$p$l"
 }
 
 while [ $# -gt 0 ]
@@ -168,8 +228,7 @@ do
 	(positionm)
 		SetInfoVars "pos      dur" \
 			    "time-pos duration"
-		SecsToTime $pos pos
-		SecsToTime $dur dur
+		SetTimeVars pos $pos dur $dur
 		secs=$(dmenu -p "[$pos / $dur"'] Jump to: ' < /dev/null | TimeToSecs)
 		Command '"set_property", "time-pos", '"$secs"
 		ResyncPause &
@@ -208,12 +267,10 @@ do
 	(pause-after)
 		PauseAfter "$@"
 		shift 2
-		[ "X$1" = 'X-' ] && {
-			shift 1
-		}
+		[ "X$1" = 'X-' ] && shift 1
 	;;
 	(loop-)
-		if [ $(Info loop) = true -a "$2" != 0 ]
+		if [ $(Info loop) = true ] && [ "$2" != 0 ]
 		then
 			Command '"set_property", "loop", 0'
 		else
@@ -250,6 +307,10 @@ do
 	(sleep)
 		sleep $2
 		shift 2
+	;;
+	(playlist-info)
+		PlaylistInfo
+		shift 1
 	;;
 	(*)
 		"$@"
