@@ -82,7 +82,7 @@ endif
 
 " Show whitespace
 "¬—>·~><:→— ←—→
-set listchars=eol:$,tab:\ —→,trail:~,extends:>,precedes:<,space:·
+set listchars=eol:$,tab:\ ->,trail:~,extends:>,precedes:<,space:·
 imap <F2> <C-\><C-o>:set list!<CR>
 nmap <F2> :set list!<CR>
 imap <F3> <C-\><C-o>:set paste!<CR>

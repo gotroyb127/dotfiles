@@ -1,7 +1,13 @@
 #!/bin/sh
 
+#handy Time function:
+Time() { a=0; if [ -n "$1" ]; then m=$1; shift; else m=100; time while [ $((++a)) -le $m ]; do "$@" > /dev/null; done; }
+
 # Commonly used packages
 moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) timidity++ ttf-fira-code ttf-nerd-fonts-?
+
+# Hotspot with nm?
+install dnsmasq package
 
 #
 sleep 1 && xdotool mousemove 1200 700 click 1 sleep 1 mousemove 100 950 click 1

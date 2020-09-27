@@ -16,5 +16,5 @@ Tag() {
 
 for fname in $@
 do
-	[ -d "$fname" -o -f "$fname" ] && Tag $fname
+	[ -d "$fname" ] || [ -f "$fname" ] && Tag $fname
 done

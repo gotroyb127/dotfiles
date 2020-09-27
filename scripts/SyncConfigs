@@ -8,7 +8,7 @@ set -A Targets ~/.{config/{gsimplecal,zathura,dunst,lf,mpv,init.sh},local/script
 
 Update() {
 	local bsnm=${1##*/}
-	if [ -f "$1" -a "$1" -nt "$2/$bsnm" ]
+	if [ -f "$1" ] && [ "$1" -nt "$2/$bsnm" ]
 	then
 		cp -pv "$1" "$2"
 		return 0
@@ -20,7 +20,7 @@ Update() {
 	mkdir -p "$2/$bsnm"
 
 	find "$1" -maxdepth 1 |
-	    while read f
+	    while read -r f
 	    do
 		[[ $1 == $f ]] && continue
 		Update "$f" "$2/$bsnm"

@@ -7,7 +7,7 @@ OP=$1
 DEST=$2
 NODUPS=$3
 
-if [ -z "$DEST" -o -z "$OP" ]
+if [ -z "$DEST" ] || [ -z "$OP" ]
 then
 	echo "$0: Wrong arguments."
 	exit 0
@@ -16,7 +16,7 @@ fi
 for i in $fx
 do
 	d=${i%/*}
-	[ -n "$NODUPS" -a "$d" = "$DEST" ] && continue
+	[ -n "$NODUPS" ] && [ "$d" = "$DEST" ] && continue
 	i=${i##*/}
 
 	if [ ! -e "$DEST/$i" ]

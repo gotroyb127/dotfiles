@@ -19,8 +19,7 @@ do
 	bname=$(echo "${f##*/}" | awk '
 		BEGIN {
 			n = split("I II III IV V VI VII VIII IX X XI", Out)
-		}
-		{
+		} {
 			for (w = 0; w < NF; ++w) {
 				for (i in Out) {
 					if (Out[i]"." == $w)

@@ -11,7 +11,10 @@ SuspendCmd=$2
 ToSusp=${3:-600}
 
 log() { echo "$b0: $(date +%r): $1" >&2; }
-Waked() { log "state: $(xssstate -s)."; [ "$(xssstate -s)" != 'on' -o "$(xset q | awk '/timeout/{print $2}')" = 0 ]; }
+Waked() {
+	log "state: $(xssstate -s)."
+	[ "$(xssstate -s)" != 'on' ] || [ "$(xset q | awk '/timeout/{print $2}')" = 0 ]
+}
 
 ToLock=10
 SleepT=5

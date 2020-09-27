@@ -1,0 +1,15 @@
+#!/bin/sh
+
+Kill() {
+	killall nm-applet stalonetray
+}
+
+if [ "X$1" = 'X-q' ]
+then
+	Kill
+	exit 0
+fi
+
+{ nm-applet & stalonetray ; } > /dev/null 2>&1
+
+Kill

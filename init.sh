@@ -26,6 +26,7 @@ alias \
 	mksh='HISTFILE= ENV= mksh -o vi'\
 	dash='HISTFILE= ENV= dash'\
 	bash='HISTFILE= ENV= bash'\
+	yt-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s'"\
 	youtube-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s'"\
 	CompileInstall='make clean && make && sudo make install && make clean'\
 	BuildLf='go mod vendor; ./gen/build.sh -mod=vendor -trimpath'\

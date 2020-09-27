@@ -1,0 +1,16 @@
+#!/bin/sh
+
+Print() {
+	s=$(Player.sh playlist-info) || return $?
+	LF_Clear
+	printf "%s\n" "$s"
+}
+
+Print
+while sleep .989
+do
+	Print || { 
+		echo 'Waiting for 5 secs...'
+		sleep 5
+	}
+done

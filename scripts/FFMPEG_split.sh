@@ -21,9 +21,10 @@ do
 	[ $((lr += 1)) -gt 7 ] && break
 	pt=$ct
 	ct=$l
-	[ -z "${pt###*}" -o -z "${l###*}" ] && {
+	if [ -z "${pt###*}" ] || [ -z "${l###*}" ]
+	then
 		lr=$((lr - 1))
 		continue
-	}
+	fi
 	FFMPEG_cut.sh $Rec "$F" "$pt" "$ct" "$(printf "$Format" "$lr")"
 done 3< "$T"

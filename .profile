@@ -40,7 +40,7 @@ dir='';music='';midi='ﱘ';vid='辶';img='';book='';ex='';txt='�
 export LF_ICONS="tw=$dir :st=st :ow= :di=$dir :ln= :or= :pi=pi :so= :cd= :cd= :bd=bd :su=su :sg=sg :dt=dt :fi=$fi :ex=$ex :*.opus=$music :*.ogg=$music :*.m4a=$music :*.mp3=$music :*.midi=$midi :*.mid=$midi :*.MID=$midi :*.mkv=$vid:*.mp4=$vid:*.webm=$vid:*.mpeg=$vid:*.avi=$vid:*.jpg=$img :*.jpeg=$img :*.png=$img :*.pdf=$book :*.djvu=$book :*.epub=$book :*.txt=$txt :*.zip=$arc :*.rar=$arc :*.7z=$arc :*.gz=$arc :*.xz=$arc :*.exe= :*.doc=$word :*.docx=$word :*.odt=$word :*.ppt=$ppt :*.pptx=$ppt :*.py= :*.c=$txt :*.cpp=$txt :*.h=$txt :*.hpp=$txt :*.go=$txt :*.sh=$txt :"
 
 TTY=$(tty)
-if [ $(id -u) != 0 -a -z "${TTY##/dev/tty*}" ]
+if [ $(id -u) != 0 ] && [ -z "${TTY##/dev/tty*}" ]
 then
 	printf "Options: [s]hell, [t]mux, [X]org: "
 	read ans

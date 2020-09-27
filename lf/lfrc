@@ -138,6 +138,7 @@ map I $lf_ratios= LF_Scope "$f" | nl | less -R
 map w $exec $SHELL
 map W !:
 map q :Ulm; quit
+map Q :quit
 map p :Paste
 map P :Paste --inside
 map E :push $nvim<space>""<left>
@@ -155,6 +156,7 @@ map c     :clear; unselect
 
 map <delete>  :Trash
 map <c-space> :toggle; up
+map <enter>   :OpenSel
 map t :toggle
 map T :toggle; up
 map Y :Yankname; echo Filename Yanked.
