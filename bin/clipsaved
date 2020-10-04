@@ -1,0 +1,90 @@
+#!/bin/sh
+
+set -o nounset
+
+: "${CS_SELECTIONS=primary clipboard}"
+: "${CS_DIR:="${XDG_RUNTIME_DIR-"${TMPDIR-/tmp}"}"}"
+: "${CS_DEBUG=}"
+: "${CS_MAXCACHED:=200}"
+
+LOCKED=
+cachedir=$CS_DIR/clipsave.$USER
+lockfile=$cachedir/CS.lck
+activecachesfile=$cachedir/ActiveCaches
+
+debug() {
+	[ -n "$CS_DEBUG" ] && printf '%s\n' "$@"
+}
+
+die() {
+	printf '%s\n' "$@" >&2
+	exit $1
+}
+
+cleanquit() {
+	if [ -n "$LOCKED" ]
+	then
+		rm -R "$cachedir"
+	fi
+
+	exit
+}
+
+initfiles() {
+	rm -Rf "$cachedir"
+	mkdir -p -m0700 "$cachedir"
+	if [ -f "$lockfile" ]
+	then
+		die 5 "Lock file '$lockfile' exists. Maybe another \
+instance is already running."
+	else
+		touch "$lockfile"
+		LOCKED=YES
+	fi
+}
+
+managenewsel() {
+	for sel in $CS_SELECTIONS
+	do
+		tmpf=$(mktemp)
+		xsel --$sel -o > "$tmpf"
+		tmpcksum=$(cksum "$tmpf")
+
+		fname="$cachedir/${tmpcksum%% *}"
+
+		if [ -f "$fname" ]
+		then
+			continue
+		fi
+		mv -f "$tmpf" "$fname"
+		debug "Grapped from $sel: '$fname'."
+
+		printf '%s\n' "$fname" >> "$activecachesfile"
+	done
+}
+
+managecachedsel() {
+	tmpf=$(mktemp)
+	tail "-$CS_MAXCACHED" "$activecachesfile" | sort > "$tmpf"
+	mv -f "$tmpf" "$activecachesfile"
+
+	{ cat "$activecachesfile"
+	  printf '%s\n' "$cachedir/"[0-9]*
+	} | sort | uniq -u |
+		while read -r f
+		do
+			rm -f "$f"
+		done
+}
+
+trap 'cleanquit' INT
+
+initfiles
+while true
+do
+	managenewsel
+	managecachedsel
+
+	clipnotify &
+	wait $!
+done

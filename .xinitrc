@@ -3,7 +3,9 @@
 Xstart -a &
 AutoUpdate &
 
-clipmenud &
+#clipmenud &
+clipsaved &
+
 pgrep pulseaudio || pulseaudio -D &
 dunst 2> /dev/null &
 lxqt-policykit-agent 2> /dev/null &

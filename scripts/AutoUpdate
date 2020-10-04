@@ -5,7 +5,7 @@ sleep .5
 {
 	sudo -n pacman -Sy &&
 	sudo -n pacman -Fy
-} > /dev/null 2>&1 || exit 1
+} > /dev/null || exit $?
 
 cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
 cache=$cachedir/AutoUpdated
@@ -37,7 +37,7 @@ then
 	notify-send -t 15000 "Time for Updates!!!
 Pacman: $UpsNum updates available." \
 	"$Updates"
-	st -e tmux new 'sudo pacman -Su && echo "---- ----" && read'
+	st -e tmux new 'sudo pacman -Su && echo "---- ----" && $SHELL'
 	pacman -Quq > /dev/null || {
 		echo "$cday" > "$cache"
 		echo "Updating cache file ($cache)."

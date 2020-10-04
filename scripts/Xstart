@@ -7,15 +7,14 @@ xset s noblank
 xset r rate 250 25
 xset -dpms
 
-setxkbmap -layout us,gr -option grp:shift_caps_toggle \
-          -option grp:alt_shift_toggle
+setxkbmap -layout us,gr -option grp:shift_caps_toggle
 
 if [ -z "${USER##*u*}" ]
 then
 	# Synaptic settings for touchpad
 	#	TapButton1=1
 	synclient \
-		TapButton1=0\
+		TapButton1=1\
 		TapButton2=3\
 		TapButton3=2\
 		HorizTwoFingerScroll=on\

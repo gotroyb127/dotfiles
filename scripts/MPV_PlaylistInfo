@@ -1,16 +1,21 @@
 #!/bin/sh
 
+q() { exit 0; }
 Print() {
 	s=$(Player.sh playlist-info) || return $?
 	LF_Clear
 	printf "%s\n" "$s"
 }
+Read() {
+	printf %s 'Waiting... : '
+	read cmd
+	eval "$cmd"
+}
+
+trap 'echo; Read' INT
 
 Print
 while sleep .989
 do
-	Print || { 
-		echo 'Waiting for 5 secs...'
-		sleep 5
-	}
+	Print || Read
 done

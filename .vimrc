@@ -58,8 +58,9 @@ if ! has("nvim")
 	nnoremap <Esc>k <C-W><C-K>
 	nnoremap <Esc>l <C-W><C-L>
 	nnoremap <Esc>h <C-W><C-H>
-	nnoremap <Esc>= <C-W>+
+	nnoremap <Esc>+ <C-W>+
 	nnoremap <Esc>- <C-W>-
+	nnoremap <Esc>= <C-W>=
 	nnoremap <Esc>, <C-W><
 	nnoremap <Esc>. <C-W>>
 
@@ -72,8 +73,9 @@ else
 	nnoremap <M-k> <C-W><C-K>
 	nnoremap <M-l> <C-W><C-L>
 	nnoremap <M-h> <C-W><C-H>
-	nnoremap <M-=> <C-W>+
+	nnoremap <M-+> <C-W>+
 	nnoremap <M--> <C-W>-
+	nnoremap <M-=> <C-W>=
 	nnoremap <M-,> <C-W><
 	nnoremap <M-.> <C-W>>
 

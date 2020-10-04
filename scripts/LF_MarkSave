@@ -1,0 +1,12 @@
+#!/bin/sh
+
+MARKSFILE=${XDG_DATA_HOME:-$HOME/.local/share}/lf/marks
+
+[ -n "${1#?}" -o -z "$1" ] && {
+	echo "${0##*/}: arguments must be one character" >&2
+	exit 100
+}
+
+{ echo "$1:$PWD"
+  sed "/^$1:/d" "$MARKSFILE"
+} | sponge "$MARKSFILE"

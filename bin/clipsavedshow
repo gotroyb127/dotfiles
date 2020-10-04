@@ -1,0 +1,55 @@
+#!/bin/sh
+
+set -o nounset
+
+: "${CS_TOSEL=primary clipboard}"
+: "${CS_DIR:="${XDG_RUNTIME_DIR-"${TMPDIR-/tmp}"}"}"
+: "${CS_LAUNCHER:=dmenu}"
+
+cachedir=$CS_DIR/clipsave.$USER
+
+getfirstline() {
+	# We look for the first line matching regex /./ here because we want the
+	# first line that can provide reasonable context to the user.
+	awk -v limit=300 '
+		BEGIN { printed = 0; }
+		printed == 0 && NF {
+			$0 = substr($0, 0, limit);
+			printf("%s", $0);
+			printed = 1;
+		}
+		END {
+			if (NR > 1)
+				printf(" (%d lines)", NR);
+			printf("\n");
+		}' < "$1"
+}
+
+selfromfile() {
+	for sel in $CS_TOSEL
+	do
+		xsel -i --$sel < "$1"
+	done
+}
+
+tmpf=$(mktemp)
+
+for fname in $(tac "$cachedir/ActiveCaches")
+do
+	printf '%s\n' "$(getfirstline "$fname")"
+done > "$tmpf"
+
+out=$("$CS_LAUNCHER" "$@" < "$tmpf" | sed 's/\(.*\) ([0-9]* lines)/\1/')
+
+for fname in "$cachedir/"[0-9]*
+do
+	if [ "X$(head -1 "$fname")" = "X$out" ]
+	then
+		selfromfile "$fname"
+		exit 0
+	fi
+done
+
+printf '%s' "$out" > "$tmpf"
+selfromfile "$tmpf"
+rm $tmpf

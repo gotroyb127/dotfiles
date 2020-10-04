@@ -55,7 +55,7 @@ do
 		${Opener[i]} ${Groups[i]} 2> /dev/null &
 	elif [[ $i -le 3 ]]
 	then
-		${Opener[i]} ${Groups[i]} 2> /dev/null | LF_Toggle &
+		${Opener[i]} ${Groups[i]} 2> /dev/null | xsel -b &
 	else
 		${Opener[i]} ${Groups[i]}
 	fi

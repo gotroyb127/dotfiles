@@ -1,9 +1,8 @@
-????: see /etc/s6/sv/rc-local/up
+lib32-alsa-lib: ???????????????? see /etc/pacman.conf
 
 ????: Have an array Type that stores how the Opener is launched: [async, async-clip, fg]
 
-????: Player.sh: see 'keep-open' option (probably a PauseAfter rewrite)
-???? Player.sh: pause-after1: improve other running instances's detection.
+????: Player.sh: pause-after1: improve other running instances's detection.
 
 --->: dunst{,ify}: use the -A (action) feature
 
@@ -11,17 +10,13 @@
 /etc/issue:
 \S \r (\l)
 
---> edited /etc/rc.local
+--> added pacman.hook: /etc/pacman.d/hooks/ClearEtcIssue.hook
+
 --> edited /etc/s6/current/run-image/service/s6-svscan-log/run:
 	-s6-log -bpd3 -- 1 t /run/uncaught-logs
 	+s6-log -bpd3 -- t /run/uncaught-logs
---> edited mount-sysfs/up:
-	-	foreground { mountpoint -q /sys/firmware/efi/efivars }
-	+	if -n { mountpoint -q /sys/firmware/efi/efivars }
 OLD:
---> acpid:
-+	redirfd -w 1 /dev/null
- 	fdmove -c 2 1
+--> edited /etc/rc.local
 --> sysctl:
 +	redirfd -w 1 /dev/null
  	fdmove -c 2 1

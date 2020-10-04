@@ -21,7 +21,8 @@ set ifs "\n"
 cmd open      $Open.sh "$f"
 cmd OpenSel   $Open.sh "$fx"
 cmd EchoSel   !LF_Clear; echo "$fs" | LF_Fihi
-cmd Ulm       :mark-save; push '
+cmd Ulm       &LF_MarkSave \'
+#cmd Ulm       :mark-save; push '
 #'
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle
@@ -139,6 +140,7 @@ map w $exec $SHELL
 map W !:
 map q :Ulm; quit
 map Q :quit
+map <c-w> :${{ let --LF_LEVEL; exec $SHELL }}; quit
 map p :Paste
 map P :Paste --inside
 map E :push $nvim<space>""<left>
@@ -191,6 +193,7 @@ map gm cd /mnt
 map gh cd ~
 map gl cd ~/.local
 map gs cd ~/.local/scripts
+map gS cd ~/.local/bin
 map gt cd ~/.local/trash
 map gd cd ~/Documents
 map gD cd ~/Downloads
