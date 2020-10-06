@@ -8,12 +8,31 @@ set -o nounset
 : "${CS_MAXCACHED:=200}"
 
 LOCKED=
+tmpf=
 cachedir=$CS_DIR/clipsave.$USER
 lockfile=$cachedir/CS.lck
 activecachesfile=$cachedir/ActiveCaches
 
-debug() {
-	[ -n "$CS_DEBUG" ] && printf '%s\n' "$@"
+if [ -n "$CS_DEBUG" ]
+then
+	debug() {
+		printf '%s\n' "$@" >&2
+	}
+	debug "Debuging is enabled."
+else
+	debug() { : ; }
+fi
+
+_mv() {
+	if ! mv "$@"
+	then
+		debug "mv $*"
+	fi
+}
+
+_mktemp() {
+	[ -f "$tmpf" ] && return 0
+	tmpf=$(mktemp)
 }
 
 die() {
@@ -33,10 +52,10 @@ cleanquit() {
 initfiles() {
 	rm -Rf "$cachedir"
 	mkdir -p -m0700 "$cachedir"
+	touch "$activecachesfile"
 	if [ -f "$lockfile" ]
 	then
-		die 5 "Lock file '$lockfile' exists. Maybe another \
-instance is already running."
+		die 5 "Lock file '$lockfile' exists. Maybe another instance is already running."
 	else
 		touch "$lockfile"
 		LOCKED=YES
@@ -46,17 +65,18 @@ instance is already running."
 managenewsel() {
 	for sel in $CS_SELECTIONS
 	do
-		tmpf=$(mktemp)
+		_mktemp
 		xsel --$sel -o > "$tmpf"
 		tmpcksum=$(cksum "$tmpf")
 
 		fname="$cachedir/${tmpcksum%% *}"
 
-		if [ -f "$fname" ]
+		if [ "$(head -1 "$tmpf")" = "" ] || [ -f "$fname" ]
 		then
+			debug "Skipping caching from $sel."
 			continue
 		fi
-		mv -f "$tmpf" "$fname"
+		_mv -f "$tmpf" "$fname"
 		debug "Grapped from $sel: '$fname'."
 
 		printf '%s\n' "$fname" >> "$activecachesfile"
@@ -64,9 +84,9 @@ managenewsel() {
 }
 
 managecachedsel() {
-	tmpf=$(mktemp)
+	_mktemp
 	tail "-$CS_MAXCACHED" "$activecachesfile" | sort > "$tmpf"
-	mv -f "$tmpf" "$activecachesfile"
+	_mv -f "$tmpf" "$activecachesfile"
 
 	{ cat "$activecachesfile"
 	  printf '%s\n' "$cachedir/"[0-9]*
@@ -78,6 +98,7 @@ managecachedsel() {
 }
 
 trap 'cleanquit' INT
+trap 'exec $0 "$@"' HUP
 
 initfiles
 while true

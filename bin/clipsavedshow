@@ -39,7 +39,7 @@ do
 	printf '%s\n' "$(getfirstline "$fname")"
 done > "$tmpf"
 
-out=$("$CS_LAUNCHER" "$@" < "$tmpf" | sed 's/\(.*\) ([0-9]* lines)/\1/')
+out=$("$CS_LAUNCHER" "$@" < "$tmpf" | sed 's/^\(.*\) ([0-9]* lines)$/\1/')
 
 for fname in "$cachedir/"[0-9]*
 do

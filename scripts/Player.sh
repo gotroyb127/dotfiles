@@ -137,7 +137,7 @@ PlaylistInfo() {
 			print
 		c += 1
 	} END {
-		cols = '"$(tput cols)"'
+		cols = length($0)
 		printf "%-"int((cols-length(s))/2)"s%s\n", "("N+1"/"c")", s
 	}' | LF_Fihi
 }

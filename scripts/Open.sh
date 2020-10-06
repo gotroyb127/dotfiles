@@ -1,62 +1,61 @@
-#!/bin/ksh
+#!/bin/sh
 
-set -f
-N='
+T='	'
+IFS='
 '
-IFS=$N
-[[ -z $@ ]] && {
-	echo 'No targets given.' >&2
-	exit 100
-}
+PGroup=\
+'	\\.(pdf|djvu)$
+	\\.pptx{0,1}$
+	\\.(od[ft]|docx{0,1})$
+	\\.(png|jpe{0,1}g|JPG|webp|svg|tiff|gif)$
+	\\.(mid|MID)$
+	\\.((mp|MP)[34]|mk[av]|ogg|wav|webm)$
+	\\.html$
+	$'
 
-set -A Group\
-	'@(*.pdf|*.djvu)'\
-	'@(*.pptx|*.ppt)'\
-	'@(*.od[ft]|*.doc|*.docx)'\
-	'@(*.png|*.jp*(e)g|*.JPG|*.webp|*.svg|*.tiff|*.gif)'\
-	'@(*.mid|*.MID)'\
-	'@(*.mp[34]|*.MP[34]|*.mk[av]|*.ogg|*.wav|*.webm)'\
-	'@(*.html)'\
-	'@(*)'\
+Opener=\
+"	a	zathura
+	a	loimpress
+	a	lowriter
+	c	sxiv -o
+	f	timidity -in
+	f	mpv --input-ipc-server=$MPVSOCKET
+	f	w3m -N
+	f	nvim"
 
-set -A Opener\
-	"zathura"\
-	"loimpress"\
-	"lowriter"\
-	"sxiv$N-o"\
-	"timidity$N-in"\
-	"mpv$N--input-ipc-server=$MPVSOCKET"\
-	"w3m$N-N"\
-	"nvim"
-
-for t in $@
-do
-	i=0
-	[[ -d $t ]] && continue
-	until eval "[[ \$t = ${Group[i]} ]]"
+printf '%s\n' $* |
+	awk -v sq="'" \
+	-v PGroups="${PGroup#$T}" \
+	-v Openers="${Opener#$T}" \
+	'BEGIN {
+		_ = split(PGroups, PGroup, "[\t\n]+")
+		_ = split(Openers, Opener, "[\t\n]+")
+		_ = split("", FGroups)
+	} {
+		for (i in PGroup) {
+			if (match($0, PGroup[i])) {
+				FGroups[i] = FGroups[i] " "sq $0 sq
+				break
+			}
+		}
+	} END {
+		for (i in FGroups) {
+			postfix = ""
+			# default: (Opener[i*2-1] == "f"), postfix = ""
+			if (Opener[i*2-1] == "a")
+				postfix = "2> /dev/null &"
+			else if (Opener[i*2-1] == "c")
+				postfix = "2> /dev/null | xsel -ib &"
+			printf "%s%s\n%s\n",Opener[i*2],FGroups[i],postfix
+		}
+	}' | (
+	IFS=' 	
+'
+	while read -r cmdl
 	do
-		if [ $((i += 1)) -ge ${#Group[@]} ]
-		then
-			continue 2
-		fi
+		read -r postfix
+		printf '%s\n\n' "$cmdl" | sed "s/\s*'\([^']*\)'/\n\1/g" |
+			LF_Fihi
+		eval "$cmdl $postfix"
 	done
-	Groups[i]="${Groups[i]}$t$N";
-done
-
-i=-1; m=${#Group[@]}
-while [[ $((i++)) -lt $m ]]
-do
-	[[ -z ${Groups[i]} ]] && continue
-
-	echo ${Opener[i]} "$N${Groups[i]}" | LF_Fihi
-
-	if [[ $i -le 2 ]]
-	then
-		${Opener[i]} ${Groups[i]} 2> /dev/null &
-	elif [[ $i -le 3 ]]
-	then
-		${Opener[i]} ${Groups[i]} 2> /dev/null | xsel -b &
-	else
-		${Opener[i]} ${Groups[i]}
-	fi
-done
+)

@@ -3,7 +3,7 @@
 q() { exit 0; }
 Print() {
 	s=$(Player.sh playlist-info) || return $?
-	LF_Clear
+	clear
 	printf "%s\n" "$s"
 }
 Read() {
