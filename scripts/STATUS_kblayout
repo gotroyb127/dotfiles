@@ -6,4 +6,4 @@ then
 else
 	L='us'
 fi
-printf " $L"
+printf '%s' " $L"

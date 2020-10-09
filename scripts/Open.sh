@@ -23,7 +23,11 @@ Opener=\
 	f	w3m -N
 	f	nvim"
 
-printf '%s\n' $* |
+for arg in $*
+do
+	[ -d "$arg" ] && continue
+	printf '%s\n' "$arg"
+done |
 	awk -v sq="'" \
 	-v PGroups="${PGroup#$T}" \
 	-v Openers="${Opener#$T}" \

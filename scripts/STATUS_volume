@@ -25,4 +25,4 @@ fi
 MicMute=$(amixer get Capture)
 [ -z "${MicMute##*\[on]*}" ] && mic=' '
 
-printf %s "$mic$vol$VOL$warn"
+printf '%s' "$mic$vol$VOL$warn"

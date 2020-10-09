@@ -16,4 +16,4 @@ case $Info in
 ;;
 esac
 
-printf "$BAT$Charg"
+printf '%s' "$BAT$Charg"

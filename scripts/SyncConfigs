@@ -6,7 +6,12 @@ DEST="$HOME/Documents/ConfigFiles"
 
 set -A Targets ~/.{config/{gsimplecal,zathura,dunst,lf,mpv,init.sh},local/{bin,scripts},tmux.conf,{vim,xinit,input}rc,profile} ~/{Notes,TODO}.txt
 
+Exclude=~/.config/mpv/watch_later\*
+
 Update() {
+	a="[[ \$1 = $Exclude ]]"
+	eval "$a" && { echo "Skipping $1."; return 2; }
+
 	local bsnm=${1##*/}
 	if [ -f "$1" ] && [ "$1" -nt "$2/$bsnm" ]
 	then

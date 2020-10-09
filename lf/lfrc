@@ -22,8 +22,6 @@ cmd open      $Open.sh "$f"
 cmd OpenSel   $Open.sh "$fx"
 cmd EchoSel   !LF_Clear; echo "$fs" | LF_Fihi
 cmd Ulm       &LF_MarkSave \'
-#cmd Ulm       :mark-save; push '
-#'
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle
 cmd Resource  &{{
@@ -151,9 +149,8 @@ map C !printf %s "$fx" | vidir -v -
 
 map <c-y> :up
 map <c-e> :down
-map <c-l> :Recol; SetPrompt
-map <esc> :cmd-escape
-map <c-r> :redraw; reload
+map <c-l> :Recol; SetPrompt; redraw
+map <c-r> :reload
 map c     :clear; unselect
 
 map <delete>  :Trash

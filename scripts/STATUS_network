@@ -24,4 +24,4 @@ case $(nmcli radio wifi) in
 ;;
 esac
 
-printf "$wifis$st"
+printf '%s' "$wifis$st"
