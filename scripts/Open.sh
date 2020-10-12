@@ -28,9 +28,8 @@ do
 	[ -d "$arg" ] && continue
 	printf '%s\n' "$arg"
 done |
-	awk -v sq="'" \
-	-v PGroups="${PGroup#$T}" \
-	-v Openers="${Opener#$T}" \
+	awk -v PGroups="${PGroup#$T}" \
+	    -v Openers="${Opener#$T}" \
 	'BEGIN {
 		_ = split(PGroups, PGroup, "[\t\n]+")
 		_ = split(Openers, Opener, "[\t\n]+")
@@ -38,7 +37,8 @@ done |
 	} {
 		for (i in PGroup) {
 			if (match($0, PGroup[i])) {
-				FGroups[i] = FGroups[i] " "sq $0 sq
+				gsub("([\"$`])", "\\\\&")
+				FGroups[i] = FGroups[i] " \"" $0 "\""
 				break
 			}
 		}
@@ -58,7 +58,7 @@ done |
 	while read -r cmdl
 	do
 		read -r postfix
-		printf '%s\n\n' "$cmdl" | sed "s/\s*'\([^']*\)'/\n\1/g" |
+		printf '%s\n\n' "$cmdl" | sed 's/\s*"\([^"]*\)"/\n\1/g' |
 			LF_Fihi
 		eval "$cmdl $postfix"
 	done

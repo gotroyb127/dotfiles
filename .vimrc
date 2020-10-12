@@ -65,6 +65,7 @@ if ! has("nvim")
 	nnoremap <Esc>. <C-W>>
 
 	inoremap {<C-j> {}<Left><CR><C-O>O<Tab>
+	inoremap {<CR> {}<Left><CR><C-O>O<Tab>
 else
 	command! Resource source ~/.config/nvim/init.vim
 
@@ -80,11 +81,12 @@ else
 	nnoremap <M-.> <C-W>>
 
 	inoremap {<C-j> {}<Left><CR><C-O>O
+	inoremap {<CR> {}<Left><CR><C-O>O
 endif
 
 " Show whitespace
 "¬—>·~><:→— ←—→
-set listchars=eol:$,tab:\ ->,trail:~,extends:>,precedes:<,space:·
+set listchars=eol:$,tab:\|->,trail:~,extends:>,precedes:<,space:·
 imap <F2> <C-\><C-o>:set list!<CR>
 nmap <F2> :set list!<CR>
 imap <F3> <C-\><C-o>:set paste!<CR>

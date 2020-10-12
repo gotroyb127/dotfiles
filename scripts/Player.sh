@@ -45,9 +45,8 @@ Info() {
 }
 
 PauseAfter() {
-	shift
 	trap 'exit 0' TERM
-	trap 'exec "$0" pause-after $n -' USR1
+	trap 'PauseAfter $n -' USR1
 	dt='0.5'
 
 	# At first spawn
@@ -201,7 +200,7 @@ Status() {
 
 	SetTimeVars CurrTime $CurrTime Duration $Duration RemPlTime $RemPlTime
 
-	printf "%.70s [%s . %s] (-%s) x%s %s" "$Title" "$CurrTime" "$Duration" \
+	printf "%.75s [%s . %s] (-%s) x%s %s" "$Title" "$CurrTime" "$Duration" \
 	       "$RemPlTime" "$Speed" "$p$l"
 }
 
@@ -267,6 +266,7 @@ do
 		shift 1
 	;;
 	(pause-after)
+		shift
 		PauseAfter "$@"
 		shift 2
 		[ "X$1" = 'X-' ] && shift 1

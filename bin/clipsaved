@@ -2,12 +2,12 @@
 
 set -o nounset
 
-: "${CS_SELECTIONS=primary clipboard}"
 : "${CS_DIR:="${XDG_RUNTIME_DIR-"${TMPDIR-/tmp}"}"}"
+: "${CS_SELECTIONS=primary clipboard}"
 : "${CS_DEBUG=}"
 : "${CS_MAXCACHED:=200}"
+#"
 
-LOCKED=
 tmpf=
 cachedir=$CS_DIR/clipsave.$USER
 lockfile=$cachedir/CS.lck
@@ -15,8 +15,9 @@ activecachesfile=$cachedir/ActiveCaches
 
 if [ -n "$CS_DEBUG" ]
 then
+	b0=${0##*/}
 	debug() {
-		printf '%s\n' "$@" >&2
+		printf "$b0: %s\n" "$@" >&2
 	}
 	debug "Debuging is enabled."
 else
@@ -41,25 +42,22 @@ die() {
 }
 
 cleanquit() {
-	if [ -n "$LOCKED" ]
-	then
-		rm -R "$cachedir"
-	fi
+	rm -R "$cachedir"
 
 	exit
 }
 
+restart() {
+	debug "Executing into '$0 $*'"
+	exec "$0" ""
+}
+
 initfiles() {
-	rm -Rf "$cachedir"
-	mkdir -p -m0700 "$cachedir"
-	touch "$activecachesfile"
-	if [ -f "$lockfile" ]
-	then
+	[ -f "$lockfile" ] &&
 		die 5 "Lock file '$lockfile' exists. Maybe another instance is already running."
-	else
-		touch "$lockfile"
-		LOCKED=YES
-	fi
+	rm -fR "$cachedir"
+	mkdir -p -m0700 "$cachedir"
+	touch "$activecachesfile" "$lockfile"
 }
 
 managenewsel() {
@@ -67,6 +65,7 @@ managenewsel() {
 	do
 		_mktemp
 		xsel --$sel -o > "$tmpf"
+		xsel -k
 		tmpcksum=$(cksum "$tmpf")
 
 		fname="$cachedir/${tmpcksum%% *}"
@@ -85,7 +84,7 @@ managenewsel() {
 
 managecachedsel() {
 	_mktemp
-	tail "-$CS_MAXCACHED" "$activecachesfile" | sort > "$tmpf"
+	tail "-$CS_MAXCACHED" "$activecachesfile" > "$tmpf"
 	_mv -f "$tmpf" "$activecachesfile"
 
 	{ cat "$activecachesfile"
@@ -97,8 +96,8 @@ managecachedsel() {
 		done
 }
 
-trap 'cleanquit' INT
-trap 'exec $0 "$@"' HUP
+trap 'cleanquit' INT TERM
+trap 'restart' HUP
 
 initfiles
 while true

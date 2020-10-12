@@ -1,6 +1,6 @@
-#!/bin/ksh
+#!/bin/sh
 
-set -o noclobber -o noglob -o nounset -o pipefail
+set -o noclobber -o noglob -o nounset
 IFS='
 '
 
@@ -56,7 +56,7 @@ handle_extension() {
 		## Preview as text conversion
 		TEXT=$(pdftotext -l 10 -nopgbrk -q -- "${FILE_PATH}" - | \
 			old_width)
-		if [[ -n $TEXT ]]; then
+		if [ -n "$TEXT" ]; then
 			echo "$TEXT" && exit 5
 		else
 		mutool draw -F txt -i -- "${FILE_PATH}" 1-10 | \
@@ -147,16 +147,16 @@ handle_mime() {
 	## Text
 	(text/*|*/xml)
 		## Syntax highlight
-		if [[ "$( stat --printf='%s' -- "${FILE_PATH}" )" -gt "${HIGHLIGHT_SIZE_MAX}" ]]
+		if [ "$( stat --printf='%s' -- "${FILE_PATH}" )" -gt "${HIGHLIGHT_SIZE_MAX}" ]
 		then
 			exit 2
-		elif [[ "$( tput colors )" -ge 256 ]]
+		elif [ "$( tput colors )" -ge 256 ]
 		then
 			local highlight_format='xterm256'
 		else
 			local highlight_format='ansi'
 		fi
-		if [[ ${FILE_PATH} = *rc ]]
+		if [ -z "${FILE_PATH##*rc}" ]
 		then
 			SYNTAX='--syntax=sh'
 		else

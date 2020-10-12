@@ -156,6 +156,7 @@ map c     :clear; unselect
 map <delete>  :Trash
 map <c-space> :toggle; up
 map <enter>   :OpenSel
+map <c-j>     :OpenSel
 map t :toggle
 map T :toggle; up
 map Y :Yankname; echo Filename Yanked.

@@ -11,11 +11,14 @@ Read() {
 	read cmd
 	eval "$cmd"
 }
+Main() {
+	Print
+	while sleep .989
+	do
+		Print || Read
+	done
+}
 
-trap 'echo; Read' INT
+trap 'echo; Read; Main' INT
 
-Print
-while sleep .989
-do
-	Print || Read
-done
+Main

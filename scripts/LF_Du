@@ -14,11 +14,12 @@ ls_size() {
 	}'
 }
 
-[ -z "$fs" ] && {
+if [ -z "$fs" ]
+then
 	du -hd1 | sort -hr
 	ls -Shla | ls_size
 	exit 0
-}
+fi
 
 for t in $fs
 do
