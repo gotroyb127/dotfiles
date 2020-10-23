@@ -161,7 +161,9 @@ map t :toggle
 map T :toggle; up
 map Y :Yankname; echo Filename Yanked.
 map L :OpenSel
-map K :set nopreview; set ratios 1
+map Kk :set nopreview; set ratios 1
+map KK :set ratios 14:16; set preview
+map Kl :set ratios 9:16; set preview
 
 map r
 map re :rename; cmd-word-back; cmd-left
