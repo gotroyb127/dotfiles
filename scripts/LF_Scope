@@ -156,18 +156,13 @@ handle_mime() {
 		else
 			local highlight_format='ansi'
 		fi
-		if [ -z "${FILE_PATH##*rc}" ]
-		then
-			SYNTAX='--syntax=sh'
-		else
-			SYNTAX=
-		fi
 		HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
 		--out-format="${highlight_format}" \
 		--line-range=1-${PV_HEIGHT} \
-		$SYNTAX --force -- "${FILE_PATH}" && exit 5
+		--force -- "${FILE_PATH}" && exit 5
 		COLORTERM=8bit bat --color=always --style="plain" \
 		-- "${FILE_PATH}" && exit 5
+		head -${PV_HEIGHT} "${FILE_PATH}" | fold_width && exit 5
 		exit 2
 	;;
 
