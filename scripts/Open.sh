@@ -10,7 +10,7 @@ PGroup=\
 	\\.(png|jpe{0,1}g|JPG|webp|svg|tiff|gif)$
 	\\.(mid|MID)$
 	\\.((mp|MP)[34]|mk[av]|ogg|wav|webm)$
-	\\.html$
+	\\.html{0,1}$
 	$'
 
 Opener=\

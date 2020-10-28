@@ -13,7 +13,7 @@ Read() {
 }
 Main() {
 	Print
-	while sleep .989
+	while sleep .85
 	do
 		Print || Read
 	done

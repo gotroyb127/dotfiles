@@ -15,10 +15,9 @@ ResyncPause() {
 		SIGS='CONT USR1'
 	;;
 	(*)
-		SIGS=
+		SIGS=$1
 	;;
 	esac
-
 	for sig in $SIGS
 	do
 		pkill -$sig -f "$0 pause-after"
@@ -29,9 +28,8 @@ TimeToSecs() {
 	awk '{
 		Secs = 0
 		n = split($0, TimeArr, ":")
-		for (i = n; i > 0; --i) {
+		for (i = n; i > 0; --i)
 			Secs += TimeArr[i] * ( 60 ^ (n-i) )
-		}
 		print Secs
 	}'
 }
@@ -48,21 +46,18 @@ PauseAfter() {
 	trap 'exit 0' TERM
 	trap 'PauseAfter $n -' USR1
 	dt='0.5'
-
 	# At first spawn
 	if [ -z "$2" ]
 	then
 		# cancel any pending pause and exit
 		others=$(pgrep -f "$0 pause-after" | wc -l)
 		pgrep -f "$0 pause-after" | grep -v $$ | xargs -r kill
-
 		if [ "$others" -gt 3 ]
 		then
 			ResyncPause CONT &
 			Notify "Mpv pause canceled."
 			exit 1
 		fi
-
 		# Notify at first spawn
 		Command '"set_property", "pause", false'
 		if [ "$1" -eq 1 ]
@@ -74,7 +69,6 @@ PauseAfter() {
 		fi
 		Notify "Pausing mpv after $time."
 	fi
-
 	n=$(($1 + 1))
 	while [ $((n -= 1)) -gt 0 ]
 	do
@@ -94,51 +88,53 @@ PauseAfter() {
 }
 
 PlaylistInfo() {
-	SetInfoVars "N            PL       CurrTime Speed"\
-	            "playlist-pos playlist time-pos speed"
-	PL=$(printf '%s\n' "$PL" | jq -r '.[] | .filename')
-
-	read BD TD RT <<- EOF
-	$(printf '%s\n' "$PL" |
+	SetInfoVars "N            PL       CT       RT                 Speed"\
+	            "playlist-pos playlist time-pos playtime-remaining speed"
+	PL=$(printf '%s\n' "$PL" | jq -r '.[] | .filename' |
 		while read -r fname
 		do
-			ffprobe -v error -show_entries format=duration \
-			        -of default=noprint_wrappers=1:nokey=1 "$fname" \
-				2> /dev/null \
-			|| Info duration
-		done | awk '
-		BEGIN {
-			TD = c = 0
-			BD = '"$CurrTime"'
-		} {
-			TD += $1
-			if (++c == '"$N"')
-				BD = int(TD + BD)
-		} END {
-			RT = int((TD - BD) / '"$Speed"')
-			print BD, TD, RT
-		}'
+			ffprobe -v error -show_entries format=filename,duration \
+				-of default=noprint_wrappers=1:nokey=1 "$fname" \
+				2> /dev/null
+		done
 	)
-	EOF
-
-	SetTimeVars BD $BD TD $TD RT $RT
-	st="[$BD . $TD] (-$RT) x$Speed"
-
-	printf '%s\n' "$PL" | awk '
-	BEGIN {
-		c = 0; N='"$N"'
-		s = "'"$st"'"
-	} {
-		if (c == N) {
-			printf "\n%s\n\n",$0
-		}
-		else
-			print
-		c += 1
-	} END {
-		cols = length($0)
-		printf "%-"int((cols-length(s))/2)"s%s\n", "("N+1"/"c")", s
-	}' | LF_Fihi
+	printf '%s\n' "$PL" |
+		awk -v N="$((N+1))" -v SP="$Speed" \
+		    -v CT="$CT" -v RD="$RT" \
+		'function SecsToTime(t) {
+			s = int(t % 60)
+			m = int((t/60) % 60)
+			h = int(t / 3600)
+			if (h != 0)
+				o = sprintf("%d:%d:%d", h, m, s)
+			else if (m != 0)
+				o = sprintf("%d:%d", m, s)
+			else
+				o = sprintf("%d", s)
+			return o
+		} (NR % 2) {
+			sub("^/.*/", "")
+			sub("\\.[^.]+$", "")
+			title = $0
+			if ((NR + 1) / 2 == N)
+				BD = CT + TD
+		} !(NR % 2) {
+			TD += $1
+			$0 = SecsToTime($0)
+			if (NR / 2 == N) {
+				CT = SecsToTime(CT)
+				RD = SecsToTime(RD)
+				printf("\t%s\n%s\t%s\n\t-%s\n",
+				       CT, $0, title, RD)
+			} else
+				printf("%s\t%s\n", $0, title)
+		} END {
+			TRD = SecsToTime((TD - BD) / SP)
+			BD = SecsToTime(BD)
+			TD = SecsToTime(TD)
+			printf("(%s/%s)\t\t[%s . %s] (-%s) x%s\n",
+			       N, NR/2, BD, TD, TRD, SP)
+		}'
 }
 
 SetInfoVars() {
@@ -158,7 +154,6 @@ SetTimeVars() {
 	done
 }
 
-
 SecsToTime() {
 	t=${2%.*}
 	m=$(( (t/60)%60 ))
@@ -177,9 +172,8 @@ SecsToTime() {
 
 Status() {
 	[ ! -S "$MPVSOCKET" ] && exit
-	SetInfoVars "pause loop Title       CurrTime Duration RemPlTime          Speed" \
+	SetInfoVars "pause loop Title       CurrTime Duration RemTime            Speed" \
 	            "pause loop media-title time-pos duration playtime-remaining speed"
-
 	case $pause in
 	(true)
 		p=''
@@ -197,11 +191,9 @@ Status() {
 		l=" ($loop)"
 	;;
 	esac
-
-	SetTimeVars CurrTime $CurrTime Duration $Duration RemPlTime $RemPlTime
-
+	SetTimeVars CurrTime $CurrTime Duration $Duration RemTime $RemTime
 	printf "%.75s [%s . %s] (-%s) x%s %s" "$Title" "$CurrTime" "$Duration" \
-	       "$RemPlTime" "$Speed" "$p$l"
+	       "$RemTime" "$Speed" "$p$l"
 }
 
 while [ $# -gt 0 ]
@@ -304,6 +296,7 @@ do
 	;;
 	(quit)
 		Command '"quit"'
+		ResyncPause TERM &
 		shift 1
 	;;
 	(sleep)

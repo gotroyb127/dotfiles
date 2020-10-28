@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# see:
-http://eleceng.dit.ie/dsp/elab/
-
 #handy Time function:
 Time() { a=0; if [ -n "$1" ]; then m=$1; shift; else m=100; time while [ $((++a)) -le $m ]; do "$@" > /dev/null; done; }
 
