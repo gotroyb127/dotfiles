@@ -1,13 +1,13 @@
 #!/bin/sh
 
-#handy Time function:
-Time() { a=0; if [ -n "$1" ]; then m=$1; shift; else m=100; time while [ $((++a)) -le $m ]; do "$@" > /dev/null; done; }
-
 # Yamaha Musicsoft Downloader with wine
 sudo modprobe snd_seq
 
 # Commonly used packages
 moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) timidity++ ttf-fira-code ttf-nerd-fonts-?
+
+# get rid of the GTK waringn ... "adwaita" engine not found ...
+pacman -S gnome-themes-standard
 
 # Hotspot with nm?
 install dnsmasq package

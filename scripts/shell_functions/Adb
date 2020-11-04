@@ -1,0 +1,15 @@
+#!/bin/sh
+Adb() {
+	cat << EOF
+functions:
+	AdbGetFocus
+	AdbUninstall
+EOF
+}
+AdbGetFocus() {
+	F="$(adb shell dumpsys window windows | tr '/' '\n' | awk '/mCurrentFocus/{print $3}')"
+	echo "$F" 1>&2; echo "$F"
+}
+AdbUnistall() {
+	adb shell pm uninstall -k --user 0 W
+}

@@ -57,7 +57,7 @@ handle_extension() {
 		TEXT=$(pdftotext -l 10 -nopgbrk -q -- "${FILE_PATH}" - | \
 			old_width)
 		if [ -n "$TEXT" ]; then
-			echo "$TEXT" && exit 5
+			printf '%s\n' "$TEXT" && exit 5
 		else
 		mutool draw -F txt -i -- "${FILE_PATH}" 1-10 | \
 			fold_width && exit 5

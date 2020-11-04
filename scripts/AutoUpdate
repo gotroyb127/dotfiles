@@ -1,31 +1,42 @@
 #!/bin/sh
 
-sleep .5
-
-{
-	sudo -n pacman -Sy &&
-	sudo -n pacman -Fy
-} > /dev/null || exit $?
-
 cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
 cache=$cachedir/AutoUpdated
 Invl=5
-
 cday=$(date +%j)
 
-if [ "X$1" = X-f ]
-then
+UpdateCache() {
+	echo "$cday" > "$cache"
+	echo "Updating cache file ($cache)."
+}
+
+case $1 in
+(-f)
 	Updating=True
-else
+;;
+(-u)
+	UpdateCache
+	echo "????"
+	exit 0
+;;
+('')
 	Updating=
-fi
+;;
+esac
+
+sleep .5
+{ sudo -n pacman -Sy &&
+  sudo -n pacman -Fy
+} > /dev/null || exit $?
 
 if [ -f "$cache" ]
 then
 	passed=$((cday - $(cat "$cache")))
 	echo "Days passed since last auto-update: $passed."
-	[ "$passed" -ge "$Invl" ] || [ "$passed" -le -"$Invl" ] &&
-	Updating=True
+	if [ "$passed" -ge "$Invl" ] || [ "$passed" -le "-$Invl" ]
+	then
+		Updating=True
+	fi
 else
 	Updating=True
 fi
@@ -34,12 +45,11 @@ if [ -n "$Updating" ]
 then
 	Updates=$(pacman -Qu | awk '{ printf("%-23s %s\n", $1, $NF) }' )
 	UpsNum=$(echo "$Updates" | wc -l)
+
 	notify-send -t 15000 "Time for Updates!!!
-Pacman: $UpsNum updates available." \
-	"$Updates"
-	st -e tmux new 'sudo pacman -Su && echo "---- ----" && $SHELL'
-	pacman -Quq > /dev/null || {
-		echo "$cday" > "$cache"
-		echo "Updating cache file ($cache)."
-	}
+Pacman: $UpsNum updates available." "$Updates"
+
+	st tmux new 'sudo pacman -Su && echo "---- ----"; $SHELL'
+	pacman -Quq > /dev/null ||
+		UpdateCache
 fi

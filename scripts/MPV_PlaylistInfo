@@ -4,7 +4,7 @@ q() { exit 0; }
 Print() {
 	s=$(Player.sh playlist-info) || return $?
 	clear
-	printf "%s\n" "$s"
+	printf "%s" "$s"
 }
 Read() {
 	printf %s 'Waiting... : '

@@ -1,0 +1,17 @@
+#!/bin/sh
+Time() {
+	a=0
+	if [ $# -ge 2 ]
+	then
+		m=$1
+		shift
+	else
+		echo "Time: usage: 'Time Repeat Cmd.'" >&2
+		return 5
+	fi
+	time \
+		while [ $((++a)) -le $m ]
+		do
+			"$@" > /dev/null
+		done
+}

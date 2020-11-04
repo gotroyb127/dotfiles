@@ -27,25 +27,12 @@ alias \
 	dash='HISTFILE= ENV= dash'\
 	bash='HISTFILE= ENV= bash'\
 	yt-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s'"\
-	youtube-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s'"\
 	CompileInstall='make clean && make && sudo make install && make clean'\
 	BuildLf='go mod vendor; ./gen/build.sh -mod=vendor -trimpath'\
-
-## Functions to automate de-bloat on Android with adb
-#AdbGetFocus() {
-#	F="$(adb shell dumpsys window windows | tr '/' '\n' | grep mCurrentFocus | awk '{print $3}')"
-#	echo "$F" 1>&2; echo "$F"
-#}
-#AdbUnistall() {
-#	adb shell pm uninstall -k --user 0 W}
 
 LF() { let --LF_LEVEL; exec "$0" -ic "lf $1"; }
 Hist() { [ $# -ge 1 ] && grep "$@" "$HISTFILE"; }
 exec_ksh() { let --LF_LEVEL; exec ksh "$@"; }
-
-mantopdf() {
-	groff -m man "$1" -Tpdf 2> /dev/null | zathura - 2> /dev/null
-}
 
 SET_PS1() {
 #	?='\[\033[38;2;;;m\]'

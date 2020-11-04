@@ -5,6 +5,8 @@ then
 	tmux attach -t Music
 else
 	tmux new -s Music -c"$HOME/Music" $SHELL -ic lf \; \
-		splitw -dvl 20 MPV_PlaylistInfo \; \
-		splitw -dvl 8 MPV_WatchLater \;
+		splitw -vl 35 MPV_PlaylistInfo \; \
+		splitw -dh MPV_WatchLater \; \
+		selectp -t1 \; \
+		resizep -Z
 fi

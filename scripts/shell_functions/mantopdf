@@ -1,0 +1,4 @@
+#!/bin/sh
+mantopdf() {
+	groff -m man "$1" -Tpdf 2> /dev/null | zathura - 2> /dev/null
+}

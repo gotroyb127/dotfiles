@@ -1,12 +1,16 @@
 #!/bin/ksh
 
-if [ "X$1" = X-recode ]
-then
+# usage: FFMPEG_split.sh [-recode] media_file times_file name_format
+
+case $1 in
+(-recode)
 	Rec='-recode'
 	shift
-else
+;;
+(*)
 	Rec=
-fi
+;;
+esac
 
 F=$1
 T=$2

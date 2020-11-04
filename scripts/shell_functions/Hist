@@ -1,0 +1,4 @@
+#!/bin/sh
+Hist() {
+	[ $# -ge 1 ] && grep "$@" "$HISTFILE"
+}
