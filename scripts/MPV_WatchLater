@@ -8,12 +8,12 @@ Print() {
 	for f in $(find ~/.config/mpv/watch_later -type f)
 	do
 		( read i; i=${i#??}
-		if [ -e "$i" ]
-		then
-			echo "${i##*/}"
-		else
-			echo "$i"
-		fi
+		  if [ -e "$i" ]
+		  then
+		  	echo "${i##*/}"
+		  else
+		  	echo "$i"
+		  fi
 		) < "$f"
 	done | sort -nk2 |
 	while read n

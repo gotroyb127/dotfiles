@@ -1,0 +1,48 @@
+#!/bin/sh
+
+b0=${0##*/}
+if [ ! -e "$PWFILE" ]
+then
+	echo "$b0: fatal: enviroment variable PWFILE not set." >&2
+	err=y
+elif [ $# -lt 1 ]
+then
+	echo "$b0: usage: $b0 launcher [launcher_args...]" >&2
+	err=y
+else
+	err=n
+fi
+if [ $err = y ]
+then
+	exit 2
+fi
+
+awk -v DM="$*" \
+    -v tmpf=$(mktemp) \
+'BEGIN {
+	_ = split("", a)
+} NF && /^[^#]/ {
+	sub("^\t", "")
+	a[int(N/3),int(N%3)] = $0
+	++N
+} END {
+	N /= 3
+	for (i = 0; i < N; ++i)
+		lmenu = lmenu sprintf("%s | %s\n", a[i,0], a[i,1])
+	ret = system(DM " << EOF > " tmpf "\n" lmenu "EOF")
+	if (ret != 0)
+		exit
+	getline lout < tmpf
+	system("rm " tmpf)
+
+	vi = index(lout, "|")
+	sa = substr(lout, 1, vi-2)
+	sb = substr(lout, vi+2)
+
+	for (i = 0; i < N; ++i) {
+		if (a[i,0] == sa && a[i,1] == sb) {
+			printf("%s", a[i,1]) | "xsel -bi"
+			printf("%s", a[i,2]) | "xsel -pi"
+		}
+	}
+}' "$PWFILE"

@@ -6,7 +6,7 @@ IFS=$N
 f_args=
 
 case $1 in
-(-mindepth|-maxdepth)
+(-mindepth|-maxdepth|-type)
 	f_args="$1$N$2"
 	shift 2
 ;;

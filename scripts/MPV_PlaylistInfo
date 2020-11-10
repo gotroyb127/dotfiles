@@ -1,24 +1,33 @@
 #!/bin/sh
 
-q() { exit 0; }
 Print() {
 	s=$(Player.sh playlist-info) || return $?
 	clear
 	printf "%s" "$s"
 }
 Read() {
-	printf %s 'Waiting... : '
+	printf '\n%s' 'Waiting... : '
 	read cmd
-	eval "$cmd"
+	case $cmd in
+	(q*)
+		exit 0
+	;;
+	(c*)
+		clear
+	;;
+	(r*)
+		exec "$0" "$@"
+	;;
+	esac
 }
 Main() {
 	Print
-	while sleep .85
+	while sleep .93
 	do
 		Print || Read
 	done
 }
 
-trap 'echo; Read; Main' INT
+trap 'Read; Main' INT
 
 Main

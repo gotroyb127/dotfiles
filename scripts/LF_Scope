@@ -55,7 +55,7 @@ handle_extension() {
 	(pdf)
 		## Preview as text conversion
 		TEXT=$(pdftotext -l 10 -nopgbrk -q -- "${FILE_PATH}" - | \
-			old_width)
+		       fold_width)
 		if [ -n "$TEXT" ]; then
 			printf '%s\n' "$TEXT" && exit 5
 		else
@@ -157,11 +157,11 @@ handle_mime() {
 			local highlight_format='ansi'
 		fi
 		HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
-		--out-format="${highlight_format}" \
-		--line-range=1-${PV_HEIGHT} \
-		--force -- "${FILE_PATH}" && exit 5
+			--out-format="${highlight_format}" \
+			--line-range=1-${PV_HEIGHT} \
+			--force -- "${FILE_PATH}" && exit 5
 		COLORTERM=8bit bat --color=always --style="plain" \
-		-- "${FILE_PATH}" && exit 5
+			-- "${FILE_PATH}" && exit 5
 		head -${PV_HEIGHT} "${FILE_PATH}" | fold_width && exit 5
 		exit 2
 	;;

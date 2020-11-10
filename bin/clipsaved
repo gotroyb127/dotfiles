@@ -30,28 +30,25 @@ _mv() {
 		debug "mv $*"
 	fi
 }
-
 _mktemp() {
 	[ -f "$tmpf" ] && return 0
 	tmpf=$(mktemp)
 }
-
 die() {
+	ret=$1
+	shift
 	printf '%s\n' "$@" >&2
-	exit $1
+	exit $ret
 }
-
 cleanquit() {
 	rm -R "$cachedir"
 
 	exit
 }
-
 restart() {
 	debug "Executing into '$0 $*'"
 	exec "$0" ""
 }
-
 initfiles() {
 	[ -f "$lockfile" ] &&
 		die 5 "Lock file '$lockfile' exists. Maybe another instance is already running."
@@ -59,7 +56,6 @@ initfiles() {
 	mkdir -p -m0700 "$cachedir"
 	touch "$activecachesfile" "$lockfile"
 }
-
 managenewsel() {
 	for sel in $CS_SELECTIONS
 	do
@@ -81,7 +77,6 @@ managenewsel() {
 		printf '%s\n' "$fname" >> "$activecachesfile"
 	done
 }
-
 managecachedsel() {
 	_mktemp
 	tail "-$CS_MAXCACHED" "$activecachesfile" > "$tmpf"

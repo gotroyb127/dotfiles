@@ -4,7 +4,6 @@ set -e
 Socat()       { socat - "$MPVSOCKET" 2> /dev/null; }
 Command()     { printf '{ "command": [%s] }\n' "$1" | Socat > /dev/null; }
 Notify()      { notify-send -t 2000 "$1" "$(date +'%-I:%-M:%-S %p.')"; }
-
 ResyncPause() {
 	pause=$(Info pause)
 	case "$pause$1" in
@@ -23,7 +22,6 @@ ResyncPause() {
 		pkill -$sig -f "$0 pause-after"
 	done
 }
-
 TimeToSecs() {
 	awk '{
 		Secs = 0
@@ -33,7 +31,6 @@ TimeToSecs() {
 		print Secs
 	}'
 }
-
 Info() {
 	for c in "$@"
 	do
@@ -41,7 +38,6 @@ Info() {
 	done |
 	Socat | jq -cr '.data'
 }
-
 PauseAfter() {
 	trap 'exit 0' TERM
 	trap 'PauseAfter $n -' USR1
@@ -86,21 +82,34 @@ PauseAfter() {
 		fi
 	done
 }
-
 PlaylistInfo() {
+	echoPL() {
+		cachedir="/tmp/${0##*/}.cache"
+		mkdir -p "$cachedir"
+		IFS='
+'
+		for fname in $PL
+		do
+			cachepath="$cachedir$fname.cache"
+			if ! [ -f "$cachepath" ]
+			then
+				mkdir -p "${cachepath%/*}"
+				ffprobe -v error -show_entries format=duration \
+					-of default=noprint_wrappers=1:nokey=1 "$fname" \
+					2> /dev/null > "$cachepath"
+			fi
+			printf '%s\n' "$fname"
+			cat "$cachepath"
+		done
+	}
 	SetInfoVars "N            PL       CT       RT                 Speed"\
 	            "playlist-pos playlist time-pos playtime-remaining speed"
-	PL=$(printf '%s\n' "$PL" | jq -r '.[] | .filename' |
-		while read -r fname
-		do
-			ffprobe -v error -show_entries format=filename,duration \
-				-of default=noprint_wrappers=1:nokey=1 "$fname" \
-				2> /dev/null
-		done
-	)
+	PL=$(printf '%s\n' "$PL" | jq -r '.[] | .filename')
+	PL=$(echoPL)
 	printf '%s\n' "$PL" |
 		awk -v N="$((N+1))" -v SP="$Speed" \
 		    -v CT="$CT" -v RD="$RT" \
+		    -v c1='\033[33m' -v c2='\033[00m' \
 		'function SecsToTime(t) {
 			s = int(t % 60)
 			m = int((t/60) % 60)
@@ -124,7 +133,7 @@ PlaylistInfo() {
 			if (NR / 2 == N) {
 				CT = SecsToTime(CT)
 				RD = SecsToTime(RD)
-				printf("\t%s\n%s\t%s\n\t-%s\n",
+				printf("%s\n%s\t" c1 "%s" c2 "\n-%s\n",
 				       CT, $0, title, RD)
 			} else
 				printf("%s\t%s\n", $0, title)
@@ -136,7 +145,6 @@ PlaylistInfo() {
 			       N, NR/2, BD, TD, TRD, SP)
 		}'
 }
-
 SetInfoVars() {
 	for v in $1
 	do
@@ -145,7 +153,6 @@ SetInfoVars() {
 	$(Info $2)
 	EOF
 }
-
 SetTimeVars() {
 	while [ $# -gt 0 ]
 	do
@@ -153,7 +160,6 @@ SetTimeVars() {
 		shift 2
 	done
 }
-
 SecsToTime() {
 	t=${2%.*}
 	m=$(( (t/60)%60 ))
@@ -169,7 +175,6 @@ SecsToTime() {
 	fi
 	eval "$1=\"$o\""
 }
-
 Status() {
 	[ ! -S "$MPVSOCKET" ] && exit
 	SetInfoVars "pause loop Title       CurrTime Duration RemTime            Speed" \
