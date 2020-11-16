@@ -1,19 +1,16 @@
 #!/bin/sh
 
 b0=${0##*/}
-if [ ! -e "$PWFILE" ]
+PWFILE=$1
+shift
+
+usage() {
+	echo "$b0: usage: $b0 pwfile launcher [launcher_args...]" >&2
+}
+
+if [ ! -e "$PWFILE" ] || [ $# -lt 1 ]
 then
-	echo "$b0: fatal: enviroment variable PWFILE not set." >&2
-	err=y
-elif [ $# -lt 1 ]
-then
-	echo "$b0: usage: $b0 launcher [launcher_args...]" >&2
-	err=y
-else
-	err=n
-fi
-if [ $err = y ]
-then
+	usage
 	exit 2
 fi
 

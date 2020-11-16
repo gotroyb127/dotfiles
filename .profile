@@ -11,6 +11,7 @@ export XDG_LOG_HOME=$HOME/.local/var/log
 
 export ENV=$XDG_CONFIG_HOME/init.sh
 export PATH=$PATH:$HOME/.local/scripts:$HOME/.local/bin
+export PATH=$HOME/.cargo/bin:$PATH
 export FPATH=$HOME/.local/scripts/shell_functions
 
 export PAGER=less

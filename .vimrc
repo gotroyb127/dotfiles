@@ -19,14 +19,15 @@ set guifont=Fira\ Code\ Medium\ 9
 
 " filetype plugin indent off
 " filetype indent off
+filetype plugin on
 set loadplugins
 set autoindent
 set tabstop=8
 set shiftwidth=8
+set noexpandtab
 
 set ttimeout
 set ttimeoutlen=1
-set ttyfast
 
 " set scrolloff=5
 :set langmap=ΑA,ΒB,ΨC,ΔD,ΕE,ΦF,ΓG,ΗH,ΙI,ΞJ,ΚK,ΛL,ΜM,ΝN,ΟO,ΠP,QQ,ΡR,ΣS,ΤT,ΘU,ΩV,WW,ΧX,ΥY,ΖZ,αa,βb,ψc,δd,εe,φf,γg,ηh,ιi,ξj,κk,λl,μm,νn,οo,πp,qq,ρr,σs,τt,θu,ωv,ςw,χx,υy,ζz
@@ -34,16 +35,19 @@ set ttyfast
 syntax enable
 set statusline=\ %<%f\ (%F)\ %h%m%r%=\|%-14.(%4.l,%-6.(%c%V%)%6.L\|%)\ %P\ 
 
+let g:python_recommended_style=0
+let g:rust_recommended_style=0
+" let g:rustfmt_options="--config hard_tabs=true"
 set cursorline
 augroup AutoCmds
 	autocmd!
 	autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
-	autocmd FileType python filetype plugin off
-"	autocmd FileType man filetype plugin on
-"	autocmd FileType sh,vim,python set tabstop=4 shiftwidth=4
+"	autocmd FileType python,rust setlocal shiftwidth=8 tabstop=8 softtabstop=0 noexpandtab
+"	autocmd FileType sh,vim,python setlocal tabstop=4 shiftwidth=4
 augroup END
-" "colorscheme elflord
-" "colorscheme ron
+
+" colorscheme elflord
+" colorscheme ron
 colorscheme pablo
 
 map Y y$
@@ -52,6 +56,7 @@ if ! has("nvim")
 	let &t_SR = "\e[4 q"
 	let &t_EI = "\e[2 q"
 	set cursorlineopt=line
+	set ttyfast
 	command! Resource source ~/.vimrc
 	autocmd VimEnter * silent exec'!printf "\033[2 q"'
 

@@ -6,9 +6,12 @@ set -o notify -o vi -o vi-tabcomplete
 HISTFILE=${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history
 HISTCONTROL='ignoredups:ignorespace'
 HISTSIZE=1000
-[ -z "$LF_LEVEL" ] &&
-	let LF_LEVEL=1 ||
+if [ -z "$LF_LEVEL" ]
+then
+	let LF_LEVEL=1
+else
 	let LF_LEVEL++
+fi
 export LF_LEVEL
 
 alias \
