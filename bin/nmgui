@@ -12,6 +12,6 @@ fi
 
 trap 'Kill' INT
 
-{ nm-applet & stalonetray ; } > /dev/null 2>&1
+{ nm-applet & stalonetray; } > /dev/null 2>&1
 
 Kill

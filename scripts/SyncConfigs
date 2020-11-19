@@ -4,7 +4,7 @@ tilde() { sed "s!'$HOME!'~!g"; }
 
 DEST="$HOME/Documents/ConfigFiles"
 
-set -A Targets ~/.{config/{gsimplecal,zathura,dunst,lf,mpv,init.sh},local/{bin,scripts},tmux.conf,{vim,xinit,input}rc,profile} ~/{Notes,TODO}.txt
+set -A Targets ~/.{config/{gsimplecal,zathura,dunst,lf,mpv},local/{bin,scripts},tmux.conf,{vim,xinit,input}rc,profile,init.sh} ~/{Notes,TODO}.txt
 
 Exclude=~/.config/mpv/watch_later\*
 
@@ -34,7 +34,8 @@ Update() {
 
 printf "\n%s\n" "Copying to $DEST:" | tilde
 
-i=-1; M=${#Targets[@]}
+i=-1
+M=${#Targets[@]}
 while [ $((++i)) -lt $M ]
 do
 	t=${Targets[i]}

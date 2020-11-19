@@ -9,7 +9,7 @@ export XDG_STATE_HOME=$HOME/.local/var/lib
 export XDG_LIB_HOME=$HOME/.local/lib
 export XDG_LOG_HOME=$HOME/.local/var/log
 
-export ENV=$XDG_CONFIG_HOME/init.sh
+export ENV=$HOME/.init.sh
 export PATH=$PATH:$HOME/.local/scripts:$HOME/.local/bin
 export PATH=$HOME/.cargo/bin:$PATH
 export FPATH=$HOME/.local/scripts/shell_functions
@@ -18,16 +18,18 @@ export PAGER=less
 export EDITOR=nvim
 export OPENER=Open.sh
 export MANPAGER='nvim +Man!'
-export CM_SELECTIONS=clipboard
 export CS_SELECTIONS=clipboard
 
 export TRASH=$HOME/.local/trash
-export TMPTRASH=/tmp/trash
-export STARTX_LOG=/tmp/startx-auto.log
-export MPVSOCKET=/tmp/mpvsocket
-which systemctl > /dev/null 2>&1 &&
-	MACHINECTL=systemctl ||
+export TMPDIR=${TMPDIR:-/tmp}
+export STARTX_LOG=$TMPDIR/startx-auto.log
+export MPVSOCKET=$TMPDIR/mpvsocket
+if command -v >/dev/null
+then
+	MACHINECTL=systemctl
+else
 	MACHINECTL=loginctl
+fi
 export MACHINECTL
 
 # keep ~/ clean ?

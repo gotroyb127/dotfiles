@@ -16,13 +16,15 @@ esac
 
 if [ $# -ge 2 ]
 then
-	if [ -n "$2" ] && [ "X${2%%-*}" = X ]
-	then
-		RE=$3
-	else
-		RE=$2
-	fi
-	"$@" | Hili "$RE"
+	case $2 in
+	(-*)
+		regexp=$3
+	;;
+	(*)
+		regexp=$2
+	;;
+	esac
+	"$@" | Hili "$regexp"
 else
 	Hili "${1:-.*}"
 fi

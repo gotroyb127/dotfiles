@@ -265,8 +265,8 @@ do
 	(pause-after)
 		shift
 		PauseAfter "$@"
-		shift 2
-		[ "X$1" = 'X-' ] && shift 1
+		shift
+		[ "X$1" = 'X-' ] && shift
 	;;
 	(loop-)
 		if [ $(Info loop) = true ] && [ "$2" != 0 ]

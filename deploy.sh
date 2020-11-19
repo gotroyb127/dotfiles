@@ -3,13 +3,13 @@
 for t in * .*
 do
 	case $t in
-	(dunst|gsimplecal|lf|mpv|zathura|init.sh)
+	(dunst|gsimplecal|lf|mpv|zathura)
 		DEST=${XDG_CONFIG_HOME:-$HOME/.config}
 	;;
 	(scripts|bin)
 		DEST=$HOME/.local
 	;;
-	(.inputrc|.profile|.tmux.conf|.vimrc|.xinitrc)
+	(init.sh|.inputrc|.profile|.tmux.conf|.vimrc|.xinitrc)
 		DEST=$HOME
 	;;
 	(*)
@@ -20,6 +20,6 @@ do
 	git diff "$DEST/$t" "$t"
 
 	printf %s "Do you want to replace '$t'? [y/n]: "
-	read REP
-	[ "X$REP" = Xy ] && cp -vfR "$t" "$DEST"
+	read reply
+	[ "X$reply" = Xy ] && cp -vfR "$t" "$DEST"
 done
