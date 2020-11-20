@@ -14,9 +14,11 @@ else
 fi
 export LF_LEVEL
 
+if ls --color=auto >/dev/null 2>&1
+then
+	alias ls='ls --color=auto'
+fi
 alias \
-	='clear -x 2> /dev/null || clear'\
-	ls='ls --color=auto'\
 	ll='ls -l'\
 	la='ls -al'\
 	lA='ls -Al'\
@@ -34,7 +36,6 @@ alias \
 	BuildLf='go mod vendor; ./gen/build.sh -mod=vendor -trimpath'\
 
 LF() { let --LF_LEVEL; exec "$0" -ic "lf $1"; }
-Hist() { [ $# -ge 1 ] && grep "$@" "$HISTFILE"; }
 exec_ksh() { let --LF_LEVEL; exec ksh "$@"; }
 SET_PS1() {
 #	?='\[\033[38;2;;;m\]'
