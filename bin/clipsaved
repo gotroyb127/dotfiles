@@ -9,7 +9,7 @@ set -o nounset
 #"
 
 tmpf=
-cachedir=$CS_DIR/clipsave.$USER
+cachedir=$CS_DIR/clipsave.$USER.$DISPLAY
 lockfile=$cachedir/CS.lck
 activecachesfile=$cachedir/ActiveCaches
 
@@ -40,14 +40,13 @@ die() {
 	printf '%s\n' "$@" >&2
 	exit $ret
 }
-cleanquit() {
+cleanbeforequit() {
 	rm -R "$cachedir"
-
-	exit
 }
 restart() {
+	cleanbeforequit
 	debug "Executing into '$0 $*'"
-	exec "$0" ""
+	exec "$0" "$@"
 }
 initfiles() {
 	[ -f "$lockfile" ] &&
@@ -91,7 +90,7 @@ managecachedsel() {
 		done
 }
 
-trap 'cleanquit' INT TERM
+trap 'cleanbeforequit' INT TERM
 trap 'restart' HUP
 
 initfiles
@@ -103,3 +102,5 @@ do
 	clipnotify &
 	wait $!
 done
+
+cleanbeforequit

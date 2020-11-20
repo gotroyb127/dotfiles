@@ -24,7 +24,7 @@ export TRASH=$HOME/.local/trash
 export TMPDIR=${TMPDIR:-/tmp}
 export STARTX_LOG=$TMPDIR/startx-auto.log
 export MPVSOCKET=$TMPDIR/mpvsocket
-if command -v >/dev/null
+if command -v systemctl >/dev/null
 then
 	MACHINECTL=systemctl
 else

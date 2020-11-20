@@ -7,7 +7,7 @@ set -o nounset
 : "${CS_LAUNCHER:=dmenu}"
 #"
 
-cachedir=$CS_DIR/clipsave.$USER
+cachedir=$CS_DIR/clipsave.$USER.$DISPLAY
 activecachesfile=$cachedir/ActiveCaches
 
 getfirstline() {

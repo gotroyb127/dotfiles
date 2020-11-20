@@ -131,10 +131,11 @@ PlaylistInfo() {
 			TD += $1
 			$0 = SecsToTime($0)
 			if (NR / 2 == N) {
-				CT = SecsToTime(CT)
-				RD = SecsToTime(RD)
-				printf("%s\n%s\t" c1 "%s" c2 "\n-%s\n",
-				       CT, $0, title, RD)
+				printf("%s\t" c1 "%s" c2 "\n", $0, title)
+#				CT = SecsToTime(CT)
+#				RD = SecsToTime(RD)
+#				printf("%s\n%s\t" c1 "%s" c2 "\n-%s\n",
+#				       CT, $0, title, RD)
 			} else
 				printf("%s\t%s\n", $0, title)
 		} END {

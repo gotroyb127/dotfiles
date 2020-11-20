@@ -3,16 +3,15 @@
 Xstart -a &
 AutoUpdate &
 
-#clipmenud &
+sblocks &
 clipsaved &
+syncthing --no-browser >> "${TMPDIR:-/tmp}/sycnthing.log" &
 
-pgrep pulseaudio || pulseaudio -D &
 dunst 2> /dev/null &
+pgrep pulseaudio || pulseaudio -D &
 lxqt-policykit-agent 2> /dev/null &
 xsidle.sh 'slock' "$MACHINECTL suspend" 600 &
 unclutter --timeout 1 --ignore-scrolling &
-
-sblocks &
 
 # start window manager
 exec dwm
