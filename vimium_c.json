@@ -1,13 +1,14 @@
 {
 	"name": "Vimium C",
-	"@time": "9/15/2020, 2:12:15 PM",
-	"time": 1600168335732,
+	"@time": "11/26/2020, 12:19:01 PM",
+	"time": 1606385941882,
 	"environment": {
-		"extension": "1.85.2",
+		"extension": "1.87.0",
 		"platform": "linux"
 	},
 	"exclusionRules": [],
 	"extAllowList": "#",
+	"grabBackFocus": true,
 	"ignoreKeyboardLayout": true,
 	"keyMappings": [
 		"# Insert your preferred key mappings here.",
@@ -28,8 +29,6 @@
 	"scrollStepSize": 60,
 	"searchEngines": "#",
 	"searchUrl": "https://duckduckgo.com/?q=$s",
-	"showAdvancedCommands": true,
-	"showAdvancedOptions": true,
 	"userDefinedCss": [
 		".LH {",
 		"  color: #ffffff;",

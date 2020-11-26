@@ -9,7 +9,7 @@ do
 	(scripts|bin)
 		DEST=$HOME/.local
 	;;
-	(init.sh|.inputrc|.profile|.tmux.conf|.vimrc|.xinitrc)
+	(.init.sh|.inputrc|.profile|.tmux.conf|.vimrc|.xinitrc)
 		DEST=$HOME
 	;;
 	(*)

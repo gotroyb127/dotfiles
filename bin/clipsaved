@@ -34,6 +34,9 @@ _mktemp() {
 	[ -f "$tmpf" ] && return 0
 	tmpf=$(mktemp)
 }
+_xsel() {
+	timeout 1 xsel --logfile /dev/null "$@"
+}
 die() {
 	ret=$1
 	shift
@@ -59,8 +62,8 @@ managenewsel() {
 	for sel in $CS_SELECTIONS
 	do
 		_mktemp
-		xsel --$sel -o > "$tmpf"
-		xsel -k
+		_xsel --$sel -o > "$tmpf"
+		_xsel -k
 		tmpcksum=$(cksum "$tmpf")
 
 		fname="$cachedir/${tmpcksum%% *}"

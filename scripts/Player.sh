@@ -1,9 +1,15 @@
 #!/bin/sh
 
 set -e
-Socat()       { socat - "$MPVSOCKET" 2> /dev/null; }
-Command()     { printf '{ "command": [%s] }\n' "$1" | Socat > /dev/null; }
-Notify()      { notify-send -t 2000 "$1" "$(date +'%-I:%-M:%-S %p.')"; }
+Socat() {
+	socat - "$MPVSOCKET" 2> /dev/null
+}
+Command() {
+	printf '{ "command": [%s] }\n' "$1" | Socat > /dev/null
+}
+Notify() {
+	notify-send -t 2000 "$1" "$(date +'%-I:%-M:%-S %p.')"
+}
 ResyncPause() {
 	pause=$(Info pause)
 	case "$pause$1" in
@@ -132,10 +138,6 @@ PlaylistInfo() {
 			$0 = SecsToTime($0)
 			if (NR / 2 == N) {
 				printf("%s\t" c1 "%s" c2 "\n", $0, title)
-#				CT = SecsToTime(CT)
-#				RD = SecsToTime(RD)
-#				printf("%s\n%s\t" c1 "%s" c2 "\n-%s\n",
-#				       CT, $0, title, RD)
 			} else
 				printf("%s\t%s\n", $0, title)
 		} END {

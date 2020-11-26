@@ -32,11 +32,18 @@ alias \
 	dash='HISTFILE= ENV= dash'\
 	bash='HISTFILE= ENV= bash'\
 	yt-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s'"\
+	scrcpy="scrcpy --shortcut-mod 'lalt+lctrl'"
 	CompileInstall='make clean && make && sudo make install && make clean'\
 	BuildLf='go mod vendor; ./gen/build.sh -mod=vendor -trimpath'\
 
-LF() { let --LF_LEVEL; exec "$0" -ic "lf $1"; }
-exec_ksh() { let --LF_LEVEL; exec ksh "$@"; }
+LF() {
+	let --LF_LEVEL
+	exec "$0" -ic "lf $1"
+}
+exec_ksh() {
+	let --LF_LEVEL
+	exec ksh "$@"
+}
 SET_PS1() {
 #	?='\[\033[38;2;;;m\]'
 	local B='\[\033[38;2;15;251;191m\]'

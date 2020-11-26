@@ -24,10 +24,14 @@ case $1 in
 ;;
 esac
 
-sleep .5
+sleep 30
 { sudo -n pacman -Sy &&
   sudo -n pacman -Fy
-} > /dev/null || exit $?
+} 2>&1 | {
+	echo "${0##*/}"
+	head
+	echo "${0##*/}"
+} >&2 || exit $?
 
 if [ -f "$cache" ]
 then

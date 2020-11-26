@@ -4,24 +4,26 @@ T='	'
 IFS='
 '
 PGroup=\
-'	\\.(pdf|djvu)$
-	\\.pptx{0,1}$
-	\\.(od[ft]|docx{0,1})$
-	\\.(png|jpe{0,1}g|JPG|webp|svg|tiff|gif)$
-	\\.(mid|MID)$
-	\\.((mp|MP)[34]|mk[av]|ogg|wav|webm)$
-	\\.html{0,1}$
-	$'
+'	\\.(pdf|djvu)$\
+	\\.pptx{0,1}$\
+	\\.(od[ft]|docx{0,1})$\
+	\\.(png|jpe{0,1}g|JPG|webp|svg|tiff|gif)$\
+	\\.(mid|MID)$\
+	\\.((mp|MP)[34]|mk[av]|ogg|wav|webm)$\
+	\\.html{0,1}$\
+	$\
+'
 
 Opener=\
-"	a	zathura
-	a	loimpress
-	a	lowriter
-	c	sxiv -o
-	f	timidity -in
-	f	mpv --input-ipc-server=$MPVSOCKET
-	f	w3m -N
-	f	nvim"
+"	a	zathura\
+	a	loimpress\
+	a	lowriter\
+	c	sxiv -o\
+	f	timidity -in\
+	f	mpv --input-ipc-server=$MPVSOCKET\
+	f	w3m -N\
+	f	nvim\
+"
 
 for arg in $*
 do
