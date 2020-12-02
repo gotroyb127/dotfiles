@@ -3,6 +3,9 @@
 # Yamaha Musicsoft Downloader with wine
 sudo modprobe snd_seq
 
+# installed to work with vulkan:
+pacman -S vulkan-{headers,tools,validation-layers} ?{spirv-tools,glm}
+
 # Commonly used packages
 moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) timidity++ ttf-fira-code ttf-nerd-fonts-?
 

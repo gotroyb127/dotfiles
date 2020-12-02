@@ -1,7 +1,7 @@
 #!/bin/sh
 
 Xstart -a &
-AutoUpdate &
+AutoUpdate -s5 &
 
 sblocks &
 clipsaved &

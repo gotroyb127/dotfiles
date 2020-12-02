@@ -32,8 +32,8 @@ alias \
 	dash='HISTFILE= ENV= dash'\
 	bash='HISTFILE= ENV= bash'\
 	yt-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s'"\
-	scrcpy="scrcpy --shortcut-mod 'lalt+lctrl'"
-	CompileInstall='make clean && make && sudo make install && make clean'\
+	scrcpy="scrcpy --shortcut-mod 'lalt+lctrl'"\
+	MakeInstall='make && sudo make install'\
 	BuildLf='go mod vendor; ./gen/build.sh -mod=vendor -trimpath'\
 
 LF() {

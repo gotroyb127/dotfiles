@@ -104,6 +104,10 @@ do
 
 	clipnotify &
 	wait $!
+	if [ $? != 0 ]
+	then
+		exit
+	fi
 done
 
 cleanbeforequit

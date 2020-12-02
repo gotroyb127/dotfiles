@@ -9,7 +9,7 @@
 #[ "${MicMute}" = '[on]' ] && mic=' '
 #mic=' '墳
 
-all=$(amixer get Master)
+all=$(amixer -M get Master)
 VOL=${all%\%] *}
 VOL=${VOL##* \[}
 mute=${all##* \[}

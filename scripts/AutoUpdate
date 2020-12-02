@@ -5,41 +5,72 @@ cache=$cachedir/AutoUpdated
 Invl=5
 cday=$(date +%j)
 
+b0=${0##*/}
+msg() {
+	printf '%s: %s\n' "$b0" "$*" >&2
+}
+usage() {
+	msg "usage $b0 [ -f | -u | -s sleep_time ]"
+	exit 5
+}
+Sleep() {
+	msg "Waiting $1 secs..." >&2
+	sleep $1
+}
 UpdateCache() {
 	echo "$cday" > "$cache"
-	echo "Updating cache file ($cache)."
+	msg "Updating cache file ($cache)."
 }
 
-case $1 in
-(-f)
-	Updating=True
-;;
-(-u)
-	UpdateCache
-	echo "????"
-	exit 0
-;;
-('')
-	Updating=
-;;
-esac
+while [ $# -gt 0 ]
+do
+	case $1 in
+	(-f)
+		Updating=True
+		shift 1
+	;;
+	(-u)
+		UpdateCache
+		exit 0
+		shift 1
+	;;
+	(-s*)
+		if [ -n "${t=${1#??}}" ]
+		then
+			s=1
+		elif [ -n "${t=$2}" ]
+		then
+			s=2
+		else
+			usage
+		fi
+		Sleep $t
+		shift $s
+	;;
+	(*)
+		shift 1
+	;;
+	esac
+done
 
-sleep 30
 { sudo -n pacman -Sy &&
   sudo -n pacman -Fy
 } 2>&1 | {
-	echo "${0##*/}"
-	head
-	echo "${0##*/}"
+	box="---------- $b0 ----------"
+	echo "$box"
+	head -15
+	echo "$box"
 } >&2 || exit $?
 
-if [ -f "$cache" ]
+if [ -f "$cache" ] && [ -z "$Updating" ]
 then
 	passed=$((cday - $(cat "$cache")))
 	echo "Days passed since last auto-update: $passed."
 	if [ "$passed" -ge "$Invl" ] || [ "$passed" -le "-$Invl" ]
 	then
 		Updating=True
+	else
+		Updating=
 	fi
 else
 	Updating=True
@@ -47,13 +78,14 @@ fi
 
 if [ -n "$Updating" ]
 then
-	Updates=$(pacman -Qu | awk '{ printf("%-23s %s\n", $1, $NF) }' )
+	Updates=$(pacman -Quq)
 	UpsNum=$(echo "$Updates" | wc -l)
 
 	notify-send -t 15000 "Time for Updates!!!
 Pacman: $UpsNum updates available." "$Updates"
 
-	st tmux new 'sudo pacman -Su && echo "---- ----"; $SHELL'
-	pacman -Quq > /dev/null ||
-		UpdateCache
+	{ st tmux new 'sudo pacman -Su; $SHELL' &&
+	  pacman -Quq > /dev/null ||
+	  	UpdateCache
+	} #&
 fi

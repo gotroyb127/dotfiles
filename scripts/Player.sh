@@ -38,11 +38,8 @@ TimeToSecs() {
 	}'
 }
 Info() {
-	for c in "$@"
-	do
-		printf '{ "command": ["get_property", "%s"] }\n' "$c"
-	done |
-	Socat | jq -cr '.data'
+	printf '{ "command": ["get_property", "%s"] }\n' "$@" \
+		| Socat | jq -cr '.data'
 }
 PauseAfter() {
 	trap 'exit 0' TERM
@@ -192,7 +189,7 @@ Status() {
 	esac
 	l=
 	case $loop in
-	(true)
+	(inf)
 		l=" ()"
 	;;
 	([0-9]*)
@@ -272,7 +269,7 @@ do
 		[ "X$1" = 'X-' ] && shift
 	;;
 	(loop-)
-		if [ $(Info loop) = true ] && [ "$2" != 0 ]
+		if [ $(Info loop) = inf ] && [ "$2" != 0 ]
 		then
 			Command '"set_property", "loop", 0'
 		else
