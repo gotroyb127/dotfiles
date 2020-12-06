@@ -1,22 +1,29 @@
 #!/bin/sh
 
 b0=${0##*/}
-PWFILE=$1
-shift
 
 usage() {
 	echo "$b0: usage: $b0 pwfile launcher [launcher_args...]" >&2
 }
 
-if [ ! -e "$PWFILE" ] || [ $# -lt 1 ]
+if [ $# -lt 1 ] || [ ! -e "${PWFILE=$1}" ]
 then
 	usage
 	exit 2
+else
+	shift
 fi
 
 awk -v DM="$*" \
     -v tmpf=$(mktemp) \
-'BEGIN {
+'function rindex(s, t, _i, _r) {
+	_i = _r = 0
+	for (_i = 1; _i < length(s); ++_i) {
+		if (substr(s, _i, length(t)) == t)
+			_r = _i
+	}
+	return _r
+} BEGIN {
 	_ = split("", a)
 } NF && /^[^#]/ {
 	sub("^\t", "")
@@ -26,13 +33,15 @@ awk -v DM="$*" \
 	N /= 3
 	for (i = 0; i < N; ++i)
 		lmenu = lmenu sprintf("%s | %s\n", a[i,0], a[i,1])
+
 	ret = system(DM " << EOF > " tmpf "\n" lmenu "EOF")
 	if (ret != 0)
 		exit
+
 	getline lout < tmpf
 	system("rm " tmpf)
 
-	vi = index(lout, "|")
+	vi = rindex(lout, "|")
 	sa = substr(lout, 1, vi-2)
 	sb = substr(lout, vi+2)
 
