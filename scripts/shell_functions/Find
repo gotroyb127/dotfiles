@@ -1,0 +1,15 @@
+#!/bin/sh
+Find() {
+		f_depth=
+	case $1 in
+	([0-9]*)
+		f_depth="-maxdepth $1"
+		shift 1
+	;;
+	esac
+
+	dir=.
+	[ -n "$1" ] && dir=$1
+
+	find $dir $f_depth
+}
