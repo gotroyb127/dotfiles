@@ -1,9 +1,14 @@
 #!/bin/sh
 
+b0=${0##*/}
+log() {
+	printf '%s: %s\n' "$b0" "$*" >&2
+}
+
 # Xorg settings
 xset m 11/2 0
 xset s 900 600
-xset s noblank
+xset s blank
 xset r rate 250 25
 xset -dpms
 
@@ -32,21 +37,25 @@ else
 	xmodmap -e 'keycode 135 = Super_R'
 fi
 
-if [ "X$1" != 'X-a' ]
-then
-	echo "${0##*/}: ----- X keymaps loaded. -----"
+log "----- X keymaps loaded. -----"
+[ "X$1" != 'X-a' ] &&
 	exit 0
-fi
 
-[ $(pgrep Xorg | wc -l) -gt 1 ] && {
+if [ $(pgrep Xorg | wc -l) -gt 1 ]
+then
 	D=-1
 	while [ "$((D += 1))" -le "${DISPLAY#:}" ]
 	do
 		DISPLAY=":$D" xset s off
 	done
-}
+fi
 
-amixer -q set Capture nocap &
-amixer -Mq set Master 40%
+if [ ! -e "${setF=${TMPDIR-/tmp}/settings.onboot}" ]
+then
+	touch "$setF"
+	sleep 3
+	amixer -q set Capture nocap
+	amixer -Mq set Master 40%
+fi
 
-echo "${0##*/}: ----- X settings loaded. -----"
+log "----- X settings loaded. -----"

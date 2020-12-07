@@ -1,6 +1,6 @@
 #!/bin/ksh
 
-# usage: FFMPEG_split.sh [-recode] media_file times_file name_format
+# usage: FFMPEG_split [-recode] media_file times_file name_format
 
 case $1 in
 (-recode)
@@ -22,13 +22,10 @@ ct=
 
 while read -u3 l
 do
-	[ $((lr += 1)) -gt 7 ] && break
+	[ -z ${l###*} ] && continue
 	pt=$ct
 	ct=$l
-	if [ -z "${pt###*}" ] || [ -z "${l###*}" ]
-	then
-		lr=$((lr - 1))
-		continue
-	fi
-	FFMPEG_cut.sh $Rec "$F" "$pt" "$ct" "$(printf "$Format" "$lr")"
+	[ -z "$pt" ] && continue
+	lr=$((lr + 1))
+	echo FFMPEG_cut $Rec "$F" "$pt" "$ct" "$(printf "$Format" "$lr")"
 done 3< "$T"

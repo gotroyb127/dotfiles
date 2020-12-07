@@ -1,48 +1,70 @@
 #!/bin/sh
 
-Status=
-Locker='xsidle.sh'
-NewTime=${1:-10}
-if [ -n "$2" ]
-then
-	NewBlank=no
-else
-	NewBlank=
-fi
+noLockF="${TMPDIR-/tmp}/xsidle.sh.nolock"
+newBlank=
+nextAction=S
+[ -n "$2" ] &&
+	newBlank=no
 
-DefTime=$(xset q | awk '/timeout/ {print $2" "$4}')
+defTime=$(xset q | awk '/timeout/ {print $2" "$4}')
 [ "$(xset q | awk '/blanking/ {print $3}')" = no ] &&
-	BlankStyle=no
+	defBlank=no
 
+SetnewTime() {
+	if expr \( \( "$1" + 0 \) : '[0-9]\+' \) '<=' 5 > /dev/null 2>&1
+	then
+		newTime=$1
+	else
+		printf '%s: %s\n' "${0##*/}" "Not a small enough integer." >&2
+		newTime=${newTime:-30}
+	fi
+}
 Set() {
-	xset s $NewTime
-	xset s ${NewBlank}blank
-	printf "|-SS-\tTimeout changed: $NewTime\t${NewBlank}blank\n"
-	printf "(II)\t"
-	killall -v -STOP "$Locker"
-	Status=S
+	[ "X$nextAction" != XS ] &&
+		return 1
+	xset s $newTime
+	xset s ${newBlank}blank
+	printf "|-SS-\tTimeout changed: $newTime\t${newBlank}blank\n"
+	touch "$noLockF"
+	nextAction=R
 }
 Reset() {
-	[ "x$Status" = xR ] && return 0
-	xset s $DefTime 
-	xset s ${BlankStyle}blank
-	printf "|-RR-\tTimeout reset: $DefTime\t${BlankStyle}blank\n"
-	printf "(II)\t"
-	killall -v -CONT "$Locker"
-	printf -- "\n---------------------------------------------------\n"
-	Status=R
+	[ "X$nextAction" != XR ] &&
+		return 1
+	xset s $defTime
+	xset s ${defBlank}blank
+	printf "|-RR-\tTimeout reset: $defTime\t${defBlank}blank\n"
+	rm -f "$noLockF"
+	nextAction=S
 }
 Pause() {
 	read ans
-	[ -n "$ans" ] && [ -z "${ans##q*}" ] &&
+	expr "$ans" : 'q' > /dev/null &&
 		exit 0
+	case $ans in
+	([0-9]*)
+		SetnewTime "$ans"
+		nextAction=S
+	;;
+	(no)
+		newBlank=no
+		nextAction=S
+	;;
+	(blank)
+		newBlank=
+		nextAction=S
+	;;
+	esac
 }
 
-trap 'exit 0' INT TERM
+trap 'exit 0' TERM
+trap 'echo; exit 0' INT
 trap 'Reset' exit
+
+SetnewTime "${1:-10}"
 
 while true
 do
-	Set; Pause
-	Reset; Pause
+	Set && Pause
+	Reset && Pause
 done

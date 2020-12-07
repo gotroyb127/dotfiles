@@ -84,8 +84,12 @@ then
 	notify-send -t 15000 "Time for Updates!!!
 Pacman: $UpsNum updates available." "$Updates"
 
-	{ st tmux new 'sudo pacman -Su; $SHELL' &&
-	  pacman -Quq > /dev/null ||
-	  	UpdateCache
-	} #&
+	if tty > /dev/null
+	then
+		sudo pacman -Su
+	else
+		st tmux new 'sudo pacman -Su; $SHELL'
+	fi
+	pacman -Quq > /dev/null ||
+		UpdateCache
 fi

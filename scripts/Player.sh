@@ -87,7 +87,7 @@ PauseAfter() {
 }
 PlaylistInfo() {
 	echoPL() {
-		cachedir="/tmp/${0##*/}.cache"
+		cachedir="${TMPDIR-/tmp}/${0##*/}.cache"
 		mkdir -p "$cachedir"
 		IFS='
 '

@@ -17,7 +17,7 @@ set splitright
 
 set relativenumber
 set clipboard+=unnamed
-set guifont=Fira\ Code\ Medium\ 9
+set guifont=Fira\ Code\ Medium\ 12
 
 " filetype plugin indent off
 " filetype indent off
@@ -31,6 +31,7 @@ set noexpandtab
 set timeout timeoutlen=3000
 set ttimeout ttimeoutlen=1
 
+set listchars=eol:$,tab:\|->,trail:~,extends:>,precedes:<,space:·
 set langmap=ΑA,ΒB,ΨC,ΔD,ΕE,ΦF,ΓG,ΗH,ΙI,ΞJ,ΚK,ΛL,ΜM,ΝN,ΟO,ΠP,QQ,ΡR,ΣS,ΤT,ΘU,ΩV,WW,ΧX,ΥY,ΖZ,αa,βb,ψc,δd,εe,φf,γg,ηh,ιi,ξj,κk,λl,μm,νn,οo,πp,qq,ρr,σs,τt,θu,ωv,ςw,χx,υy,ζz
 
 syntax enable
@@ -42,12 +43,15 @@ let g:rust_recommended_style=0
 set cursorline
 augroup AutoCmds
 	autocmd!
-	autocmd ColorScheme * hi CursorLine ctermbg=235 cterm=NONE
+	if ! has("nvim")
+		autocmd VimEnter * silent exec'!printf "\033[2 q"'
+	endif
+	autocmd ColorScheme * hi CursorLine ctermbg=234 cterm=NONE
 "	autocmd FileType python setlocal tabstop=4 shiftwidth=4
 augroup END
 
-" colorscheme elflord
-" colorscheme ron
+" Colorescheme setting must
+" be after ColorScheme autocmd.
 colorscheme pablo
 
 map Y y$
@@ -57,42 +61,27 @@ if ! has("nvim")
 	let &t_EI = "\e[2 q"
 	set cursorlineopt=line
 	set ttyfast
-	command! Resource source ~/.vimrc
-	autocmd VimEnter * silent exec'!printf "\033[2 q"'
 
-	nnoremap <Esc>q <C-w>q
-	nnoremap <Esc>j <C-w><C-j>
-	nnoremap <Esc>k <C-w><C-k>
-	nnoremap <Esc>l <C-w><C-l>
-	nnoremap <Esc>h <C-w><C-h>
-	nnoremap <Esc>+ <C-w>+
-	nnoremap <Esc>- <C-w>-
-	nnoremap <Esc>= <C-w>=
-	nnoremap <Esc>, <C-w><
-	nnoremap <Esc>. <C-w>>
+	command! Resource source ~/.vimrc
 
 	inoremap {<C-j> {}<Left><CR><C-o>O<Tab>
 	inoremap {<CR> {}<Left><CR><C-o>O<Tab>
+
+	for i in range(33, 123) + range(125, 126)
+		let c = nr2char(i)
+		exec "map  \e" . c . " <M-" . c . ">"
+	endfor
+	for c in ['\|', 'Space', '\e']
+		exec 'map \e' . c . " <M-". c . ">"
+	endfor
 else
 	command! Resource source ~/.config/nvim/init.vim
 
-	nnoremap <M-q> <C-w>q
-	nnoremap <M-j> <C-w><C-j>
-	nnoremap <M-k> <C-w><C-k>
-	nnoremap <M-l> <C-w><C-l>
-	nnoremap <M-h> <C-w><C-h>
-	nnoremap <M-+> <C-w>+
-	nnoremap <M--> <C-w>-
-	nnoremap <M-=> <C-w>=
-	nnoremap <M-,> <C-w><
-	nnoremap <M-.> <C-w>>
-
 	inoremap {<C-j> {}<Left><CR><C-o>O
 	inoremap {<CR> {}<Left><CR><C-o>O
+
 endif
 
-" Show whitespace
-set listchars=eol:$,tab:\|->,trail:~,extends:>,precedes:<,space:·
 imap <F2> <C-\><C-o>:set list!<CR>
 nmap <F2> :call OptionToggle("list")<CR>
 imap <F3> <C-\><C-o>:set paste!<CR>
@@ -112,12 +101,24 @@ inoremap )) )
 
 inoremap <C-f> <Esc>*Nea
 
+nnoremap <M-q> <C-w>q
+nnoremap <M-j> <C-w><C-j>
+nnoremap <M-k> <C-w><C-k>
+nnoremap <M-l> <C-w><C-l>
+nnoremap <M-h> <C-w><C-h>
+nnoremap <M-+> <C-w>+
+nnoremap <M--> <C-w>-
+nnoremap <M-=> <C-w>=
+nnoremap <M-,> <C-w><
+nnoremap <M-.> <C-w>>
+
 nnoremap <leader>r :Resource<CR>
 nnoremap <leader>e :e!<CR>
 nnoremap <leader>E :set write modifiable noreadonly<CR>
-nnoremap <leader>i :call OptionToggle("ic")<CR>
+nnoremap <leader>i :call OptionToggle("ignorecase")<CR>
 nnoremap <leader>p :call OptionToggle("paste")<CR>
 nnoremap <leader>l :call OptionToggle("list")<CR>
+nnoremap <expr> <leader>s exists('g:syntax_on') ? ':syntax off<CR>' : ':syntax enable<CR>'
 
 vnoremap <leader>n :norm 
 vnoremap <leader>' <Esc>:call Surround(["'"])<CR>
@@ -130,8 +131,11 @@ vnoremap <leader>[ <Esc>:call Surround(['[', ']'])<CR>
 nnoremap <leader>cc :call CommentLines('c')<CR>
 nnoremap <leader>cu :call CommentLines('u')<CR>
 
+vnoremap <leader>cc :call CommentLines('c')<CR>
+vnoremap <leader>cu :call CommentLines('u')<CR>
+
 func! OptionToggle(option)
-	exec "set " . a:option . "!"
+	exec "setl " . a:option . "!"
 	exec 'echo "' . a:option . ':" &' . a:option
 endfunc
 

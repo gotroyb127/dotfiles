@@ -1,51 +1,59 @@
 #!/bin/sh
 
+set -x
 b0=${0##*/}
-if [ $# -lt 1 ]
-then
-	echo "usage: $b0 'LockCmd' 'SuspendCmd' 'TimeBeforeSuspend'" 1>&2
+[ $# -lt 1 ] && {
+	echo "usage: $b0 'lockCmd' 'timeBeforeLocking' 'suspendCmd' 'timeBeforeSuspend'" 1>&2
 	exit 1
-fi
-LockCmd=$1
-SuspendCmd=$2
-ToSusp=${3:-600}
+}
+noLockF="${TMPDIR-/tmp}/xsidle.sh.nolock"
+lockCmd=$1
+toLock=${2:-15}
+suspendCmd=$3
+toSusp=${4:-600}
 
-log() { echo "$b0: $(date +%r): $1" >&2; }
+log() {
+	echo "$b0: $(date +%r): $1" >&2
+}
 Waked() {
-	log "state: $(xssstate -s)."
-	[ "$(xssstate -s)" != 'on' ] || [ "$(xset q | awk '/timeout/{print $2}')" = 0 ]
+#	log "xsstate: $(xssstate -s)."
+	while [ -f "$noLockF" ]
+	do
+		sleep $sleepT
+	done
+	[ "$(xssstate -s)" != 'on' ] ||
+		[ "$(xset q | awk '/timeout/{print $2}')" = 0 ]
 }
 
-ToLock=10
-SleepT=5
+sleepT=20
 BigSleepT=30
 
 while true
 do
-	ToSleep=$(($(xssstate -t) / 1000))
+	toSleep=$(($(xssstate -t) / 1000))
 	if [ "$(xssstate -s)" = 'disabled' ]
 	then
 		sleep $BigSleepT
-	elif [ $ToSleep -eq 0 ]
+	elif [ $toSleep -eq 0 ]
 	then
 		log "Screensaver activated."
-		sleep $ToLock
+		sleep $toLock
 		Waked && continue
-		log "Executing LockCmd: '$LockCmd'."
-		$LockCmd &
+		log "Executing lockCmd: '$lockCmd'."
+		$lockCmd &
 
-		[ -n "$SuspendCmd" ] && {
-			sleep $ToSusp
+		[ -n "$suspendCmd" ] && {
+			sleep $toSusp
 			Waked && continue
-			log "Executing SuspendCmd: '$SuspendCmd'."
-			$SuspendCmd
+			log "Executing suspendCmd: '$suspendCmd'."
+			$suspendCmd
 		}
 
 		until Waked
 		do
-			sleep $SleepT
+			sleep $sleepT
 		done
 	else
-		sleep $ToSleep
+		sleep $toSleep
 	fi
 done
