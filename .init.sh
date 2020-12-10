@@ -1,7 +1,11 @@
 # only usefull when the shell is interactive
 [ -z "${-##*c*}" ] && return
 
-set -o notify -o vi -o vi-tabcomplete
+set \
+	-o vi \
+	-o vi-tabcomplete \
+	-o notify \
+	-o pipefail
 
 HISTFILE=${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history
 HISTCONTROL='ignoredups:ignorespace'

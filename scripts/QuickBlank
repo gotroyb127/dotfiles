@@ -1,6 +1,6 @@
 #!/bin/sh
 
-noLockF="${TMPDIR-/tmp}/xsidle.sh.nolock"
+dontLockF="${TMPDIR-/tmp}/xsidle.sh.dontlock"
 newBlank=
 nextAction=S
 [ -n "$2" ] &&
@@ -25,7 +25,7 @@ Set() {
 	xset s $newTime
 	xset s ${newBlank}blank
 	printf "|-SS-\tTimeout changed: $newTime\t${newBlank}blank\n"
-	touch "$noLockF"
+	touch "$dontLockF"
 	nextAction=R
 }
 Reset() {
@@ -34,7 +34,7 @@ Reset() {
 	xset s $defTime
 	xset s ${defBlank}blank
 	printf "|-RR-\tTimeout reset: $defTime\t${defBlank}blank\n"
-	rm -f "$noLockF"
+	rm -f "$dontLockF"
 	nextAction=S
 }
 Pause() {

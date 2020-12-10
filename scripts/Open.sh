@@ -55,8 +55,8 @@ done |
 			printf "%s%s\n%s\n",Opener[i*2],FGroups[i],postfix
 		}
 	}' | (
-	IFS=' 	
-'
+	IFS='
+ 	'
 	while read -r cmdl
 	do
 		read -r postfix

@@ -5,7 +5,7 @@ set number
 set title
 set showcmd
 set laststatus=2
-set statusline=\ %<%f\ (%F)\ %h%m%r%=\|%-14.(%4.l,%-6.(%c%V%)%6.L\|%)\ %P\ 
+set statusline=\ %<%f\ (%F)\ %h%m%r%=\|%-15.(%-5.(%c%V%)%4.l/%L\|%)\ %P\ 
 
 set mouse=a
 set hlsearch
@@ -34,8 +34,6 @@ set ttimeout ttimeoutlen=1
 set listchars=eol:$,tab:\|->,trail:~,extends:>,precedes:<,space:·
 set langmap=ΑA,ΒB,ΨC,ΔD,ΕE,ΦF,ΓG,ΗH,ΙI,ΞJ,ΚK,ΛL,ΜM,ΝN,ΟO,ΠP,QQ,ΡR,ΣS,ΤT,ΘU,ΩV,WW,ΧX,ΥY,ΖZ,αa,βb,ψc,δd,εe,φf,γg,ηh,ιi,ξj,κk,λl,μm,νn,οo,πp,qq,ρr,σs,τt,θu,ωv,ςw,χx,υy,ζz
 
-syntax enable
-
 let g:mapleader=' '
 let g:python_recommended_style=0
 let g:rust_recommended_style=0
@@ -44,15 +42,21 @@ set cursorline
 augroup AutoCmds
 	autocmd!
 	if ! has("nvim")
-		autocmd VimEnter * silent exec'!printf "\033[2 q"'
+		autocmd VimEnter * silent exec '!printf "\033[2 q"'
 	endif
-	autocmd ColorScheme * hi CursorLine ctermbg=234 cterm=NONE
-"	autocmd FileType python setlocal tabstop=4 shiftwidth=4
+	autocmd ColorScheme * hi CursorLine ctermbg=234 cterm=NONE guibg='#1c1c1c'
+	autocmd ColorScheme * hi ExtraWhitespace ctermbg=red guibg=red
+"	autocmd InsertLeave * redraw!
+"	autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+"	autocmd InsertLeave * match ExtraWhitespace /\s\+\%#\@<!$/
 augroup END
 
 " Colorescheme setting must
 " be after ColorScheme autocmd.
-colorscheme pablo
+"colorscheme pablo
+colo noclown
+match ExtraWhitespace /\s\+\%#\@<!$/
+syntax enable
 
 map Y y$
 if ! has("nvim")
@@ -118,9 +122,10 @@ nnoremap <leader>E :set write modifiable noreadonly<CR>
 nnoremap <leader>i :call OptionToggle("ignorecase")<CR>
 nnoremap <leader>p :call OptionToggle("paste")<CR>
 nnoremap <leader>l :call OptionToggle("list")<CR>
-nnoremap <expr> <leader>s exists('g:syntax_on') ? ':syntax off<CR>' : ':syntax enable<CR>'
+nnoremap <leader>s :call ColoToggle()<CR>
+nnoremap <leader>S :call SyntaxToggle()<CR>
 
-vnoremap <leader>n :norm 
+vnoremap <leader>n :norm
 vnoremap <leader>' <Esc>:call Surround(["'"])<CR>
 vnoremap <leader>" <Esc>:call Surround(['"'])<CR>
 vnoremap <leader>` <Esc>:call Surround(['`'])<CR>
@@ -171,4 +176,20 @@ func! CommentLines(action) range
 	for ln in range(a:firstline, a:lastline)
 		call ActionClosure(ln)
 	endfor
+endfunc
+
+func! SyntaxToggle()
+	if exists('g:syntax_on')
+		syntax off
+	else
+		syntax enable
+	endif
+endfunc
+
+func! ColoToggle()
+	if ! exists('g:colors_name') || g:colors_name !=# 'pablo'
+		colo pablo
+	else
+		colo noclown
+	endif
 endfunc

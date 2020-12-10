@@ -7,6 +7,6 @@ MARKSFILE=${XDG_DATA_HOME:-$HOME/.local/share}/lf/marks
 	exit 100
 }
 
-{ echo "$1:$PWD"
-  sed "/^$1:/d" "$MARKSFILE"
+{	echo "$1:$PWD"
+	sed "/^$1:/d" "$MARKSFILE"
 } | sponge "$MARKSFILE"

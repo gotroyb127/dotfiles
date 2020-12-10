@@ -1,17 +1,58 @@
 #!/bin/ksh
 
-tilde() { sed "s!'$HOME!'~!g"; }
+IFS='
+	'
+tilde() {
+	sed "s!'$HOME!'~!g" "$@"
+}
 
 DEST="$HOME/Documents/ConfigFiles"
 
-set -A Targets ~/.{config/{gsimplecal,zathura,dunst,lf,mpv},local/{bin,scripts},tmux.conf,{vim,xinit,input}rc,profile,init.sh} ~/{Notes,TODO}.txt
+Targets=
+for t in \
+	~/.{tmux.conf,{xinit,input}rc,profile,init.sh} \
+	~/.config/{nvim,lf,mpv,gsimplecal,zathura,dunst} \
+	~/.local/{bin,scripts} \
+	~/{Notes,ToDo}.txt
+do
+	Targets="$Targets${IFS#?}$t"
+done
 
-Exclude=~/.config/mpv/watch_later\*
+Excludes="
+	$HOME/.config/mpv/watch_later
+	$HOME/.config/nvim/
+	$HOME/.config/colors/
+"
+Includes="
+	$HOME/.config/nvim/\(init\|colors/noclown\).vim$
+	$HOME/.config/nvim/colors$
+"
+
+set -f
 
 Update() {
-	a="[[ \$1 = $Exclude ]]"
-	eval "$a" && { echo "Skipping $1."; return 2; }
-
+	skip=n
+	for e in $Excludes
+	do
+		expr "$1" : "$e" > /dev/null && {
+			skip=y
+			break
+		}
+	done
+	if [ $skip = y ]
+	then
+		for i in $Includes
+		do
+			expr "$1" : "$i" > /dev/null && {
+				skip=n
+				break
+			}
+		done
+	fi
+	[ $skip = y ] && {
+		echo "Skipped '$1'." >> "$tmpf"
+		return 2
+	}
 	local bsnm=${1##*/}
 	if [ -f "$1" ] && [ "$1" -nt "$2/$bsnm" ]
 	then
@@ -24,22 +65,21 @@ Update() {
 
 	mkdir -p "$2/$bsnm"
 
-	find "$1" -maxdepth 1 |
-	    while read -r f
-	    do
-		[[ $1 == $f ]] && continue
-		Update "$f" "$2/$bsnm"
-	    done
+	find "$1" -maxdepth 1 -mindepth 1 |
+		while read -r f
+		do
+			Update "$f" "$2/$bsnm"
+		done
 }
 
-printf "\n%s\n" "Copying to $DEST:" | tilde
+printf '\n%s\n' "Copying to $DEST:" | tilde
 
-i=-1
-M=${#Targets[@]}
-while [ $((++i)) -lt $M ]
+tmpf=$(mktemp)
+for t in $Targets
 do
-	t=${Targets[i]}
 	Update "$t" "$DEST" | tilde
 done
 
 echo
+tilde "$tmpf"
+rm -f "$tmpf"

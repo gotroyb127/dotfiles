@@ -1,12 +1,17 @@
 #!/bin/sh
 
-set -x
 b0=${0##*/}
 [ $# -lt 1 ] && {
-	echo "usage: $b0 'lockCmd' 'timeBeforeLocking' 'suspendCmd' 'timeBeforeSuspend'" 1>&2
-	exit 1
+	cat << EOF 1>&2
+usage: $b0 'lockCmd' 'timeBeforeLocking' \
+'suspendCmd' 'timeBeforeSuspend'
+EOF
+	exit 5
 }
-noLockF="${TMPDIR-/tmp}/xsidle.sh.nolock"
+
+tmpDir="${TMPDIR-/tmp}"
+dontLockF="$tmpDir/xsidle.sh.dontlock"
+haveLockedF="$tmpDir/$b0.lockded"
 lockCmd=$1
 toLock=${2:-15}
 suspendCmd=$3
@@ -16,31 +21,40 @@ log() {
 	echo "$b0: $(date +%r): $1" >&2
 }
 Waked() {
-#	log "xsstate: $(xssstate -s)."
-	while [ -f "$noLockF" ]
+	while [ -f "$dontLockF" ]
 	do
-		sleep $sleepT
+		sleep $bigSleepT
 	done
 	[ "$(xssstate -s)" != 'on' ] ||
 		[ "$(xset q | awk '/timeout/{print $2}')" = 0 ]
 }
 
 sleepT=20
-BigSleepT=30
+bigSleepT=60
 
 while true
 do
-	toSleep=$(($(xssstate -t) / 1000))
+	toSleepU=$(xssstate -t)
+	toSleepS=$((toSleepU / 1000 + 1))
 	if [ "$(xssstate -s)" = 'disabled' ]
 	then
-		sleep $BigSleepT
-	elif [ $toSleep -eq 0 ]
+		sleep $bigSleepT
+	elif [ $toSleepU -eq 0 ]
 	then
 		log "Screensaver activated."
 		sleep $toLock
 		Waked && continue
-		log "Executing lockCmd: '$lockCmd'."
-		$lockCmd &
+
+		if [ ! -e "$haveLockedF" ]
+		then
+			log "Executing lockCmd: '$lockCmd'."
+			(	touch "$haveLockedF"
+				$lockCmd
+				rm -f "$haveLockedF"
+			) &
+		else
+			log "Skipping lockCmd, since screen is already locked."
+		fi
 
 		[ -n "$suspendCmd" ] && {
 			sleep $toSusp
@@ -54,6 +68,6 @@ do
 			sleep $sleepT
 		done
 	else
-		sleep $toSleep
+		sleep $toSleepS
 	fi
 done

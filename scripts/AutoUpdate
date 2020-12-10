@@ -53,8 +53,8 @@ do
 	esac
 done
 
-{ sudo -n pacman -Sy &&
-  sudo -n pacman -Fy
+{	sudo -n pacman -Sy &&
+	sudo -n pacman -Fy
 } 2>&1 | {
 	box="---------- $b0 ----------"
 	echo "$box"

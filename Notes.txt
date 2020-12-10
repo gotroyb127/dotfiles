@@ -3,6 +3,9 @@
 # Ascii table with:
 a=32; a=$((a-1)); while [ $((a++)) -lt 126 ]; do printf "%3s: \x$(printf '%x' $a)\n" "$a"; done | column
 
+# Terminal colors [0..255] with:
+for i in $(seq 1 255); do echo "\\033[38;5;${i}m$i"; done | column -x | less -R
+
 # Yamaha Musicsoft Downloader with wine
 sudo modprobe snd_seq
 
