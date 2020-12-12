@@ -5,7 +5,7 @@ set number
 set title
 set showcmd
 set laststatus=2
-set statusline=\ %<%f\ (%F)\ %h%m%r%=\|%-15.(%-5.(%c%V%)%4.l/%L\|%)\ %P\ 
+set statusline=\ %f\ %<(%F)\ %h%m%r%=\|%-15.(%-5.(%c%V%)%4.l/%L\|%)\ %P\ 
 
 set mouse=a
 set hlsearch

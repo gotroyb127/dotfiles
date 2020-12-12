@@ -2,6 +2,8 @@
 
 set -e
 Socat() {
+	[ ! -S "$MPVSOCKET" ] &&
+		exit 3
 	socat - "$MPVSOCKET" 2> /dev/null
 }
 Command() {
@@ -55,7 +57,7 @@ PauseAfter() {
 		then
 			ResyncPause CONT &
 			Notify "Mpv pause canceled."
-			exit 1
+			exit 4
 		fi
 		# Notify at first spawn
 		Command '"set_property", "pause", false'
@@ -176,7 +178,6 @@ SecsToTime() {
 	eval "$1=\"$o\""
 }
 Status() {
-	[ ! -S "$MPVSOCKET" ] && exit
 	SetInfoVars "pause loop Title       CurrTime Duration RemTime            Speed" \
 	            "pause loop media-title time-pos duration playtime-remaining speed"
 	case $pause in
@@ -266,7 +267,8 @@ do
 		shift
 		PauseAfter "$@"
 		shift
-		[ "X$1" = 'X-' ] && shift
+		[ "X$1" = 'X-' ] &&
+			shift
 	;;
 	(loop-)
 		if [ $(Info loop) = inf ] && [ "$2" != 0 ]
