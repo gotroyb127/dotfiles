@@ -96,14 +96,14 @@ imap <C-_> <C-o>:noh<CR>
 nmap <C-_> :noh<CR>
 
 inoremap <C-d> <Del>
+inoremap <C-f> <C-g>U<Right>
+inoremap <C-b> <C-g>U<Left>
 
 inoremap " ""<C-g>U<Left>
 inoremap ' ''<C-g>U<Left>
 inoremap ( ()<C-g>U<Left>
-inoremap ) <C-g>U<Right>
-inoremap )) )
 
-inoremap <C-f> <Esc>*Nea
+inoremap <C-g> <Esc>*Nzzea
 
 nnoremap <M-q> <C-w>q
 nnoremap <M-j> <C-w><C-j>

@@ -10,16 +10,17 @@ Print() {
 		(	read i; i=${i#??}
 			if [ -e "$i" ]
 			then
+				i=${i%.*}
 				echo "${i##*/}"
 			else
 				echo "$i"
 			fi
 		) < "$f"
 	done | sort -nk2 |
-	while read n
-	do
-		echo "$n"
-	done
+		while read n
+		do
+			echo "$n"
+		done
 }
 
 Print
