@@ -4,14 +4,16 @@ Adb() {
 functions:
 	AdbGetFocus
 	AdbUninstall
+	AdbUninstallFocus
 EOF
 }
 AdbGetFocus() {
-	echo "Doesn't work anymore."
-	return 5
-	F="$(adb shell dumpsys window windows | awk '/mCurrentFocus/ {print $3}')"
+	F="$(adb shell dumpsys window windows | awk -F'[/ {}]+' '/mObscuringWindow/{print $4}')"
 	echo "$F" 1>&2; echo "$F"
 }
-AdbUnistall() {
+AdbUninstall() {
 	adb shell pm uninstall -k --user 0 "$@"
+}
+AdbUninstallFocus() {
+	AdbUninstall "$(AdbGetFocus)"
 }

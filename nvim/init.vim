@@ -5,7 +5,7 @@ set number
 set title
 set showcmd
 set laststatus=2
-set statusline=\ %f\ %<(%F)\ %h%m%r%=\|%-15.(%-5.(%c%V%)%4.l/%L\|%)\ %P\ 
+set statusline=\ %f\ %<(%F)\ %h%m%r%=\|%-15.(%-8.(%c%V%)%4.l/%L\|%)\ %P\ 
 
 set mouse=a
 set hlsearch
@@ -95,15 +95,18 @@ nmap <F3> :call OptionToggle("paste")<CR>
 imap <C-_> <C-o>:noh<CR>
 nmap <C-_> :noh<CR>
 
+inoremap <C-j> <C-g>u<CR>
 inoremap <C-d> <Del>
 inoremap <C-f> <C-g>U<Right>
 inoremap <C-b> <C-g>U<Left>
+inoremap <C-a> <C-g>U<Home>
+inoremap <C-e> <C-g>U<End>
 
 inoremap " ""<C-g>U<Left>
 inoremap ' ''<C-g>U<Left>
 inoremap ( ()<C-g>U<Left>
 
-inoremap <C-g> <Esc>*Nzzea
+nnoremap <leader>f *Nzz
 
 nnoremap <M-q> <C-w>q
 nnoremap <M-j> <C-w><C-j>

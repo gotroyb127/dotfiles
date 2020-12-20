@@ -1,10 +1,25 @@
-#!/bin/sh
+# Notes.txt
 
 # Ascii table with:
 a=32; a=$((a-1)); while [ $((a++)) -lt 126 ]; do printf "%3s: \x$(printf '%x' $a)\n" "$a"; done | column
 
 # Terminal colors [0..255] with:
 for i in $(seq 1 255); do echo "\\033[38;5;${i}m$i"; done | column -x | less -R
+
+# from lfrc:
+cmd Recol &{{
+	w=$(tput cols)
+	N="$IFS"
+	if [ $w -le 75 ]
+	then
+		lf -remote "send $id set nopreview${N}send $id set ratios 1"
+	elif [ $w -le 160 ]
+	then
+		lf -remote "send $id set ratios 14:16${N}send $id set preview"
+	else
+		lf -remote "send $id set ratios 9:16${N}send $id set preview"
+	fi
+}}
 
 # Yamaha Musicsoft Downloader with wine
 sudo modprobe snd_seq

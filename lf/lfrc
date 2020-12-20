@@ -54,14 +54,11 @@ cmd SetPrompt &{{
 cmd Recol &{{
 	w=$(tput cols)
 	N="$IFS"
-	if [ $w -le 75 ]
+	if [ "$w" -le 75 ]
 	then
 		lf -remote "send $id set nopreview${N}send $id set ratios 1"
-	elif [ $w -le 160 ]
-	then
-		lf -remote "send $id set ratios 14:16${N}send $id set preview"
 	else
-		lf -remote "send $id set ratios 9:16${N}send $id set preview"
+		lf -remote "send $id set ratios 7:8${N}send $id set preview"
 	fi
 }}
 
