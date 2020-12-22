@@ -158,7 +158,7 @@ endfunc
 func! CommentLines(action) range
 	if &ft ==# "vim"
 		let cmnts = '"'
-	elseif index(["c", "cpp", "go", "rust"], &ft) != -1
+	elseif index(["c", "cpp", "go", "rust", "openscad"], &ft) != -1
 		let cmnts = '//'
 	elseif &ft ==# "matlab"
 		let cmnts = '%'
