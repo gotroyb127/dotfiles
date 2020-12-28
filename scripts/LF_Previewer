@@ -1,0 +1,54 @@
+#!/bin/sh
+
+draw() {
+	path="$(printf '%s' "$1" | sed 's/\([\\"]\)/\\\1/g')"
+	printf '{ "action": "add", "identifier": "preview", "x": %d, "y": %d,'\
+'"width": %d, "height": %d, "scaler": "contain",'\
+'"scaling_position_x": 0.5, "scaling_position_y": 0.5, "path": "%s" }\n' \
+		"$pv_x" "$pv_y" "$pv_w" "$pv_h" "$path" > "$FIFO_UEBERZUG"
+	exit 6
+}
+hashf() {
+	# hash does not depend on file name
+	f=$(readlink -f "$1")
+	{	stat --printf '%F\0%s\0' -- "$f"
+		head -5 -- "$f"
+	} | sha256sum | awk '{print $1}'
+}
+
+cachedir="$HOME/.cache/lf"
+show_img_pv=n
+[ -n "FIFO_UEBERZUG" ] &&
+	show_img_pv=y
+set -u
+
+fpath=$1
+img_cache_path="$cachedir/$(hashf "$fpath").jpeg"
+if [ $# -gt 1 ]
+then
+	pv_w=$2
+	pv_h=$3
+	pv_x=$4
+	pv_y=$5
+else
+	pv_w=$(($(tput cols) - 8))
+	pv_h=
+	pv_x=0
+	pv_y=0
+	show_img_pv=n
+fi
+
+mkdir -p "${img_cache_path%/*}"
+exec 2>&1
+LF_Scope "$fpath" "$pv_w" "$pv_h" "$img_cache_path" "$show_img_pv"
+
+r=$?
+case $r in
+(6)
+	[ "$show_img_pv" != y ] &&
+		break
+	draw "$img_cache_path"
+;;
+esac
+
+exit 0

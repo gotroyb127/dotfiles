@@ -12,7 +12,8 @@ set period 1
 set findlen 2
 set anchorfind
 set scrolloff 7
-set previewer LF_Scope
+set previewer LF_Previewer
+set cleaner LF_Cleaner
 set shell ksh
 set shellopts '-f'
 set filesep "\n"
@@ -57,8 +58,11 @@ cmd Recol &{{
 	if [ "$w" -le 75 ]
 	then
 		lf -remote "send $id set nopreview${N}send $id set ratios 1"
-	else
+	elif [ "$w" -le 180 ]
+	then
 		lf -remote "send $id set ratios 7:8${N}send $id set preview"
+	else
+		lf -remote "send $id set ratios 9:16${N}send $id set preview"
 	fi
 }}
 
@@ -133,7 +137,7 @@ map Jd %LF_Jump -type d
 map Ja %LF_Jump
 
 map i $nvim -MR "$f"
-map I $lf_ratios= LF_Scope "$f" | nl | less -R
+map I $LF_Previewer "$f" | nl | less -R
 map w $exec $SHELL
 map W !:
 map q :Ulm; quit
