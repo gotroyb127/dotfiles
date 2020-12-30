@@ -22,6 +22,7 @@ Excludes="
 	$HOME/.config/mpv/watch_later
 	$HOME/.config/nvim/
 	$HOME/.config/colors/
+	$HOME/.local/bin/DDNet
 "
 Includes="
 	$HOME/.config/nvim/\(init\|colors/noclown\).vim$

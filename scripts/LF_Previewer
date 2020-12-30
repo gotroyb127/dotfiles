@@ -18,7 +18,7 @@ hashf() {
 
 cachedir="$HOME/.cache/lf"
 show_img_pv=n
-[ -n "FIFO_UEBERZUG" ] &&
+[ -n "$FIFO_UEBERZUG" ] &&
 	show_img_pv=y
 set -u
 
