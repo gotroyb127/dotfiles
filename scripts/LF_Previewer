@@ -45,7 +45,7 @@ LF_Scope "$fpath" "$pv_w" "$pv_h" "$img_cache_path" "$show_img_pv"
 r=$?
 case $r in
 (6)
-	[ "$show_img_pv" != y ] &&
+	[ "X$show_img_pv" != 'Xy' ] &&
 		break
 	draw "$img_cache_path"
 ;;

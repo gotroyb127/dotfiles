@@ -19,8 +19,11 @@ HIGHLIGHT_SIZE_MAX=262143 # 256KiB
 HIGHLIGHT_STYLE="pablo"
 HIGHLIGHT_OPTIONS="--style=$HIGHLIGHT_STYLE -V ${PV_WIDTH} ${HIGHLIGHT_OPTIONS:-}"
 
+OPENSCAD_IMGSIZE='1000,1000'
+OPENSCAD_COLORSCHEME=${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}
+
 fold_width() {
-	"$@" | fold -s -w $PV_WIDTH
+	"$@" | fold -s -w "$PV_WIDTH"
 }
 
 handle_extension() {
@@ -233,27 +236,30 @@ handle_image() {
 	#	;;
 	esac
 
-#	openscad_image() {
-#		TMPPNG="$(mktemp -t XXXXXX.png)"
-#		openscad --colorscheme="${OPENSCAD_COLORSCHEME}" \
-#			--imgsize="${OPENSCAD_IMGSIZE/x/,}" \
-#			-o "${TMPPNG}" "${1}"
-#		mv "${TMPPNG}" "${IMAGE_CACHE_PATH}"
-#	}
+	openscad_image() {
+		TMPPNG="$(mktemp -t XXXXXX.png)"
+		openscad --colorscheme="${OPENSCAD_COLORSCHEME}" \
+			--imgsize="${OPENSCAD_IMGSIZE}" \
+			-o "${TMPPNG}" "${1}"
+		mv "${TMPPNG}" "${IMAGE_CACHE_PATH}"
+	}
 
-#	case "${FILE_EXTENSION_LOWER}" in
-#		## 3D models
-#		## OpenSCAD only supports png image output, and ${IMAGE_CACHE_PATH}
-#		## is hardcoded as jpeg. So we make a tempfile.png and just
-#		## move/rename it to jpg. This works because image libraries are
-#		## smart enough to handle it.
-#		(csg|scad)
-#			openscad_image "${FILE_PATH}" && exit 6
-#			;;
-#		(3mf|amf|dxf|off|stl)
-#			openscad_image <(echo "import(\"${FILE_PATH}\");") && exit 6
-#			;;
-#	esac
+	case "${FILE_EXTENSION_LOWER}" in
+	## 3D models
+	## OpenSCAD only supports png image output, and ${IMAGE_CACHE_PATH}
+	## is hardcoded as jpeg. So we make a tempfile.png and just
+	## move/rename it to jpg. This works because image libraries are
+	## smart enough to handle it.
+	(csg|scad)
+		openscad_image "${FILE_PATH}" && exit 6
+	;;
+	(3mf|amf|dxf|off|stl)
+		local tmpf=$(mktemp -t "XXXXXX.$FILE_EXTENSION_LOWER")
+		echo "import(\"${FILE_PATH}\");" > "$tmpf"
+		openscad_image "$tmpf" && exit 6
+		rm -f "$tmpf"
+	;;
+	esac
 }
 
 handle_mime() {
@@ -297,15 +303,15 @@ handle_mime() {
 		[ "$(tput colors)" -ge 256 ] &&
 			local highlight_format='xterm256'
 
-		if [ nohighlight = y ]
+		if [ "X$nohighlight" = 'Xy' ]
 		then
 			[ -n "$PV_HEIGHT" ] &&
-				fold_width head -${PV_HEIGHT} "${FILE_PATH}" && exit 0
+				fold_width head "-$PV_HEIGHT" "$FILE_PATH" && exit 0
 			fold_width cat "$FILE_PATH" && exit 0
 		else
 			HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
 				--out-format="${highlight_format}" \
-				--line-range=1-${PV_HEIGHT} \
+				--line-range="1-$PV_HEIGHT" \
 				--force -- "${FILE_PATH}" && exit 0
 
 			COLORTERM=8bit bat --color=always --style="plain" \
