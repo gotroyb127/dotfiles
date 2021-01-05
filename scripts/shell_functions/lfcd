@@ -1,0 +1,7 @@
+#!/bin/sh
+lfcd() {
+	tmpf=$(mktemp)
+	lf -last-dir-path "$tmpf" "$@"
+	cd "$(cat "$tmpf")"
+	rm -f "$tmpf"
+}

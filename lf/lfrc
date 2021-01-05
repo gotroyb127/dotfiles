@@ -127,6 +127,9 @@ map sN :set sortby name
 map v
 map vv :invert
 map vr :set reverse!; invert; set reverse!
+map vj :toggle; down
+map vk :toggle; up
+map vt :toggle
 map Vv :SelRecurs
 map VV :SelRecurs; down
 map Vr :SelRecurs -r
@@ -150,6 +153,7 @@ map D :push $mkdir<space>""<left>
 map x :push $chmod<space>+x<space>"$f"
 map X !LF_Clear; "$f"
 map C !printf %s "$fx" | vidir -v -
+map ` $nvim -MR "${TMPDIR:-/tmp}/lf.$USER.$id.log"
 
 map <c-y> :up
 map <c-e> :down
@@ -161,10 +165,7 @@ map <delete>  :Trash
 map <c-space> :toggle; up
 map <enter>   :OpenSel
 map <c-j>     :OpenSel
-map t :toggle
-map T :toggle; up
 map Y :Yankname; echo Filename Yanked.
-map L :OpenSel
 map Kk :set nopreview; set ratios 1
 map KK :set ratios 14:16; set preview
 map Kl :set ratios 9:16; set preview

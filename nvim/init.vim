@@ -121,7 +121,7 @@ nnoremap <M-.> <C-w>>
 
 nnoremap <leader>r :Resource<CR>
 nnoremap <leader>e :e!<CR>
-nnoremap <leader>E :set write modifiable noreadonly<CR>
+nnoremap <leader>E :set write! modifiable! readonly!<CR>
 nnoremap <leader>i :call OptionToggle("ignorecase")<CR>
 nnoremap <leader>p :call OptionToggle("paste")<CR>
 nnoremap <leader>l :call OptionToggle("list")<CR>

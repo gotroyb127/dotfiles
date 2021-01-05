@@ -198,7 +198,7 @@ Status() {
 	;;
 	esac
 	SetTimeVars CurrTime $CurrTime Duration $Duration RemTime $RemTime
-	printf "%.75s [%s . %s] (-%s) x%s %s" "$Title" "$CurrTime" "$Duration" \
+	printf "%.100s [%s . %s] (-%s) x%s %s" "$Title" "$CurrTime" "$Duration" \
 	       "$RemTime" "$Speed" "$p$l"
 }
 
