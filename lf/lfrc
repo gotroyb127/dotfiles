@@ -184,6 +184,7 @@ map bi :set icons!
 
 map Sp &xsel -o  | LF_Toggle
 map Sc &xsel -bo | LF_Toggle
+map SS &LF_SelShuf shuf
 map Ss :EchoSel
 map Sg :push :glob-select<space>
 map SG :push :glob-unselect<space>

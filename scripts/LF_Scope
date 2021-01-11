@@ -3,7 +3,6 @@
 set -o noclobber -o noglob -o nounset
 IFS='
 '
-
 ## Script arguments
 FILE_PATH=${1}        # Full path of the highlighted file
 PV_WIDTH=${2}         # Width of the preview pane in characters
@@ -20,7 +19,7 @@ HIGHLIGHT_STYLE="pablo"
 HIGHLIGHT_OPTIONS="--style=$HIGHLIGHT_STYLE -V ${PV_WIDTH} ${HIGHLIGHT_OPTIONS:-}"
 
 OPENSCAD_IMGSIZE='1000,1000'
-OPENSCAD_COLORSCHEME=${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}
+OPENSCAD_COLORSCHEME=${RNGR_OPENSCAD_COLORSCHEME:-Starnight}
 
 fold_width() {
 	"$@" | fold -s -w "$PV_WIDTH"

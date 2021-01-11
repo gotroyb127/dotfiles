@@ -3,7 +3,6 @@
 set -f
 IFS='
 '
-
 ls_size() {
 	awk '/^[^dltσ]/ {
 		printf $5"\t"

@@ -2,7 +2,6 @@
 
 IFS='
 '
-
 Title() { echo "${1##*/}" | sed 's/\.mp[34]$//g'; }
 
 Tag() {

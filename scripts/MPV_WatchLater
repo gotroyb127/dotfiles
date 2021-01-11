@@ -2,9 +2,7 @@
 
 IFS='
 '
-
-Print() {
-	LF_Clear
+PrintWhat() {
 	for f in $(find ~/.config/mpv/watch_later -type f)
 	do
 		(	read i; i=${i#??}
@@ -22,11 +20,14 @@ Print() {
 			echo "$n"
 		done
 }
+Print() {
+	printf '%s%s\n' "$(LF_Clear)" "$(PrintWhat)"
+}
 
-Print
-while read ans
+while true
 do
-	Print | sponge
+	Print
+	read ans
 	case $ans in
 	(q*)
 		break

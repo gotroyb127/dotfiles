@@ -1,7 +1,8 @@
 #!/bin/ksh
 
-IFS='
-	'
+N='
+'
+IFS="	$N"
 tilde() {
 	sed "s!'$HOME!'~!g" "$@"
 }
@@ -15,7 +16,7 @@ for t in \
 	~/.local/{bin,scripts} \
 	~/{Notes,ToDo}.txt
 do
-	Targets="$Targets${IFS#?}$t"
+	Targets="$Targets$N$t"
 done
 
 Excludes="

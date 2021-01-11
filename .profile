@@ -19,6 +19,7 @@ export EDITOR=nvim
 export OPENER=Open.sh
 export MANPAGER='nvim +Man!'
 export CS_SELECTIONS=clipboard
+export TCELL_TRUECOLOR=y
 
 export TRASH=$HOME/.local/trash
 export TMPDIR=${TMPDIR:-/tmp}
@@ -55,7 +56,7 @@ then
 	;;
 	(x|X|'')
 		echo "Starting X.org..."
-		startx >> "$STARTX_LOG" 2>&1
+		startx 2>&1 | tee "$STARTX_LOG" > "$HOME/.startx.log"
 	;;
 	(s|S)
 		echo "Continuing to login shell."

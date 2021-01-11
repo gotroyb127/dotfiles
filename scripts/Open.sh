@@ -4,7 +4,7 @@ T='	'
 IFS='
 '
 PGroup=\
-'	\\.(pdf|djvu)$\
+'	\\.(pdf|djvu|epub)$\
 	\\.pptx{0,1}$\
 	\\.(od[ft]|docx{0,1})$\
 	\\.(png|jpe{0,1}g|JPG|webp|svg|tiff|gif)$\

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+[ $# -lt 1 ] && {
+	echo "${0##*/}: expected at least one argument" >&2
+	exit 2
+}
+IFS='
+'
+lf -remote "send $id unselect"
+printf '%s\n' $fx | "$@" | LF_Toggle

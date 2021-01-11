@@ -2,7 +2,7 @@
 
 MARKSFILE=${XDG_DATA_HOME:-$HOME/.local/share}/lf/marks
 
-[ -n "${1#?}" -o -z "$1" ] && {
+expr "$1" : '.$' > /dev/null || {
 	echo "${0##*/}: arguments must be one character" >&2
 	exit 100
 }
