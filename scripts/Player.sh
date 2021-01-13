@@ -35,7 +35,7 @@ TimeToSecs() {
 		Secs = 0
 		n = split($0, TimeArr, ":")
 		for (i = n; i > 0; --i)
-			Secs += TimeArr[i] * ( 60 ^ (n-i) )
+			Secs += TimeArr[i] * (60 ^ (n-i))
 		print Secs
 	}'
 }
@@ -80,7 +80,7 @@ PauseAfter() {
 			) & wait $!
 		else
 			secs=$(echo "$(Info playtime-remaining) - $dt" | bc)
-			( sleep $secs
+			(	sleep $secs
 				Command '"set_property", "pause", true'
 				Notify "Mpv paused."
 			) & wait $!
@@ -164,8 +164,8 @@ SetTimeVars() {
 }
 SecsToTime() {
 	t=${2%.*}
-	m=$(( (t/60)%60 ))
-	s=$(( t%60 ))
+	m=$(( (t/60) % 60))
+	s=$((t % 60))
 	if [ "$((h = t/3600))" != 0 ]
 	then
 		o="$h:$m:$s"

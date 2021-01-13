@@ -4,7 +4,7 @@ T='	'
 IFS='
 '
 PGroup=\
-'	\\.(pdf|djvu|epub)$\
+'	\\.(ps|pdf|djvu|epub)$\
 	\\.pptx{0,1}$\
 	\\.(od[ft]|docx{0,1})$\
 	\\.(png|jpe{0,1}g|JPG|webp|svg|tiff|gif)$\
@@ -20,24 +20,25 @@ Opener=\
 	a	lowriter\
 	c	sxiv -o\
 	f	timidity -in\
-	f	mpv --input-ipc-server=$MPVSOCKET\
+	f	mpvs\
 	f	w3m -N\
 	f	nvim\
 "
 
-for arg in $*
+for arg
 do
-	[ -d "$arg" ] && continue
+	[ -d "$arg" ] &&
+		continue
 	printf '%s\n' "$arg"
 done |
 	awk -v PGroups="${PGroup#$T}" \
 	    -v Openers="${Opener#$T}" \
 	'BEGIN {
-		_ = split(PGroups, PGroup, "[\t\n]+")
-		_ = split(Openers, Opener, "[\t\n]+")
+		n = split(PGroups, PGroup, "[\t\n]+")
+		m = split(Openers, Opener, "[\t\n]+")
 		_ = split("", FGroups)
 	} {
-		for (i in PGroup) {
+		for (i = 1; i <= n; ++i) {
 			if (match($0, PGroup[i])) {
 				gsub("([\"$`])", "\\\\&")
 				FGroups[i] = FGroups[i] " \"" $0 "\""
@@ -45,7 +46,9 @@ done |
 			}
 		}
 	} END {
-		for (i in FGroups) {
+		for (i = 1; i <= n; ++i) {
+			if (FGroups[i] == "")
+				continue
 			postfix = ""
 			# default: (Opener[i*2-1] == "f"), postfix = ""
 			if (Opener[i*2-1] == "a")

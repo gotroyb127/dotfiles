@@ -2,20 +2,16 @@
 [ -z "${-##*c*}" ] && return
 
 set \
-	-o vi \
-	-o vi-tabcomplete \
-	-o notify \
+	-o vi\
+	-o vi-tabcomplete\
+	-o notify\
 	-o pipefail
 
 HISTFILE=${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history
 HISTCONTROL='ignoredups:ignorespace'
 HISTSIZE=1000
-if [ -z "$LF_LEVEL" ]
-then
-	let LF_LEVEL=1
-else
-	let LF_LEVEL++
-fi
+LF_LEVEL=$((${LF_LEVEL:-0} + 1))
+
 export LF_LEVEL
 
 if ls --color=auto >/dev/null 2>&1
@@ -28,7 +24,6 @@ alias \
 	lA='ls -Al'\
 	vim='nvim'\
 	view='nvim -MR'\
-	mpvs="mpv --input-ipc-server=$MPVSOCKET"\
 	SU='sudo ksh -il'\
 	LOG='vim "$STARTX_LOG"'\
 	LOGIN='exec_ksh -l'\
