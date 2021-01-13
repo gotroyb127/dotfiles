@@ -1,7 +1,7 @@
 #!/bin/sh
 
 sfile=${TMPDIR:-/tmp}/mpvs.curr.name
-defname=${TMPDIR:-/tmp}/mpv.socket.1
+defname=${TMPDIR:-/tmp}/mpvs.socket.1
 
 cleanup() {
 	rm -f "$newsocket"

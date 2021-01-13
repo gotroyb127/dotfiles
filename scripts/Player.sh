@@ -65,6 +65,7 @@ PauseAfter() {
 		then
 			secs=$(echo "$(Info playtime-remaining) - $dt" | bc)
 			SecsToTime time $secs
+			time="$time secs"
 		else
 			time=$1
 		fi

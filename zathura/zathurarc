@@ -23,7 +23,7 @@ set window-title-home-tilde
 set window-title-basename
 set window-title-page
 
-set font "DejaVu Sans 11"
+set font "DejaVuSerif 11"
 
 map r     recolor
 map R     rotate

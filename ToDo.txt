@@ -1,10 +1,8 @@
-lib32-alsa-lib: ???????????????? see /etc/pacman.conf
+--> Player.sh:
+	pause-after 1: improve other running instances's detection.
+	using a file.
 
-????: Have an array Type that stores how the Opener is launched: [async, async-clip, fg]
-
-????: Player.sh: pause-after1: improve other running instances's detection.
-
---->: dunst{,ify}: use the -A (action) feature
+--> dunst{,ify}: use the -A (action) feature
 
 ----- S6: -----
 /etc/issue:
@@ -16,8 +14,6 @@ lib32-alsa-lib: ???????????????? see /etc/pacman.conf
 	-s6-log -bpd3 -- 1 t /run/uncaught-logs
 	+s6-log -bpd3 -- t /run/uncaught-logs
 OLD:
---> edited /etc/rc.local
---> sysctl:
-+	redirfd -w 1 /dev/null
- 	fdmove -c 2 1
 --> removed binfmt from boot bundle.
+
+lib32-alsa-lib: ???????????????? see /etc/pacman.conf

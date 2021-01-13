@@ -9,7 +9,7 @@ Print() {
 	LF_Clear
 	printf "%s" "$S"
 }
-Read() {
+Wait() {
 	printf '%s' 'Waiting... : '
 	read ans
 	case $ans in
@@ -27,11 +27,11 @@ Read() {
 Main() {
 	while true
 	do
-		Print || Read
+		Print || Wait
 		sleep .93
 	done
 }
 
-trap 'echo; Read; Main' INT
+trap 'echo; Wait; Main' INT
 
 Main

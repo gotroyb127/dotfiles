@@ -24,7 +24,7 @@ export TCELL_TRUECOLOR=y
 export TRASH=$HOME/.local/trash
 export TMPDIR=${TMPDIR:-/tmp}
 export STARTX_LOG=$TMPDIR/startx-auto.log
-export MPVSOCKET=$TMPDIR/mpv.socket.current
+export MPVSOCKET=$TMPDIR/mpvs.socket.current
 if command -v systemctl >/dev/null
 then
 	MACHINECTL=systemctl
