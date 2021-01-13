@@ -1,0 +1,36 @@
+#!/bin/sh
+
+sfile=${TMPDIR:-/tmp}/mpvs.curr.name
+defname=${TMPDIR:-/tmp}/mpv.socket.1
+
+cleanup() {
+	rm -f "$newsocket"
+}
+setsocket() {
+	printf '%s' "$1" > "$sfile"
+	[ -z "$1" ] && {
+		rm -f "$MPVSOCKET"
+		return
+	}
+	touch "$1"
+	ln -sf "$1" "$MPVSOCKET"
+}
+
+if [ ! -f "$sfile" ] || [ -z "$(cat "$sfile")" ]
+then
+	prevsocket=
+	newsocket=$defname
+else
+	prevsocket=$(cat "$sfile")
+	n=${prevsocket##*.}
+	pref=${prevsocket%.*}
+	newsocket=$pref.$((n+1))
+fi
+
+trap cleanup exit INT
+
+setsocket "$newsocket"
+
+mpv --input-ipc-server="$newsocket" "$@"
+
+setsocket "$prevsocket"
