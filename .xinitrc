@@ -1,5 +1,8 @@
 #!/bin/sh
 
+[ -z "$DBUS_SESSION_BUS_ADDRESS" ] &&
+	eval "$(dbus-launch --sh-syntax)"
+
 Xstart -a &
 AutoUpdate -s5 &
 

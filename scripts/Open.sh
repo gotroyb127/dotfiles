@@ -5,12 +5,12 @@ IFS='
 '
 PGroup=\
 '	\\.(ps|pdf|djvu|epub)$\
-	\\.pptx{0,1}$\
-	\\.(od[ft]|docx{0,1})$\
-	\\.(png|jpe{0,1}g|JPG|webp|svg|tiff|gif)$\
+	\\.(ppt|pptx)$\
+	\\.(od[ft]|doc|docx)$\
+	\\.(png|jpg|jpeg|JPG|webp|svg|tiff|gif)$\
 	\\.(mid|MID)$\
 	\\.((mp|MP)[34]|mk[av]|ogg|wav|webm)$\
-	\\.html{0,1}$\
+	\\.htm|html$\
 	$\
 '
 

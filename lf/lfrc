@@ -46,7 +46,7 @@ cmd SetPrompt &{{
 	ID="$T$id"
 	CO="\033[38;5;252m:"
 	LV="$L$LF_LEVEL"
-	CD="$D%w"
+	CD="$D%d"
 	CF="$N%f"
 
 	lf -remote "send $id set promptfmt \"$B[$ID$CO$LV$B] $CD$CF\""
@@ -180,7 +180,8 @@ map bb :set drawbox!
 map bv :set preview!
 map bn :set relativenumber!
 map bN :set number!
-map bi :set icons!
+map bI :set icons!
+map bi $lfimg
 
 map Sp &xsel -o  | LF_Toggle
 map Sc &xsel -bo | LF_Toggle

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -e
+pidf=${TMPDIR-/tmp}/${0##*/}.pause-after.pid
 Socat() {
 	[ ! -S "$MPVSOCKET" ] &&
 		exit 3
@@ -14,11 +15,14 @@ Notify() {
 }
 ResyncPause() {
 	pause=$(Info pause)
+	[ ! -e "$pidf" ] &&
+		exit
+	pid=$(cat "$pidf")
 	case "$pause$1" in
-	(true|*STOP)
+	(true)
 		SIGS=STOP
 	;;
-	(false|*CONT)
+	(false)
 		SIGS='CONT USR1'
 	;;
 	(*)
@@ -27,15 +31,13 @@ ResyncPause() {
 	esac
 	for sig in $SIGS
 	do
-		pkill -$sig -f "$0 pause-after"
+		kill -$sig $pid || rm -f "$pidf"
 	done
 }
 TimeToSecs() {
-	awk '{
-		Secs = 0
-		n = split($0, TimeArr, ":")
-		for (i = n; i > 0; --i)
-			Secs += TimeArr[i] * (60 ^ (n-i))
+	awk -F: '{
+		for (i = NF; i > 0; --i)
+			Secs += $i * (60 ^ (NF-i))
 		print Secs
 	}'
 }
@@ -46,21 +48,18 @@ Info() {
 PauseAfter() {
 	trap 'exit 0' TERM
 	trap 'PauseAfter $n -' USR1
+	trap 'rm -f "$pidf"' USR2
 	dt='0.5'
 	# At first spawn
-	if [ -z "$2" ]
-	then
+	[ $# -lt 2 ] && {
 		# cancel any pending pause and exit
-		others=$(pgrep -f "$0 pause-after" | wc -l)
-		pgrep -f "$0 pause-after" | grep -v $$ | xargs -r kill
-		if [ "$others" -gt 3 ]
-		then
-			ResyncPause CONT &
+		[ -e "$pidf" ] && {
+			ResyncPause USR2 &
 			Notify "Mpv pause canceled."
 			exit 4
-		fi
-		# Notify at first spawn
+		}
 		Command '"set_property", "pause", false'
+		# Notify
 		if [ "$1" -eq 1 ]
 		then
 			secs=$(echo "$(Info playtime-remaining) - $dt" | bc)
@@ -70,23 +69,29 @@ PauseAfter() {
 			time=$1
 		fi
 		Notify "Pausing mpv after $time."
-	fi
+	}
+	# check if mpv is running
+	Command '"get_property", "time-pos"' || exit
+	printf '%s' $$ > "$pidf"
 	n=$(($1 + 1))
 	while [ $((n -= 1)) -gt 0 ]
 	do
-		if [ $n -ne 1 ]
+		if [ $n -gt 1 ]
 		then
 			secs=$(echo "$(Info playtime-remaining) + $dt" | bc)
-			( sleep $secs
+			(
+				sleep $secs
 			) & wait $!
 		else
 			secs=$(echo "$(Info playtime-remaining) - $dt" | bc)
-			(	sleep $secs
-				Command '"set_property", "pause", true'
-				Notify "Mpv paused."
+			(
+				sleep $secs
 			) & wait $!
+			Command '"set_property", "pause", true'
+			Notify "Mpv paused."
 		fi
 	done
+	rm -f "$pidf"
 }
 PlaylistInfo() {
 	echoPL() {
@@ -250,6 +255,7 @@ do
 		shift 2
 	;;
 	(play)
+#		Command '"set_property", "keep-open", "no"'
 		Command '"set_property", "pause", false'
 		ResyncPause &
 		shift 1
@@ -260,16 +266,23 @@ do
 		shift 1
 	;;
 	(play-pause)
+#		[ "$(Info eof-reached)" = true ] &&
+#			Command '"set_property", "keep-open", "no"'
 		Command '"cycle", "pause"'
 		ResyncPause &
 		shift 1
 	;;
 	(pause-after)
+#		if [ "$(Info keep-open)" != always ]
+#		then
+#			Command '"set_property", "keep-open", "always"'
+#		else
+#			Command '"set_property", "keep-open", "no"'
+#		fi
 		shift
+		Command '"set_property", "pause", false'
 		PauseAfter "$@"
 		shift
-		[ "X$1" = 'X-' ] &&
-			shift
 	;;
 	(loop-)
 		if [ $(Info loop) = inf ] && [ "$2" != 0 ]
@@ -316,7 +329,7 @@ do
 		shift 1
 	;;
 	(*)
-		"$@"
+		eval "$@"
 		shift $#
 	;;
 	esac

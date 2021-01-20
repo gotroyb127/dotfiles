@@ -46,6 +46,7 @@ unset dir music midi vid img book ex txt fi arc word ppt
 if [ $(id -u) != 0 ] && expr "$(tty)" : '/dev/tty[0-9]*' > /dev/null
 then
 	printf '%s' "Options: [s]hell, [t]mux, [X]org: "
+	trap 'ans=s; echo' INT
 	read ans
 	case "$ans" in
 	(t|T|j)
@@ -56,11 +57,12 @@ then
 	;;
 	(x|X|'')
 		echo "Starting X.org..."
-		startx 2>&1 | tee "$STARTX_LOG" > "$HOME/.startx.log"
+		startx 2>&1 | tee "$STARTX_LOG" >> "$HOME/.startx.log"
 	;;
 	(s|S)
 		echo "Continuing to login shell."
 	;;
 	esac
+	trap - INT
 fi
 echo '---> Sourced ~/.profile'
