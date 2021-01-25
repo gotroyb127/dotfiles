@@ -12,10 +12,14 @@ xset s blank
 xset r rate 250 25
 xset -dpms
 
+xsetroot -solid gray0
+
 setxkbmap -layout us,gr -option grp:shift_caps_toggle
 
-if [ -z "${USER##*u*}" ]
-then
+[ -f "$HOME/.Xmodmap" ] &&
+	xmodmap ~/.Xmodmap
+
+command -v synclient > /dev/null 2>&1 && {
 	# Synaptic settings for touchpad
 	#	TapButton1=1
 	synclient \
@@ -33,9 +37,7 @@ then
 		VertTwoFingerScroll=1\
 		HorizTwoFingerScroll=1\
 		PalmDetect=1
-else
-	xmodmap -e 'keycode 135 = Super_R'
-fi
+}
 
 log "----- X keymaps loaded. -----"
 [ "X$1" != 'X-a' ] &&

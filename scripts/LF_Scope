@@ -69,8 +69,8 @@ handle_extension() {
 	(odt|ods|odp|sxw)
 		## Preview as text conversion
 		fold_width odt2txt "${FILE_PATH}" && exit 0
-		## Preview as markdown conversion
-		fold_width pandoc -s -t markdown -- "${FILE_PATH}" && exit 0
+#		## Preview as markdown conversion
+#		fold_width pandoc -s -t markdown -- "${FILE_PATH}" && exit 0
 		exit 1
 	;;
 
@@ -88,7 +88,7 @@ handle_extension() {
 		fold_width w3m -dump "${FILE_PATH}" && exit 0
 		fold_width lynx -dump -- "${FILE_PATH}" && exit 0
 		fold_width elinks -dump "${FILE_PATH}" && exit 0
-		pandoc -s -t markdown -- "${FILE_PATH}" && exit 0
+#		pandoc -s -t markdown -- "${FILE_PATH}" && exit 0
 	;;
 
 	## JSON
@@ -276,11 +276,11 @@ handle_mime() {
 		## DOCX, ePub, FB2 (using markdown)
 		## You might want to remove "|epub" and/or "|fb2" below if you have
 		## uncommented other methods to preview those formats
-	(*wordprocessingml.document|*/epub+zip|*/x-fictionbook+xml)
-		## Preview as markdown conversion
-		pandoc -s -t markdown -- "${FILE_PATH}" && exit 0
-		exit 1
-	;;
+#	(*wordprocessingml.document|*/epub+zip|*/x-fictionbook+xml)
+#		## Preview as markdown conversion
+#		pandoc -s -t markdown -- "${FILE_PATH}" && exit 0
+#		exit 1
+#	;;
 
 		## XLS
 	(*ms-excel)

@@ -9,7 +9,7 @@ set number
 set nodrawbox
 set relativenumber
 set period 1
-set findlen 2
+set findlen 0
 set anchorfind
 set scrolloff 7
 set previewer LF_Previewer
@@ -19,6 +19,7 @@ set shellopts '-f'
 set filesep "\n"
 set ifs "\n"
 
+cmd Quit      :Ulm \'; quit
 cmd open      $Open.sh $f
 cmd OpenSel   $Open.sh $fx
 cmd EchoSel   !LF_Clear; echo "$fs" | LF_Fihi
@@ -93,7 +94,7 @@ cmd rm !{{
 
 cmd Paste &{{
 	{ N="$IFS"
-	if [ "X$1" = 'X--inside' -a -d "$f" ]
+	if [ "X$1" = 'X--inside' ] && [ -d "$f" ]
 	then
 		DEST=$f
 	else
@@ -143,9 +144,9 @@ map i $nvim -MR "$f"
 map I $LF_Previewer "$f" | nl | less -R
 map w $exec $SHELL
 map W !:
-map q :Ulm; quit
+map q :Quit
 map Q :quit
-map <c-w> :${{ let --LF_LEVEL; exec $SHELL }}; quit
+map <c-w> :${{ let --LF_LEVEL; exec $SHELL }}; Quit
 map p :Paste
 map P :Paste --inside
 map E :push $nvim<space>""<left>

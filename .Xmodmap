@@ -1,0 +1,3 @@
+! keycode 94 = q Q semicolon U0387
+keycode 47 = semicolon colon dead_acute dead_diaeresis dead_greek dead_abovecomma
+keycode 60 = period greater period greater guillemotright U0387

@@ -9,7 +9,7 @@ case "$1" in
 ;;
 esac
 
-Fifo=${1:-/tmp/sblocks.fifo}
+Fifo=${1:-${TMPDIR-/tmp}/sblocks.$DISPLAY.fifo}
 
 sleep .01
 COLS=$(tput cols)

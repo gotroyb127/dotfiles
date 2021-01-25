@@ -11,7 +11,6 @@ export XDG_LOG_HOME=$HOME/.local/var/log
 
 export ENV=$HOME/.init.sh
 export PATH=$PATH:$HOME/.local/scripts:$HOME/.local/bin
-export PATH=$HOME/.cargo/bin:$PATH
 export FPATH=$HOME/.local/scripts/shell_functions
 
 export PAGER=less
@@ -24,6 +23,7 @@ export TCELL_TRUECOLOR=y
 export TRASH=$HOME/.local/trash
 export TMPDIR=${TMPDIR:-/tmp}
 export STARTX_LOG=$TMPDIR/startx-auto.log
+export SYNCTHING_LOG=${TMPDIR:-/tmp}/sycnthing.log
 export MPVSOCKET=$TMPDIR/mpvs.socket.current
 if command -v systemctl >/dev/null
 then
@@ -57,7 +57,7 @@ then
 	;;
 	(x|X|'')
 		echo "Starting X.org..."
-		startx 2>&1 | tee "$STARTX_LOG" >> "$HOME/.startx.log"
+		startx 2>&1 | tee -a "$STARTX_LOG" >> "$HOME/.startx.log"
 	;;
 	(s|S)
 		echo "Continuing to login shell."

@@ -14,7 +14,7 @@ usage() {
 	exit 5
 }
 Sleep() {
-	msg "Waiting $1 secs..." >&2
+	msg "Waiting $1 secs..."
 	sleep $1
 }
 UpdateCache() {
@@ -79,7 +79,7 @@ fi
 if [ -n "$Updating" ]
 then
 	Updates=$(pacman -Quq)
-	UpsNum=$(echo "$Updates" | wc -l)
+	UpsNum=$(printf '%s' "$Updates" | wc -l)
 
 	notify-send -t 15000 "Time for Updates!!!
 Pacman: $UpsNum updates available." "$Updates"

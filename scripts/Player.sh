@@ -47,11 +47,11 @@ Info() {
 }
 PauseAfter() {
 	trap 'exit 0' TERM
-	trap 'PauseAfter $n -' USR1
+	trap 'PAonce=n; PauseAfter $n "$@"' USR1
 	trap 'rm -f "$pidf"' USR2
 	dt='0.5'
 	# At first spawn
-	[ $# -lt 2 ] && {
+	[ "X$PAonce" != 'Xn' ] && {
 		# cancel any pending pause and exit
 		[ -e "$pidf" ] && {
 			ResyncPause USR2 &
@@ -74,6 +74,7 @@ PauseAfter() {
 	Command '"get_property", "time-pos"' || exit
 	printf '%s' $$ > "$pidf"
 	n=$(($1 + 1))
+	shift
 	while [ $((n -= 1)) -gt 0 ]
 	do
 		if [ $n -gt 1 ]
@@ -92,6 +93,7 @@ PauseAfter() {
 		fi
 	done
 	rm -f "$pidf"
+	Main "$@"
 }
 PlaylistInfo() {
 	echoPL() {
@@ -208,129 +210,135 @@ Status() {
 	       "$RemTime" "$Speed" "$p$l"
 }
 
-while [ $# -gt 0 ]
-do
-	case $1 in
-	(status)
-		Status
-		shift 1
-	;;
-	(position-)
-		Command '"seek", -'"$2"
-		ResyncPause &
-		shift 2
-	;;
-	(position)
-		Command '"set_property", "time-pos", '"$2"
-		ResyncPause &
-		shift 2
-	;;
-	(position+)
-		Command '"seek", '"$2"
-		ResyncPause &
-		shift 2
-	;;
-	(positionm)
-		SetInfoVars "pos      dur" \
-			    "time-pos duration"
-		SetTimeVars pos $pos dur $dur
-		secs=$(dmenu -p "[$pos / $dur"'] Jump to: ' < /dev/null | TimeToSecs)
-		Command '"set_property", "time-pos", '"$secs"
-		ResyncPause &
-		shift 1
-	;;
-	(speed-)
-		Command '"add", "speed", -'"$2"
-		ResyncPause &
-		shift 2
-	;;
-	(speed)
-		Command '"set_property", "speed", '"$2"
-		ResyncPause &
-		shift 2
-	;;
-	(speed+)
-		Command '"add", "speed", '"$2"
-		ResyncPause &
-		shift 2
-	;;
-	(play)
-#		Command '"set_property", "keep-open", "no"'
-		Command '"set_property", "pause", false'
-		ResyncPause &
-		shift 1
-	;;
-	(pause)
-		Command '"set_property", "pause", true'
-		ResyncPause &
-		shift 1
-	;;
-	(play-pause)
-#		[ "$(Info eof-reached)" = true ] &&
+Main() {
+	while [ $# -gt 0 ]
+	do
+		case $1 in
+		(status)
+			Status
+			shift
+		;;
+		(position-)
+			Command '"seek", -'"$2"
+			ResyncPause &
+			shift 2
+		;;
+		(position)
+			Command '"set_property", "time-pos", '"$2"
+			ResyncPause &
+			shift 2
+		;;
+		(position+)
+			Command '"seek", '"$2"
+			ResyncPause &
+			shift 2
+		;;
+		(positionm)
+			SetInfoVars "pos      dur" \
+				    "time-pos duration"
+			SetTimeVars pos $pos dur $dur
+			secs=$(dmenu -p "[$pos / $dur"'] Jump to: ' < /dev/null | TimeToSecs)
+			Command '"set_property", "time-pos", '"$secs"
+			ResyncPause &
+			shift
+		;;
+		(speed-)
+			Command '"add", "speed", -'"$2"
+			ResyncPause &
+			shift 2
+		;;
+		(speed)
+			Command '"set_property", "speed", '"$2"
+			ResyncPause &
+			shift 2
+		;;
+		(speed+)
+			Command '"add", "speed", '"$2"
+			ResyncPause &
+			shift 2
+		;;
+		(play)
 #			Command '"set_property", "keep-open", "no"'
-		Command '"cycle", "pause"'
-		ResyncPause &
-		shift 1
-	;;
-	(pause-after)
-#		if [ "$(Info keep-open)" != always ]
-#		then
-#			Command '"set_property", "keep-open", "always"'
-#		else
-#			Command '"set_property", "keep-open", "no"'
-#		fi
-		shift
-		Command '"set_property", "pause", false'
-		PauseAfter "$@"
-		shift
-	;;
-	(loop-)
-		if [ $(Info loop) = inf ] && [ "$2" != 0 ]
-		then
-			Command '"set_property", "loop", 0'
-		else
-			Command '"add", "loop", -'"$2"
-		fi
-		shift 2
-	;;
-	(loop)
-		Command '"set_property", "loop", '"$2"
-		shift 2
-	;;
-	(loop+)
-		Command '"add", "loop", '"$2"
-		shift 2
-	;;
-	(next)
-		Command '"playlist-next"'
-		ResyncPause &
-		shift 1
-	;;
-	(prev*)
-		Command '"playlist-prev"'
-		ResyncPause &
-		shift 1
-	;;
-	(quit-wl)
-		Command '"quit-watch-later"'
-		shift 1
-	;;
-	(quit)
-		Command '"quit"'
-		ResyncPause TERM &
-		shift 1
-	;;
-	(sleep)
-		sleep $2
-		shift 2
-	;;
-	(playlist-info)
-		PlaylistInfo
-		shift 1
-	;;
-	(*)
-		eval "$@"
-		shift $#
-	;;
-	esac
-done
+			Command '"set_property", "pause", false'
+			ResyncPause &
+			shift
+		;;
+		(pause)
+			Command '"set_property", "pause", true'
+			ResyncPause &
+			shift
+		;;
+		(play-pause)
+#			[ "$(Info eof-reached)" = true ] &&
+#				Command '"set_property", "keep-open", "no"'
+			Command '"cycle", "pause"'
+			ResyncPause &
+			shift
+		;;
+		(pause-after)
+#			if [ "$(Info keep-open)" != always ]
+#			then
+#				Command '"set_property", "keep-open", "always"'
+#			else
+#				Command '"set_property", "keep-open", "no"'
+#			fi
+			shift
+			Command '"set_property", "pause", false'
+			PAonce=y
+			PauseAfter "$@"
+			shift
+		;;
+		(loop-)
+			if [ $(Info loop) = inf ] && [ "$2" != 0 ]
+			then
+				Command '"set_property", "loop", 0'
+			else
+				Command '"add", "loop", -'"$2"
+			fi
+			shift 2
+		;;
+		(loop)
+			Command '"set_property", "loop", '"$2"
+			shift 2
+		;;
+		(loop+)
+			Command '"add", "loop", '"$2"
+			shift 2
+		;;
+		(next)
+			Command '"playlist-next"'
+			ResyncPause &
+			shift
+		;;
+		(prev*)
+			Command '"playlist-prev"'
+			ResyncPause &
+			shift
+		;;
+		(quit-wl)
+			Command '"quit-watch-later"'
+			shift
+		;;
+		(quit)
+			Command '"quit"'
+			ResyncPause TERM &
+			shift
+		;;
+		(sleep)
+			sleep $2
+			shift 2
+		;;
+		(playlist-info)
+			PlaylistInfo
+			shift
+		;;
+		(*)
+			"$@"
+			shift $#
+		;;
+		esac
+	done
+	exit
+}
+
+Main "$@"

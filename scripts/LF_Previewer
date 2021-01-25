@@ -40,7 +40,7 @@ fi
 
 mkdir -p "${img_cache_path%/*}"
 exec 2>&1
-LF_Scope "$fpath" "$pv_w" "$pv_h" "$img_cache_path" "$show_img_pv"
+timeout 2 LF_Scope "$fpath" "$pv_w" "$pv_h" "$img_cache_path" "$show_img_pv"
 
 r=$?
 case $r in
