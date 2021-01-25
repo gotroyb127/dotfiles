@@ -3,13 +3,13 @@
 for t in * .*
 do
 	case $t in
-	(dunst|gsimplecal|lf|mpv|zathura)
+	(dunst|gsimplecal|lf|mpv|zathura|nvim)
 		DEST=${XDG_CONFIG_HOME:-$HOME/.config}
 	;;
 	(scripts|bin)
 		DEST=$HOME/.local
 	;;
-	(.init.sh|.inputrc|.profile|.tmux.conf|.vimrc|.xinitrc)
+	(.init.sh|.inputrc|.profile|.tmux.conf|.vimrc|.xinitrc|.XCompose|.Xmodmap)
 		DEST=$HOME
 	;;
 	(*)
