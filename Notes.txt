@@ -33,6 +33,12 @@ Player.sh Command '"set_property", "audio-channels", "mono"'
 # Yamaha Musicsoft Downloader with wine
 sudo modprobe snd_seq
 
+# from STATUS_volume:
+	read VOL mute << EOF
+	$(amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].* \[\(o[nf]*\)\]/\1 \2/')
+	$(amixer get Master | sed -n '7s/.*\[\([0-9]*\)%\].* \[\(o[nf]*\)\]/\1 \2/p')
+	EOF
+
 # android recover things
 MobiSaver - DeletedAudioRecovery
 
@@ -66,6 +72,7 @@ sudo /etc/init.d/vmware start
 youtube-dl -k -x -f mp4 --audio-format mp3 --playlist-items 20-25 -o '%(title)s.%(ext)s'
 youtube-dl --rm-cache-dir # ERROR: unable to download video data: HTTP Error 403: Forbidden
 
+# use ffmpeg to see camera's input
 ffmpeg -i /dev/video0 -c:v rawvideo -pix_fmt yuv420p -window_size qcif -f sdl "SDL output"
 
 # refresh disks

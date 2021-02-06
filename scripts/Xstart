@@ -5,6 +5,9 @@ log() {
 	printf '%s: %s\n' "$b0" "$*" >&2
 }
 
+Xstartlf=$HOME/.Xstart.local
+xmodmapf=$HOME/.Xmodmap
+
 # Xorg settings
 xset m 11/2 0
 xset s 900 600
@@ -16,8 +19,16 @@ xsetroot -solid gray0
 
 setxkbmap -layout us,gr -option grp:shift_caps_toggle
 
-[ -f "$HOME/.Xmodmap" ] &&
-	xmodmap ~/.Xmodmap
+[ -f "$xmodmapf" ] &&
+	xmodmap "$xmodmapf"
+
+if [ -x "$Xstartlf" ]
+then
+	"$Xstartlf"
+elif [ -f "$Xstartlf" ]
+then
+	. "$Xstartlf"
+fi
 
 command -v synclient > /dev/null 2>&1 && {
 	# Synaptic settings for touchpad

@@ -1,28 +1,17 @@
 #!/bin/sh
 
-#$(amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].* \[\(o[nf]*\)\]/\1 \2/')
-#read VOL mute << EOF
-#$(amixer get Master | sed -n '7s/.*\[\([0-9]*\)%\].* \[\(o[nf]*\)\]/\1 \2/p')
-#EOF
-
-#MicMute=$(amixer get Capture | tail -1)
-#[ "${MicMute}" = '[on]' ] && mic=' '
-#mic=' '墳
-
 all=$(amixer -M get Master)
 VOL=${all%\%] *}
 VOL=${VOL##* \[}
 mute=${all##* \[}
 mute=${mute%]}
 
-if [ "$mute" = 'on' ]
-then
-	vol="墳 "; warn=' '
-else
-	vol="ﱝ "; warn='!'
-fi
-
 MicMute=$(amixer get Capture)
-[ -z "${MicMute##*\[on]*}" ] && mic=' '
+[ -z "${MicMute##*\[on]*}" ] &&
+	mic=' '
 
-printf '%s' "$mic$vol$VOL$warn"
+suf=%
+[ "$mute" != on ] &&
+	suf=!
+
+printf '%s' "$mic$VOL$suf"

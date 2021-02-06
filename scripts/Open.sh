@@ -55,7 +55,7 @@ done |
 				postfix = "2> /dev/null &"
 			else if (Opener[i*2-1] == "c")
 				postfix = "2> /dev/null | xsel -ib &"
-			printf "%s%s\n%s\n",Opener[i*2],FGroups[i],postfix
+			printf "%s%s\n%s\n", Opener[i*2], FGroups[i], postfix
 		}
 	}' | (
 	IFS='

@@ -24,7 +24,7 @@ alias \
 	lA='ls -Al'\
 	vim='nvim'\
 	view='nvim -MR'\
-	SU='sudo ksh -il'\
+	SU='sudo --preserve-env=LF_LEVEL ksh -l'\
 	LOG='vim "$STARTX_LOG"'\
 	LOGIN='exec_ksh -l'\
 	mksh='HISTFILE= ENV= mksh -o vi'\
@@ -33,7 +33,6 @@ alias \
 	yt-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s'"\
 	scrcpy="scrcpy --shortcut-mod 'lalt+lctrl'"\
 	MakeInstall='make && sudo make install'\
-	BuildLf='go mod vendor; ./gen/build.sh -mod=vendor -trimpath'\
 
 LF() {
 	let --LF_LEVEL
@@ -59,11 +58,10 @@ SET_PS1() {
 	local s='>'
 	local LVL=$LF_LEVEL
 
-	if [ "$USER" = root ]
-	then
+	[ "X$USER" = Xroot ] && {
 		D='\[\033[38;2;255;0;0m\]'
 		s='#'
-	fi
+	}
 	while [ $# -gt 0 ]
 	do
 		case $1 in

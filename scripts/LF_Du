@@ -4,28 +4,32 @@ set -f
 IFS='
 '
 ls_size() {
-	awk '/^[^dltσ]/ {
-		printf $5"\t"
-		for (i=9; i<NF; ++i) {
-			printf $i" "
-		}
+	awk '/^[^d]/ && NR > 1 {
+		printf("%s\t", $5)
+		for (i = 9; i < NF; ++i)
+			printf $i " "
 		print $NF
 	}'
 }
 
 if [ -z "$fs" ]
 then
-	du -hd1 | sort -hr
+	du -hd1 .
 	ls -Shla | ls_size
-	exit 0
-fi
-
-for t in $fs
-do
-	t=${t#"$PWD/"}
-	[ -d $t ] && {
-		du -hd0 $t
-		continue
-	}
-	ls -Shl $t | ls_size
-done
+else
+	dirs=
+	files=
+	for f in $fs
+	do
+		f=${f#$PWD/}
+		[ -d "$f" ] && {
+			dirs="$dirs$IFS$f"
+			continue
+		}
+		files="$files$IFS$f"
+	done
+	[ -n "$dirs" ] &&
+		du -hd0 $dirs
+	[ -n "$files" ] &&
+		ls -Shl $files | ls_size
+fi | sort -hr

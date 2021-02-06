@@ -32,11 +32,11 @@ set timeout timeoutlen=3000
 set ttimeout ttimeoutlen=1
 
 set listchars=eol:$,tab:\|->,trail:~,extends:>,precedes:<,space:·
-set langmap=ΑA,ΒB,ΨC,ΔD,ΕE,ΦF,ΓG,ΗH,ΙI,ΞJ,ΚK,ΛL,ΜM,ΝN,ΟO,ΠP,QQ,ΡR,ΣS,ΤT,ΘU,ΩV,WW,ΧX,ΥY,ΖZ,αa,βb,ψc,δd,εe,φf,γg,ηh,ιi,ξj,κk,λl,μm,νn,οo,πp,qq,ρr,σs,τt,θu,ωv,ςw,χx,υy,ζz
+set langmap=ΑA,ΒB,ΨC,ΔD,ΕE,ΦF,ΓG,ΗH,ΙI,ΞJ,ΚK,ΛL,ΜM,ΝN,ΟO,ΠP,QQ,ΡR,ΣS,ΤT,ΘU,ΩV,-W,ΧX,ΥY,ΖZ,αa,βb,ψc,δd,εe,φf,γg,ηh,ιi,ξj,κk,λl,μm,νn,οo,πp,qq,ρr,σs,τt,θu,ωv,ςw,χx,υy,ζz
 
-let g:mapleader=' '
-let g:python_recommended_style=0
-let g:rust_recommended_style=0
+let g:mapleader = ' '
+let g:python_recommended_style = 0
+let g:rust_recommended_style = 0
 
 set cursorline
 augroup AutoCmds
@@ -46,6 +46,7 @@ augroup AutoCmds
 	endif
 	autocmd ColorScheme * hi CursorLine ctermbg=234 cterm=NONE guibg='#1c1c1c'
 	autocmd ColorScheme * hi ExtraWhitespace ctermbg=red guibg=red
+	autocmd FileType python,sh,vim,c call MapAutoComplete()
 "	autocmd InsertLeave * redraw!
 "	autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 "	autocmd InsertLeave * match ExtraWhitespace /\s\+\%#\@<!$/
@@ -68,9 +69,6 @@ if ! has("nvim")
 
 	command! Resource source ~/.vimrc
 
-	inoremap {<C-j> {}<Left><CR><C-o>O<Tab>
-	inoremap {<CR> {}<Left><CR><C-o>O<Tab>
-
 	for i in range(33, 123) + range(125, 126)
 		let c = nr2char(i)
 		exec "map  \e" . c . " <M-" . c . ">"
@@ -80,10 +78,6 @@ if ! has("nvim")
 	endfor
 else
 	command! Resource source ~/.config/nvim/init.vim
-
-	inoremap {<C-j> {}<Left><CR><C-o>O
-	inoremap {<CR> {}<Left><CR><C-o>O
-
 endif
 
 imap <F2> <C-\><C-o>:set list!<CR>
@@ -101,10 +95,6 @@ inoremap <C-f> <C-g>U<Right>
 inoremap <C-b> <C-g>U<Left>
 inoremap <C-a> <C-g>U<Home>
 inoremap <C-e> <C-g>U<End>
-
-inoremap " ""<C-g>U<Left>
-inoremap ' ''<C-g>U<Left>
-inoremap ( ()<C-g>U<Left>
 
 nnoremap <leader>f *Nzz
 
@@ -138,6 +128,9 @@ vnoremap <leader>[ <Esc>:call Surround(['[', ']'])<CR>
 
 nnoremap <leader>cc :call CommentLines('c')<CR>
 nnoremap <leader>cu :call CommentLines('u')<CR>
+
+nnoremap <leader>bn :bn<CR>
+nnoremap <leader>bp :bp<CR>
 
 vnoremap <leader>cc :call CommentLines('c')<CR>
 vnoremap <leader>cu :call CommentLines('u')<CR>
@@ -196,5 +189,19 @@ func! ColoToggle()
 		colo pablo
 	else
 		colo noclown
+	endif
+endfunc
+
+func! MapAutoComplete()
+	inoremap " ""<C-g>U<Left>
+	inoremap ' ''<C-g>U<Left>
+	inoremap ( ()<C-g>U<Left>
+
+	if has("nvim")
+		inoremap {<C-j> {}<Left><CR><C-o>O
+		inoremap {<CR> {}<Left><CR><C-o>O
+	else
+		inoremap {<C-j> {}<Left><CR><C-o>O<Tab>
+		inoremap {<CR> {}<Left><CR><C-o>O<Tab>
 	endif
 endfunc

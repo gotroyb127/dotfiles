@@ -1,27 +1,33 @@
 #!/bin/sh
 
-case $(nmcli networking connectivity) in
-('full')
-	st=' o'
+case $(nmcli networking connectivity check) in
+(full)
+	conn='o'
 ;;
-('limited')
-	st='勒 ?'
+(limited)
+	conn='?'
+;;
+(none)
+	conn='x'
 ;;
 (*)
-	st='勒 x'
+	conn='?x'
 ;;
 esac
 
-case $(nmcli radio wifi) in
-('disabled')
-	wifis=''
-;;
-('enabled')
-	wifis=' 直 '
-;;
-(*)
-	wifis=' 睊 ? '
-;;
-esac
+eth=
+wcon=
+type=$(nmcli connection show --active | awk 'NR > 1 {print $(NF-1)}')
 
-printf '%s' "$wifis$st"
+expr "X$type" : 'X.*ethernet' > /dev/null 2>&1 &&
+	eth=E
+expr "X$type" : 'X.*wifi' > /dev/null 2>&1 &&
+	wcon=W
+
+wifi=
+[ "$(nmcli radio wifi)" = enabled ] &&
+	wifi=w
+
+printf '%s' "$wcon$eth$conn$wifi"
+
+exit

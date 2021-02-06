@@ -1,16 +1,17 @@
 #!/bin/sh
 
-set nohidden
-set dircounts
-set incsearch
-set info size
+set mouse
 set icons
 set number
+set info size
+set dircounts
+set nohidden
 set nodrawbox
 set relativenumber
 set period 1
 set findlen 0
 set anchorfind
+set incsearch
 set scrolloff 7
 set previewer LF_Previewer
 set cleaner LF_Cleaner
@@ -44,6 +45,10 @@ cmd SetPrompt &{{
 	L='\033[38;2;95;255;135m'
 	D='\033[38;2;128;128;255m'
 	N='\033[0m'
+	[ "X$USER" = Xroot ] && {
+		D='\033[38;2;255;0;0m'
+		lf -remote 'send '"$id"' map w $exec ksh'
+	}
 	ID="$T$id"
 	CO="\033[38;5;252m:"
 	LV="$L$LF_LEVEL"
@@ -125,6 +130,11 @@ map R :Resource
 map sn :set sortby natural
 map sN :set sortby name
 
+map <m-1> :open
+map <m-2> :updir
+map <m-up> :up
+map <m-down> :down
+
 map v
 map vv :invert
 map vr :set reverse!; invert; set reverse!
@@ -158,7 +168,8 @@ map ` $nvim -MR "${TMPDIR:-/tmp}/lf.$USER.$id.log"
 
 map <c-y> :up
 map <c-e> :down
-map <c-l> :Recol; SetPrompt; redraw
+map <c-k> :Recol; SetPrompt
+map <c-l> :redraw
 map <c-r> :reload
 map c     :clear; unselect
 
