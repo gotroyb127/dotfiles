@@ -529,7 +529,6 @@ include "%L"
 <dead_greek> <space>                                 : "´"  U1ffd
 <dead_greek> <dead_greek>                            : "´"  U1ffd
 <dead_dasia> <space>                                 : "῾"  U1ffe
-<dead_dasia> <dead_dasia>                            : "῾"  U1ffe
 
 <dead_iota> <space>                                  : "ͺ"  U037a
 <dead_iota> <dead_iota>                              : "ͺ"  U037a

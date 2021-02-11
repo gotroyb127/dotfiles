@@ -39,6 +39,11 @@ sudo modprobe snd_seq
 	$(amixer get Master | sed -n '7s/.*\[\([0-9]*\)%\].* \[\(o[nf]*\)\]/\1 \2/p')
 	EOF
 
+# 04_gen_ms.sh
+	.de NUM
+	\\f[Galatia\\$2]\\$1\\f[]\\
+	..
+
 # android recover things
 MobiSaver - DeletedAudioRecovery
 

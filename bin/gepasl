@@ -1,18 +1,15 @@
 #!/bin/sh
 
 b0=${0##*/}
-
 usage() {
 	echo "$b0: usage: $b0 pwfile launcher [launcher_args...]" >&2
 }
 
-if [ $# -lt 1 ] || [ ! -e "${PWFILE=$1}" ]
-then
+[ $# -lt 1 ] || [ ! -e "${PWFILE=$1}" ] && {
 	usage
 	exit 2
-else
-	shift
-fi
+}
+shift
 
 awk -v DM="$*" \
     -v tmpf=$(mktemp) \

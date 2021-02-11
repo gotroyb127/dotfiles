@@ -3,7 +3,6 @@
 
 set \
 	-o vi\
-	-o vi-tabcomplete\
 	-o notify\
 	-o pipefail
 

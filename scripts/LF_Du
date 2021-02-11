@@ -4,7 +4,7 @@ set -f
 IFS='
 '
 ls_size() {
-	awk '/^[^d]/ && NR > 1 {
+	awk '/^[^dt]/ {
 		printf("%s\t", $5)
 		for (i = 9; i < NF; ++i)
 			printf $i " "
