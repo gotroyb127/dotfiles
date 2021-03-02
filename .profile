@@ -20,10 +20,14 @@ export MANPAGER='nvim +Man!'
 export CS_SELECTIONS=clipboard
 export TCELL_TRUECOLOR=y
 
+ttyn=$(expr "$(tty)" : '/dev/tty\([0-9]*\)')
+ttyn=${ttyn:-0}
+
 export TRASH=$HOME/.local/trash
 export TMPDIR=${TMPDIR:-/tmp}
-export STARTX_LOG=$TMPDIR/startx-auto.log
-export SYNCTHING_LOG=${TMPDIR:-/tmp}/sycnthing.log
+export STARTX_LOG=$TMPDIR/startx.$ttyn.log
+export ULOG="$TMPDIR/u.$(id -un).log"
+export SYNCTHING_LOG=$TMPDIR/sycnthing.log
 export MPVSOCKET=$TMPDIR/mpvs.socket.current
 if command -v systemctl >/dev/null
 then
@@ -43,7 +47,7 @@ dir=''; music=''; midi='ﱘ'; vid='辶'; img=''; book=''; ex=''; 
 export LF_ICONS="tw=$dir :st=st :ow= :di=$dir :ln= :or= :pi=pi :so= :cd= :cd= :bd=bd :su=su :sg=sg :dt=dt :fi=$fi :ex=$ex :*.opus=$music :*.ogg=$music :*.m4a=$music :*.mp3=$music :*.ogg=$music :*.midi=$midi :*.mid=$midi :*.MID=$midi :*.mkv=$vid:*.mp4=$vid:*.webm=$vid:*.mpeg=$vid:*.avi=$vid:*.jpg=$img :*.jpeg=$img :*.png=$img :*.pdf=$book :*.djvu=$book :*.epub=$book :*.txt=$txt :*.zip=$arc :*.rar=$arc :*.7z=$arc :*.gz=$arc :*.xz=$arc :*.exe= :*.doc=$word :*.docx=$word :*.odt=$word :*.ppt=$ppt :*.pptx=$ppt :*.py= :*.c=$txt :*.cpp=$txt :*.h=$txt :*.hpp=$txt :*.go=$txt :*.sh=$txt :"
 unset dir music midi vid img book ex txt fi arc word ppt
 
-if [ $(id -u) != 0 ] && expr "$(tty)" : '/dev/tty[0-9]*' > /dev/null
+if [ $(id -u) != 0 ] && [ "$ttyn" != 0 ]
 then
 	printf '%s' "Options: [s]hell, [t]mux, [X]org: "
 	trap 'ans=s; echo' INT
@@ -57,7 +61,7 @@ then
 	;;
 	(x|X|'')
 		echo "Starting X.org..."
-		startx 2>&1 | tee -a "$STARTX_LOG" >> "$HOME/.startx.log"
+		startx >> "$STARTX_LOG" 2>&1
 	;;
 	(s|S)
 		echo "Continuing to login shell."

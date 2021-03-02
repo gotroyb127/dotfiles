@@ -1,5 +1,8 @@
 # Notes.txt
 
+# ~/.profile
+startx 2>&1 | tee -a "$STARTX_LOG" >> "$HOME/.startx.log"
+
 # Ascii table with:
 a=32; a=$((a-1)); while [ $((a++)) -lt 126 ]; do printf "%3s: \x$(printf '%x' $a)\n" "$a"; done | column
 

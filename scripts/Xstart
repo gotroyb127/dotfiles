@@ -22,14 +22,6 @@ setxkbmap -layout us,gr -option grp:shift_caps_toggle
 [ -f "$xmodmapf" ] &&
 	xmodmap "$xmodmapf"
 
-if [ -x "$Xstartlf" ]
-then
-	"$Xstartlf"
-elif [ -f "$Xstartlf" ]
-then
-	. "$Xstartlf"
-fi
-
 command -v synclient > /dev/null 2>&1 && {
 	# Synaptic settings for touchpad
 	#	TapButton1=1
@@ -55,6 +47,14 @@ log "----- X keymaps loaded. -----"
 [ "X$1" != 'X-a' ] &&
 	exit 0
 
+if [ -x "$Xstartlf" ]
+then
+	"$Xstartlf"
+elif [ -f "$Xstartlf" ]
+then
+	. "$Xstartlf"
+fi
+
 if [ $(pgrep Xorg | wc -l) -gt 1 ]
 then
 	D=-1
@@ -69,9 +69,7 @@ then
 	touch "$setF"
 	sleep 3
 
-	amixer -Mq set Master 40%
 	# mute mics
-	set -x
 	m=$(pulsemixer --list-sources | wc -l)
 	i=-1
 	while [ $((i += 1)) -lt $m ]

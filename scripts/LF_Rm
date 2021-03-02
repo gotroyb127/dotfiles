@@ -1,0 +1,19 @@
+#!/bin/sh
+
+LF_Clear
+
+printf -- '--- Files to be removed: ---\n\n%s\n\nDelete? [Y/n]: ' "$fx" \
+	| LF_Fihi
+
+read ans
+if [ "$ans" != y ]
+then
+	messg='Aborted'
+elif rm -vfR $fx | LF_Log
+then
+	messg='DONE'
+else
+	messg='SOME ERROR OCCURED'
+fi
+
+printf "\n--- $messg ---\n"

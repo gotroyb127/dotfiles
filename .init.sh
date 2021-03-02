@@ -24,7 +24,8 @@ alias \
 	vim='nvim'\
 	view='nvim -MR'\
 	SU='sudo --preserve-env=LF_LEVEL ksh -l'\
-	LOG='vim "$STARTX_LOG"'\
+	LOG='vim "$ULOG"'\
+	XLOG='vim "$STARTX_LOG"'\
 	LOGIN='exec_ksh -l'\
 	mksh='HISTFILE= ENV= mksh -o vi'\
 	dash='HISTFILE= ENV= dash'\

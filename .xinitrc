@@ -12,7 +12,7 @@ sblocks "${TMPDIR-/tmp}/sblocks.$DISPLAY.fifo" &
 clipsaved &
 
 pgrep syncthing ||
-	syncthing --no-browser >> "$SYNCTHING_LOG" &
+	setsid -f syncthing --no-browser >> "$SYNCTHING_LOG" &
 
 dunst 2> /dev/null &
 pgrep pulseaudio || pulseaudio -D &

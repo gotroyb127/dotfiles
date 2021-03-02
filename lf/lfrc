@@ -24,6 +24,7 @@ cmd Quit      :Ulm \'; quit
 cmd open      $Open.sh $f
 cmd OpenSel   $Open.sh $fx
 cmd EchoSel   !LF_Clear; echo "$fs" | LF_Fihi
+cmd rm        !LF_Rm
 cmd Ulm       &LF_MarkSave \'
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle
@@ -80,23 +81,6 @@ cmd Trash &{{
 	} | LF_Log
 }}
 
-cmd rm !{{
-	LF_Clear
-	printf "--- Files to be removed: ---\n\n%s\n\nDelete? [Y/n]: " "$fx" \
-		| LF_Fihi
-	read ans
-	if [ "$ans" != y ]
-	then
-		messg='Aborted'
-	elif rm -vfR $fx | LF_Log
-	then
-		messg='DONE'
-	else
-		messg='SOME ERROR OCCURED'
-	fi
-	printf "\n--- $messg ---\n"
-}}
-
 cmd Paste &{{
 	{ N="$IFS"
 	if [ "X$1" = 'X--inside' ] && [ -d "$f" ]
@@ -122,6 +106,13 @@ cmd Paste &{{
 	lf -remote "send load${N}send clear"
 	} | LF_Log
 }}
+
+map η :push h
+map ξ :push j
+map κ :push k
+map λ :push l
+map ς :push w
+map ι :push i
 
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls -lhd "$f"
 map A !LF_Clear; LF_Du

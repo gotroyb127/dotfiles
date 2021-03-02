@@ -149,7 +149,7 @@ call s:Link('SpellCap', 'Underlined')
 call s:Link('SpellLocal', 'SpellCap')
 call s:Link('SpellRare', 'SpellCap')
 
-call s:Defn('Folded', s:fg('highlight'), s:bg('fade'))
+call s:Defn('Folded', s:fg('highlight'), s:bg('fade-more'))
 call s:Defn('FoldColumn', s:fg('highlight'), s:bg('fade-more'))
 
 call s:Defn('DiffAdd', s:attr('bold'), s:bg('fade-more'))
