@@ -6,7 +6,7 @@
 echo 'starting X...' | LF_Log &
 
 Xstart -a &
-AutoUpdate -s5 &
+AutoUpdate -s5 >> "$ULOG" 2>&1 &
 
 sblocks "${TMPDIR-/tmp}/sblocks.$DISPLAY.fifo" &
 clipsaved &

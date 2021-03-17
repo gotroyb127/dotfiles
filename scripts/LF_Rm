@@ -1,7 +1,9 @@
 #!/bin/sh
 
-LF_Clear
+IFS='
+'
 
+LF_Clear
 printf -- '--- Files to be removed: ---\n\n%s\n\nDelete? [Y/n]: ' "$fx" \
 	| LF_Fihi
 

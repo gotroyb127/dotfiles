@@ -107,12 +107,37 @@ cmd Paste &{{
 	} | LF_Log
 }}
 
+map α :push a
+map β :push b
+map γ :push g
+map δ :push d
+map ε :push e
+map ζ :push z
 map η :push h
-map ξ :push j
+map θ :push u
+map ι :push i
 map κ :push k
 map λ :push l
+map μ :push m
+map ν :push n
+map ξ :push j
+map ο :push o
+map π :push p
+map ρ :push r
+map σ :push s
+map τ :push t
+map υ :push y
+map φ :push f
+map χ :push x
+map ψ :push c
+map ω :push v
 map ς :push w
-map ι :push i
+
+map Α :push A
+map Δ :push D
+map Ε :push E
+map Σ :push S
+
 
 map a %du -hd0 "$f" 2> /dev/null | awk '{print $1"  "}' | tr -d '\n'; ls -lhd "$f"
 map A !LF_Clear; LF_Du
