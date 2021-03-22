@@ -172,7 +172,7 @@ SetTimeVars() {
 }
 SecsToTime() {
 	t=${2%.*}
-	m=$(( (t/60) % 60))
+	m=$(((t/60) % 60))
 	s=$((t % 60))
 	if [ "$((h = t/3600))" != 0 ]
 	then
@@ -183,11 +183,14 @@ SecsToTime() {
 	else
 		o="$s"
 	fi
-	eval "$1=\"$o\""
+	eval "$1='$o'"
 }
 Status() {
-	SetInfoVars "pause loop Title       CurrTime Duration RemTime            Speed" \
-	            "pause loop media-title time-pos duration playtime-remaining speed"
+	SetInfoVars "pause loop loopPl        Title\
+		CurrTime Duration RemTime            Speed" \
+	            "pause loop loop-playlist media-title\
+		time-pos duration playtime-remaining speed"
+	p=?
 	case $pause in
 	(true)
 		p=''
@@ -196,15 +199,24 @@ Status() {
 		p=''
 	;;
 	esac
-	l=
+	[ "$loopPl" = inf ] &&
+		lp=P
+	use_lf=y
 	case $loop in
 	(inf)
-		l=" ()"
+		lf=
+		[ "$lp" = P ] &&
+			lf=F
 	;;
 	([0-9]*)
-		l=" ($loop)"
+		lf=$loop
+	;;
+	(*)
+		use_lf=
 	;;
 	esac
+	[ -n "$use_lf$lp" ] &&
+		l=" ($lp$lf)"
 	SetTimeVars CurrTime $CurrTime Duration $Duration RemTime $RemTime
 	printf "%.150s [%s . %s] (-%s) x%s %s" "$Title" "$CurrTime" "$Duration" \
 	       "$RemTime" "$Speed" "$p$l"
@@ -304,6 +316,15 @@ Main() {
 		(loop+)
 			Command '"add", "loop", '"$2"
 			shift 2
+		;;
+		(loop-playlist)
+			if [ $(Info loop-playlist) = inf ]
+			then
+				Command '"set_property", "loop-playlist", "no"'
+			else
+				Command '"set_property", "loop-playlist", "inf"'
+			fi
+			shift
 		;;
 		(next)
 			Command '"playlist-next"'

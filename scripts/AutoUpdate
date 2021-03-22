@@ -3,7 +3,7 @@
 cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
 cache=$cachedir/AutoUpdated
 Invl=5
-cday=$(date +%j)
+cday=$(date +%j | sed 's/^0*//g')
 
 b0=${0##*/}
 msg() {
@@ -53,7 +53,8 @@ do
 	esac
 done
 
-{	sudo -n pacman -Sy &&
+{
+	sudo -n pacman -Sy &&
 	sudo -n pacman -Fy
 } 2>&1 | {
 	box="---------- $b0 ----------"
@@ -64,14 +65,12 @@ done
 
 if [ -f "$cache" ] && [ -z "$Updating" ]
 then
-	passed=$((cday - $(cat "$cache")))
+	lday=$(sed 's/^0*//g' "$cache")
+	passed=$((cday - lday))
 	echo "Days passed since last auto-update: $passed."
-	if [ "$passed" -ge "$Invl" ] || [ "$passed" -le "-$Invl" ]
-	then
+	Updating=
+	[ "$passed" -ge "$Invl" ] || [ "$passed" -le "-$Invl" ] &&
 		Updating=True
-	else
-		Updating=
-	fi
 else
 	Updating=True
 fi

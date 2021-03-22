@@ -1,6 +1,6 @@
 #!/bin/sh
 
-case $(nmcli networking connectivity check) in
+case $(nmcli networking connectivity) in
 (full)
 	conn='o'
 ;;
