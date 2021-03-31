@@ -1,24 +1,30 @@
 #!/bin/sh
 
+Fork() {
+	setsid -f "$@"
+}
+
 [ -z "$DBUS_SESSION_BUS_ADDRESS" ] &&
 	eval "$(dbus-launch --exit-with-session --sh-syntax)"
 
 echo 'starting X...' | LF_Log &
 
-Xstart -a &
-AutoUpdate -s5 >> "$ULOG" 2>&1 &
+Fork Xstart -a
+Fork AutoUpdate -s5 >> "$ULOG" 2>&1
 
-sblocks "${TMPDIR-/tmp}/sblocks.$DISPLAY.fifo" &
-clipsaved &
+Fork sblocks "${TMPDIR-/tmp}/sblocks.$DISPLAY.fifo"
+Fork clipsaved
 
 pgrep syncthing ||
-	setsid -f syncthing --no-browser >> "$SYNCTHING_LOG" &
+	Fork syncthing --no-browser >> "$SYNCTHING_LOG"
+pgrep pulseaudio ||
+	Fork pulseaudio -D
 
-dunst 2> /dev/null &
-pgrep pulseaudio || pulseaudio -D &
-lxqt-policykit-agent 2> /dev/null &
-xsidle.sh slock 15 "$MACHINECTL suspend" 600 &
-unclutter --timeout 1 --ignore-scrolling &
+Fork dunst 2> /dev/null
+Fork lxqt-policykit-agent 2> /dev/null
+Fork xsidle.sh slock 15 "$MACHINECTL suspend" 600
+Fork unclutter --timeout 1 --ignore-scrolling
+Fork keynav
 
 # start window manager
 exec dwm

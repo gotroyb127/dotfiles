@@ -151,7 +151,7 @@ PlaylistInfo() {
 			TRD = SecsToTime((TD - BD) / SP)
 			BD = SecsToTime(BD)
 			TD = SecsToTime(TD)
-			printf("(%s/%s)\t\t[%s . %s] (-%s) x%s\t",
+			printf("(%s/%s)\t\t[%s %s] (-%s) x%s\t",
 			       N, NR/2, BD, TD, TRD, SP)
 		}'
 }
@@ -218,7 +218,7 @@ Status() {
 	[ -n "$use_lf$lp" ] &&
 		l=" ($lp$lf)"
 	SetTimeVars CurrTime $CurrTime Duration $Duration RemTime $RemTime
-	printf "%.150s [%s . %s] (-%s) x%s %s" "$Title" "$CurrTime" "$Duration" \
+	printf "%.150s [%s %s] (-%s) x%s %s" "$Title" "$CurrTime" "$Duration" \
 	       "$RemTime" "$Speed" "$p$l"
 }
 

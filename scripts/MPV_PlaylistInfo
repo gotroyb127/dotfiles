@@ -18,6 +18,7 @@ Wait() {
 	;;
 	(c*)
 		clear
+		Wait
 	;;
 	(r*)
 		exec "$0" "$@"
