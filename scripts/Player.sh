@@ -215,11 +215,14 @@ Status() {
 		use_lf=
 	;;
 	esac
+	pa=
+	[ -e "$pidf" ] &&
+		pa=!
 	[ -n "$use_lf$lp" ] &&
 		l=" ($lp$lf)"
 	SetTimeVars CurrTime $CurrTime Duration $Duration RemTime $RemTime
 	printf "%.150s [%s %s] (-%s) x%s %s" "$Title" "$CurrTime" "$Duration" \
-	       "$RemTime" "$Speed" "$p$l"
+	       "$RemTime" "$Speed" "$p$l$pa"
 }
 
 Main() {

@@ -1,5 +1,19 @@
 #!/bin/sh
 
+diff=diff
+command -v colordiff > /dev/null &&
+	diff=colordiff
+cp='cp -vfR'
+# check if -u flag is supported
+cp -u /dev/null /dev/zero 2> /dev/null &&
+	cp="$cp -u"
+
+Ask() {
+	printf '%s [y/n]: ' "$1"
+	read ans
+	[ "X$ans" = Xy ]
+}
+
 for t in * .*
 do
 	case $t in
@@ -9,7 +23,8 @@ do
 	(scripts|bin)
 		DEST=$HOME/.local
 	;;
-	(.init.sh|.inputrc|.profile|.tmux.conf|.vimrc|.xinitrc|.XCompose|.Xmodmap)
+	(.init.sh|.inputrc|.profile|.tmux.conf|.vimrc\
+	|.xinitrc|.keynavrc|.XCompose|.Xmodmap)
 		DEST=$HOME
 	;;
 	(*)
@@ -17,9 +32,14 @@ do
 	;;
 	esac
 
-	git diff "$DEST/$t" "$t"
-
-	printf %s "Do you want to replace '$t'? [y/n]: "
-	read reply
-	[ "X$reply" = Xy ] && cp -vfR "$t" "$DEST"
+	if [ -e "$DEST/$t" ]
+	then
+		$diff -u "$DEST/$t" "$t" &&
+			continue
+		query="Replace '$t'?"
+	else
+		query="Copy '$t'?"
+	fi
+	Ask "$query" &&
+		$cp "$t" "$DEST"
 done
