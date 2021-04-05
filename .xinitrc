@@ -4,6 +4,9 @@ Fork() {
 	setsid -f "$@"
 }
 
+# make sure this does not look like a tty
+exec < /dev/null
+
 [ -z "$DBUS_SESSION_BUS_ADDRESS" ] &&
 	eval "$(dbus-launch --exit-with-session --sh-syntax)"
 

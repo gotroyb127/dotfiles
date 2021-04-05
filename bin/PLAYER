@@ -2,12 +2,11 @@
 
 xdotool getactivewindow windowsize 1260 31 windowmove 255 -3
 
-case "$1" in
-(-a)
+All=
+[ "X$1" = X-a ] && {
 	All=Yes
 	shift
-;;
-esac
+}
 
 Fifo=${1:-${TMPDIR-/tmp}/sblocks.$DISPLAY.fifo}
 
@@ -21,8 +20,8 @@ while read l
 do
 	if [ -z "$All" ]
 	then
-		l=${l%  *}
-		l=${l%  *}
+		l=${l% us *}
+		l=${l% el *}
 	fi
-	printf "\n%${COLS}s" "$l  "
+	printf "\n%${COLS}s" "$l "
 done < "$Fifo"

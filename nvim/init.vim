@@ -46,7 +46,7 @@ augroup AutoCmds
 	endif
 	autocmd ColorScheme * hi CursorLine ctermbg=234 cterm=NONE guibg='#1c1c1c'
 	autocmd ColorScheme * hi ExtraWhitespace ctermbg=red guibg=red
-	autocmd FileType python,sh,vim,c,cpp call MapAutoComplete()
+	autocmd FileType python,sh,vim,c,cpp,go,rust,openscad call MapAutoComplete()
 "	autocmd InsertLeave * redraw!
 "	autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 "	autocmd InsertLeave * match ExtraWhitespace /\s\+\%#\@<!$/
