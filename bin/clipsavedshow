@@ -31,7 +31,7 @@ selfromfile() {
 	done
 }
 
-if [ $# -gt 0 ] && [ "X$1" = 'X--rm' ]
+if [ "X$1" = 'X--rm' ]
 then
 	rm=y
 	shift
@@ -51,7 +51,7 @@ out=$("$CS_LAUNCHER" "$@" < "$tmpf")
 lret=$?
 [ "$lret" != 0 ] &&
 	exit 0
-out=$(printf '%s' "$out" | sed 's/^\(.*\) ([0-9]* lines)$/\1/')
+out=$(printf '%s' "$out" | sed 's/^\(.*\) ([0-9]\+ lines)$/\1/')
 
 fname=$(while read -r fname
 	do

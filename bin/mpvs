@@ -1,36 +1,41 @@
 #!/bin/sh
 
-sfile=${TMPDIR:-/tmp}/mpvs.curr.name
-defname=${TMPDIR:-/tmp}/mpvs.socket.1
+pref=${TMPDIR:-/tmp}/mpvs.socket
 
-cleanup() {
+rmsocket() {
 	rm -f "$newsocket"
 }
 setsocket() {
-	printf '%s' "$1" > "$sfile"
-	[ -z "$1" ] && {
-		rm -f "$MPVSOCKET"
-		return
-	}
 	touch "$1"
 	ln -sf "$1" "$MPVSOCKET"
 }
+restoresocket() {
+	rmsocket
+	m=$(ls "$pref".* | awk -F. -v m=0 '{
+		if ((n = $NF + 0) > m)
+			m = n
+		} END {
+			print m
+		}'
+	)
+	[ "$m" = 0 ] && {
+		unlink "$MPVSOCKET"
+		return
+	}
+	setsocket "$pref.$m"
+}
 
-if [ ! -f "$sfile" ] || [ -z "$(cat "$sfile")" ]
+
+if [ ! -e "$MPVSOCKET" ]
 then
-	prevsocket=
-	newsocket=$defname
+	newsocket=$pref.1
 else
-	prevsocket=$(cat "$sfile")
-	n=${prevsocket##*.}
-	pref=${prevsocket%.*}
+	prevsocket=$(readlink "$MPVSOCKET")
+	n=${prevsocket#$pref.}
 	newsocket=$pref.$((n+1))
 fi
 
-trap cleanup exit INT
-
 setsocket "$newsocket"
+trap restoresocket exit TERM INT
 
 mpv --input-ipc-server="$newsocket" "$@"
-
-setsocket "$prevsocket"

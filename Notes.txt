@@ -12,6 +12,20 @@ a=32; a=$((a-1)); while [ $((a++)) -lt 126 ]; do printf "%3s: \x$(printf '%x' $a
 # Terminal colors [0..255] with:
 for i in $(seq 1 255); do echo "\\033[38;5;${i}m$i"; done | column -x | less -R
 
+# from dwm.c
+/#define FOR_SELTAG(_i, code) do {\
+		for (_i = 0; _i < LENGTH(tags); ++_i) {\
+			if (selmon->tagset[selmon->seltags] & 1 << _i) {\
+				code\
+			}\
+		}\
+		/* apply for last also */\
+		if (selmon->pertag->curtag == _i) {\
+			code\
+		}\
+	} while (0)
+
+
 // ===========================================================================================
 // from /usr/share/X11/xkb/symbols/gr
 // ===========================================================================================

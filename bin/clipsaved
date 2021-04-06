@@ -21,7 +21,7 @@ then
 	}
 	debug "Debuging is enabled."
 else
-	debug() { : ; }
+	debug() { :; }
 fi
 
 _mv() {
@@ -35,7 +35,7 @@ _mktemp() {
 	tmpf=$(mktemp)
 }
 _xsel() {
-	timeout 1 xsel --logfile /dev/null "$@"
+	timeout 1 xsel -l /dev/null "$@"
 }
 die() {
 	ret=$1
@@ -68,7 +68,7 @@ managenewsel() {
 
 		fname="$cachedir/${tmpcksum%% *}"
 
-		if [ "$(head -1 "$tmpf")" = "" ] || [ -f "$fname" ]
+		if [ -z "$(cat "$tmpf")" ] || [ -f "$fname" ]
 		then
 			debug "Skipping caching from $sel."
 			continue
@@ -84,8 +84,9 @@ managecachedsel() {
 	tail "-$CS_MAXCACHED" "$activecachesfile" > "$tmpf"
 	_mv -f "$tmpf" "$activecachesfile"
 
-	{ cat "$activecachesfile"
-	  printf '%s\n' "$cachedir/"[0-9]*
+	{
+		cat "$activecachesfile"
+		printf '%s\n' "$cachedir/"[0-9]*
 	} | sort | uniq -u |
 		while read -r f
 		do
@@ -93,8 +94,8 @@ managecachedsel() {
 		done
 }
 
-trap 'cleanbeforequit' INT TERM
-trap 'restart' HUP
+trap cleanbeforequit INT TERM
+trap restart HUP
 
 initfiles
 while true
@@ -104,10 +105,8 @@ do
 
 	clipnotify &
 	wait $!
-	if [ $? != 0 ]
-	then
+	[ $? != 0 ] &&
 		exit
-	fi
 done
 
 cleanbeforequit

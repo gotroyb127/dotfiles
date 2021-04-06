@@ -63,40 +63,6 @@ do
 	shift
 done
 
-#while [ $# -gt 0 ]
-#do
-#	case $1 in
-#	(-bg)
-#		bg=$2
-#		shift
-#	;;
-#	(-s)
-#		shadow='--shadow'
-#	;;
-#	(-f)
-#		fading=
-#	;;
-#	(-t)
-#		transp="--active-opacity${IFS}0.9"
-#		transp="${transp}${IFS}--inactive-opacity${IFS}0.75"
-#	;;
-#	(-d)
-#		dim="--inactive-dim${IFS}0.25"
-#	;;
-#	(-i)
-#		invert="--invert-color-include${IFS}class_i ~= 'dwm|st-256color'"
-#	;;
-#	(--)
-#		shift
-#		break
-#	;;
-#	(*)
-#		usage
-#	;;
-#	esac
-#	shift
-#done
-
 [ -n "$bg" ] &&
 	if [ -e "$bg" ]
 	then

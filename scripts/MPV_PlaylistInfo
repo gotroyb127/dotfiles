@@ -1,16 +1,28 @@
 #!/bin/sh
 
+neednl=n
+Echo() {
+	[ "$neednl" = y ] && {
+		echo
+		neednl=n
+	}
+}
 Print() {
 	S=$(Player.sh playlist-info) || {
 		r=$?
-		printf '%s' "[$r] "
+		Echo
 		return $r
 	}
 	LF_Clear
 	printf "%s" "$S"
+	neednl=y
 }
 Wait() {
-	printf '%s' 'Waiting... : '
+	r=$?
+	[ $r != 0 ] &&
+		ret="[$r] "
+	Echo
+	printf '%s%s' "$ret" 'Waiting... : '
 	read ans
 	case $ans in
 	(q*)
@@ -33,6 +45,6 @@ Main() {
 	done
 }
 
-trap 'echo; Wait; Main' INT
+trap 'neednl=y; Wait; Main' INT
 
 Main
