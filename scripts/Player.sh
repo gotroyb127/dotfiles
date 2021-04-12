@@ -47,18 +47,17 @@ Info() {
 }
 PauseAfter() {
 	trap 'exit 0' TERM
-	trap 'PAonce=n; PauseAfter $n "$@"' USR1
-	trap 'rm -f "$pidf"' USR2
-	dt='0.5'
+	trap 'PAfirstspawn=n; PauseAfter $n "$@"' USR1
+	trap 'rm -f "$pidf"' USR2 INT
+	dt=0.5
 	# At first spawn
-	[ "X$PAonce" != 'Xn' ] && {
+	[ "X$PAfirstspawn" = Xy ] && {
 		# cancel any pending pause and exit
 		[ -e "$pidf" ] && {
 			ResyncPause USR2 &
 			Notify "Mpv pause canceled."
 			exit 4
 		}
-		Command '"set_property", "pause", false'
 		# Notify
 		if [ "$1" -eq 1 ]
 		then
@@ -70,8 +69,7 @@ PauseAfter() {
 		fi
 		Notify "Pausing mpv after $time."
 	}
-	# check if mpv is running
-	Command '"get_property", "time-pos"' || exit
+	Command '"set_property", "pause", false'
 	printf '%s' $$ > "$pidf"
 	n=$(($1 + 1))
 	shift
@@ -93,6 +91,7 @@ PauseAfter() {
 		fi
 	done
 	rm -f "$pidf"
+	trap '' TERM USR1 USR2 exit
 	Main "$@"
 }
 PlaylistInfo() {
@@ -298,8 +297,13 @@ Main() {
 #				Command '"set_property", "keep-open", "no"'
 #			fi
 			shift
-			Command '"set_property", "pause", false'
-			PAonce=y
+			[ "X$1" = X-f ] && {
+				shift
+				"$0" pause-after "$@" &
+				sleep .1
+				exit
+			}
+			PAfirstspawn=y
 			PauseAfter "$@"
 			shift
 		;;
