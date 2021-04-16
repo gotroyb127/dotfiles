@@ -1,11 +1,6 @@
 #!/bin/sh
 
 xhost +SI:localuser:wineuser > /dev/null
-run() {
-	exec sudo -u wineuser env -u PATH -C /home/wineuser \
-		HOME=/home/wineuser USER=wineuser USERNAME=wineuser LOGNAME=wineuser \
-		"$@"
-}
 
 [ "$#" -le 0 ] && {
 	exec >&2
@@ -13,4 +8,6 @@ run() {
 	exit 2
 }
 
-run "$@"
+exec sudo -u wineuser env -u PATH -C /home/wineuser \
+	HOME=/home/wineuser USER=wineuser USERNAME=wineuser LOGNAME=wineuser \
+	"$@"

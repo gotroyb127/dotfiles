@@ -153,9 +153,9 @@ func! CommentLines(action) range
 		let cmnts = '"'
 	elseif index(["c", "cpp", "go", "rust", "openscad"], &ft) != -1
 		let cmnts = '//'
-	elseif index(["roff", "nroff"], &ft) != -1
-		let cmnts = '\"'
-	elseif &ft ==# "matlab"
+	elseif index(["nroff"], &ft) != -1
+		let cmnts = '.\"'
+	elseif index(["matlab", "plaintex", "tex"], &ft) != -1
 		let cmnts = '%'
 	else
 		let cmnts = '#'

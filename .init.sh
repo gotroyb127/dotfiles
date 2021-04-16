@@ -18,6 +18,7 @@ then
 	alias ls='ls --color=auto'
 fi
 alias \
+	E='set -o emacs'\
 	ll='ls -l'\
 	la='ls -al'\
 	lA='ls -Al'\

@@ -1,10 +1,10 @@
 #!/bin/sh
 
-if tmux has -t Music 2> /dev/null
+if tmux.sh has -t Music 2> /dev/null
 then
-	tmux attach -t Music
+	tmux.sh attach -t Music
 else
-	tmux new -s Music -c"$HOME/Music" $SHELL -ic lf \; \
+	tmux.sh new -s Music -c"$HOME/Music" $SHELL -ic lf \; \
 		splitw -vl 35 MPV_PlaylistInfo \; \
 		splitw -dh MPV_WatchLater \; \
 		selectp -t1 \; \
