@@ -1,0 +1,4 @@
+#!/bin/sh
+tee_stderr() {
+	tee /dev/stderr
+}

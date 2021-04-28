@@ -150,7 +150,7 @@ PlaylistInfo() {
 			TRD = SecsToTime((TD - BD) / SP)
 			BD = SecsToTime(BD)
 			TD = SecsToTime(TD)
-			printf("(%s/%s)\t\t[%s %s] (-%s) x%s\t",
+			printf("(%s/%s)\t\t[%s %s] (-%s) x%s",
 			       N, NR/2, BD, TD, TRD, SP)
 		}'
 }

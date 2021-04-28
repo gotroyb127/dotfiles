@@ -5,7 +5,8 @@ IFS='
 PrintWhat() {
 	for f in $(find ~/.config/mpv/watch_later -type f)
 	do
-		(	read i; i=${i#??}
+		(
+			read i; i=${i#??}
 			if [ -e "$i" ]
 			then
 				i=${i%.*}

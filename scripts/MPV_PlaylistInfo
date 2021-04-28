@@ -14,7 +14,7 @@ Print() {
 		return $r
 	}
 	LF_Clear
-	printf "%s" "$S"
+	printf "%s\t" "$S"
 	neednl=y
 }
 Wait() {

@@ -53,34 +53,14 @@ Player.sh Command '"set_property", "audio-channels", "mono"'
 # Yamaha Musicsoft Downloader with wine
 sudo modprobe snd_seq
 
-# from STATUS_volume:
-	read VOL mute << EOF
-	$(amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].* \[\(o[nf]*\)\]/\1 \2/')
-	$(amixer get Master | sed -n '7s/.*\[\([0-9]*\)%\].* \[\(o[nf]*\)\]/\1 \2/p')
-	EOF
-
-# 04_gen_ms.sh
-	.de NUM
-	\\f[Galatia\\$2]\\$1\\f[]\\
-	..
-
 # android recover things
 MobiSaver - DeletedAudioRecovery
-
-# installed to work with vulkan:
-pacman -S vulkan-{headers,tools,validation-layers} ?{spirv-tools,glm}
-
-# Commonly used packages
-moreutiles(includes vidir) xssstate dunst highlight clipmenu mpv(socat,jq) timidity++ ttf-fira-code ttf-nerd-fonts-?
 
 # get rid of the GTK waringn ... "adwaita" engine not found ...
 pacman -S gnome-themes-standard
 
 # Hotspot with nm?
 install dnsmasq package
-
-#
-sleep 1 && xdotool mousemove 1200 700 click 1 sleep 1 mousemove 100 950 click 1
 
 # lfrc
 	ID="\033[38;5;123m$id"

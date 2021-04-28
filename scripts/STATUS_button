@@ -1,0 +1,45 @@
+#!/bin/sh
+
+case $1 in
+(2)
+#	sign=2
+#	[ "$BUTTON" = 1 ] &&
+#		xkblayout
+;;
+(3)
+	sign=4
+	args=
+	sink=Master
+	case $BUTTON in
+	(2)
+		sink=Capture
+		args=toggle
+	;;
+	(3)
+		args=toggle
+	;;
+	(4)
+		args=5%+
+	;;
+	(5)
+		args=5%-
+	;;
+	(8)
+		args=35%
+	;;
+	(9)
+		args=75%
+	;;
+	esac
+	[ -n "$args" ] &&
+		amixer -Mq set $sink $args
+;;
+(5)
+	sign=
+	[ "$BUTTON" = 1 ] &&
+		gsimplecal
+;;
+esac
+
+[ -n "$sign" ] &&
+	kill -$((31 - sign)) $(pidof sblocks)

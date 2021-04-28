@@ -1,5 +1,6 @@
 #!/bin/sh
 setifs() {
+	set -f
 	case $1 in
 	(-n|'')
 		IFS='
@@ -11,6 +12,7 @@ setifs() {
 	esac
 }
 resetifs() {
+	set +f
 	IFS='
 	 '
 }

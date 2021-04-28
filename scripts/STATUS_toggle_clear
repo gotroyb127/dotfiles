@@ -1,0 +1,17 @@
+#!/bin/sh
+
+tmpf=${TMPDIR-/tmp}/status.cleared
+sig() {
+	kill -$1 $(pidof sblocks)
+}
+
+if [ -e "$tmpf" ]
+then
+	sig CONT
+	rm -f "$tmpf"
+else
+	sig STOP
+	xsetroot -name ''
+	touch "$tmpf" ||
+		sig CONT
+fi

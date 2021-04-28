@@ -87,7 +87,7 @@ Pacman: $UpsNum updates available." "$Updates"
 	then
 		sudo pacman -Su
 	else
-		st tmux new 'sudo pacman -Su; $SHELL'
+		st tmux.sh new 'sudo pacman -Su; $SHELL'
 	fi
 	pacman -Quq > /dev/null ||
 		UpdateCache

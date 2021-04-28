@@ -39,9 +39,10 @@ Reset() {
 }
 Pause() {
 	read ans
-	expr "$ans" : 'q' > /dev/null &&
-		exit 0
 	case $ans in
+	(q*)
+		exit 0
+	;;
 	([0-9]*)
 		SetnewTime "$ans"
 		nextAction=S
