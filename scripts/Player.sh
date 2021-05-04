@@ -20,18 +20,18 @@ ResyncPause() {
 	pid=$(cat "$pidf")
 	case "$pause$1" in
 	(true)
-		SIGS=STOP
+		sigs=STOP
 	;;
 	(false)
-		SIGS='CONT USR1'
+		sigs='CONT USR1'
 	;;
 	(*)
-		SIGS=$1
+		sigs="CONT $*"
 	;;
 	esac
-	for sig in $SIGS
+	for sig in $sigs
 	do
-		kill -$sig $pid || rm -f "$pidf"
+		kill -$sig $pid #|| rm -f "$pidf"
 	done
 }
 TimeToSecs() {

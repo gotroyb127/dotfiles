@@ -1,7 +1,7 @@
 #!/bin/sh
 
 L='us'
-[ "$(xkblayout)" = 'Gre' ] &&
+[ "$(xkblt)" = 'Greek' ] &&
 	L='el'
 
 printf '%s' "$L"

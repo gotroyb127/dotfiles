@@ -1,0 +1,8 @@
+#!/bin/sh
+
+[ $# -ne 2 ] && {
+	echo "${0##*/}: need 2 arguments" >&2
+	exit 1
+}
+
+colordiff -u "$1" "$2" | less -R

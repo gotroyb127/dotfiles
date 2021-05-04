@@ -24,6 +24,8 @@ alias \
 	lA='ls -Al'\
 	vim='nvim'\
 	view='nvim -MR'\
+	nmutt='neomutt'\
+	cal='cal -s'\
 	SU='sudo --preserve-env=LF_LEVEL ksh -l'\
 	LOG='vim "$ULOG"'\
 	XLOG='vim "$STARTX_LOG"'\

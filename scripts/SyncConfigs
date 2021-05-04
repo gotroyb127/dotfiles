@@ -15,7 +15,7 @@ for t in \
 	~/.X{modmap,Compose} \
 	~/.config/{nvim,lf,mpv,gsimplecal,zathura,dunst} \
 	~/.local/{bin,scripts} \
-	~/{Notes,ToDo}.txt
+	~/Notes.txt
 do
 	Targets="$Targets$N$t"
 done

@@ -26,7 +26,7 @@ export STARTX_LOG=$TMPDIR/startx.$ttyn.log
 export ULOG="$TMPDIR/u.$(id -un).log"
 export SYNCTHING_LOG=$TMPDIR/sycnthing.log
 export MPVSOCKET=$TMPDIR/mpvs.socket.current
-MACHINECTL=loginctl
+export MACHINECTL=loginctl
 command -v systemctl > /dev/null &&
 	MACHINECTL=systemctl
 

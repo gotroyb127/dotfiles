@@ -1,12 +1,13 @@
 #!/bin/sh
 
-MARKSFILE=${XDG_DATA_HOME:-$HOME/.local/share}/lf/marks
+marksf=${XDG_DATA_HOME:-$HOME/.local/share}/lf/marks
 
-expr "$1" : '.$' > /dev/null || {
+[ "${#1}" = 1 ] || {
 	echo "${0##*/}: arguments must be one character" >&2
 	exit 100
 }
 
-{	echo "$1:$PWD"
-	sed "/^$1:/d" "$MARKSFILE"
-} | sponge "$MARKSFILE"
+{
+	echo "$1:$PWD"
+	sed "/^$1:/d" "$marksf"
+} | sponge "$marksf"

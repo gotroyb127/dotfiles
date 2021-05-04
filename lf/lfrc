@@ -75,36 +75,38 @@ cmd Recol &{{
 }}
 
 cmd Trash &{{
-	{ N="$IFS"
-	mkdir -p "$TRASH"
-	LF_Move "mv${N}-v${N}--" "$TRASH" NO_DUPS
-	lf -remote "send load${N}"
+	{
+		N="$IFS"
+		mkdir -p "$TRASH"
+		LF_Move "mv${N}-v${N}--" "$TRASH" NO_DUPS
+		lf -remote "send load${N}"
 	} | LF_Log
 }}
 
 cmd Paste &{{
-	{ N="$IFS"
-	if [ "X$1" = 'X--inside' ] && [ -d "$f" ]
-	then
-		DEST=$f
-	else
-		DEST=$PWD
-	fi
-	load=$(lf -remote 'load')
-	mode=$(echo "$load" | sed -n '1p')
-	list=$(echo "$load" | sed '1d')
-	if [ $mode = copy ]
-	then
-		OP="cp${N}-Rv${N}--"
-		DUPS=
-	elif [ $mode = move ]
-	then
-		OP="mv${N}-v${N}--"
-		DUPS=NO
-	fi
-	export fx="$list"
-	LF_Move "$OP" $DEST $DUPS | sed "s!'$HOME!'~!g"
-	lf -remote "send load${N}send clear"
+	{
+		N="$IFS"
+		if [ "X$1" = 'X--inside' ] && [ -d "$f" ]
+		then
+			DEST=$f
+		else
+			DEST=$PWD
+		fi
+		load=$(lf -remote 'load')
+		mode=$(echo "$load" | sed -n '1p')
+		list=$(echo "$load" | sed '1d')
+		if [ $mode = copy ]
+		then
+			OP="cp${N}-Rv${N}--"
+			DUPS=
+		elif [ $mode = move ]
+		then
+			OP="mv${N}-v${N}--"
+			DUPS=NO
+		fi
+		export fx="$list"
+		LF_Move "$OP" $DEST $DUPS | sed "s!'$HOME!'~!g"
+		lf -remote "send load${N}send clear"
 	} | LF_Log
 }}
 

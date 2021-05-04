@@ -15,7 +15,7 @@ echo 'starting X...' | LF_Log &
 Fork Xstart -a
 Fork AutoUpdate -s5 >> "$ULOG" 2>&1
 
-Fork sblocks "${TMPDIR-/tmp}/sblocks.$DISPLAY.fifo"
+Fork sblocks
 Fork clipsaved
 
 pgrep syncthing ||

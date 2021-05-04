@@ -1,16 +1,48 @@
 #!/bin/sh
 
-case $1 in
+btn=$1
+blkn=$2
+
+#echo "${0##*/} btn:$btn blkn:$blkn" >&2
+case $blkn in
+(0|7)
+	sign=
+	[ $btn = 2 ] &&
+		STATUS_toggle_clear
+;;
+(1)
+	sign=1
+	case $btn in
+	(3)
+		Player.sh play-pause
+	;;
+	esac
+;;
 (2)
-#	sign=2
-#	[ "$BUTTON" = 1 ] &&
-#		xkblayout
+	sign=2
+	case $btn in
+	(1)
+		xkblt -t0
+	;;
+	(3)
+		xkblt -t1
+	;;
+	(4)
+		xkblt -a1
+	;;
+	(5)
+		xkblt -s1
+	;;
+	esac
 ;;
 (3)
+	sign=5
+;;
+(4)
 	sign=4
 	args=
 	sink=Master
-	case $BUTTON in
+	case $btn in
 	(2)
 		sink=Capture
 		args=toggle
@@ -35,8 +67,11 @@ case $1 in
 		amixer -Mq set $sink $args
 ;;
 (5)
+	sign=2
+;;
+(6)
 	sign=
-	[ "$BUTTON" = 1 ] &&
+	[ "$btn" = 3 ] &&
 		gsimplecal
 ;;
 esac

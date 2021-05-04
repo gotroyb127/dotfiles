@@ -1,27 +1,37 @@
 #!/bin/sh
 
-xdotool getactivewindow windowsize 1260 31 windowmove 255 -3
+mw=1920
+mh=1080
 
-All=
+xdotool getactivewindow windowsize $((2 * mw / 3)) 30 windowmove $((mw / 6)) -3
+
+all=
 [ "X$1" = X-a ] && {
-	All=Yes
+	all=Yes
 	shift
 }
 
-Fifo=${1:-${TMPDIR-/tmp}/sblocks.$DISPLAY.fifo}
-
-sleep .01
+sleep .1
 COLS=$(tput cols)
 
-kill -USR1 $(pidof sblocks)
-sleep .1
+if [ -z "$all" ]
+then
+	c=$(printf '\1')
+	readlns() {
+		while read -r l
+		do
+			l=${l#$c}
+			l=${l%%$c*}
+			printf "\n%${COLS}s " "$l"
+		done
+	}
+else
+	readlns() {
+		while read -r l
+		do
+			printf "\n%${COLS}s " "$l"
+		done
+	}
+fi
 
-while read l
-do
-	if [ -z "$All" ]
-	then
-		l=${l% us *}
-		l=${l% el *}
-	fi
-	printf "\n%${COLS}s" "$l "
-done < "$Fifo"
+xwrtnm | readlns
