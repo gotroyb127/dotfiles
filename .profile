@@ -17,12 +17,13 @@ export PAGER=less
 export EDITOR=nvim
 export OPENER=Open.sh
 
-ttyn=$(expr "$(tty 2> /dev/null)" : '/dev/tty\([0-9]*\)')
-ttyn=${ttyn:-0}
+TTYN=$(expr "$(tty 2> /dev/null)" : '/dev/tty\([0-9]*\)')
+TTYN=${TTYN:-0}
+export TTYN
 
 export TRASH=$HOME/.local/trash
 export TMPDIR=${TMPDIR:-/tmp}
-export STARTX_LOG=$TMPDIR/startx.$ttyn.log
+export XLOG=$TMPDIR/x.$TTYN.log
 export ULOG="$TMPDIR/u.$(id -un).log"
 export SYNCTHING_LOG=$TMPDIR/sycnthing.log
 export MPVSOCKET=$TMPDIR/mpvs.socket.current
@@ -46,7 +47,7 @@ unset dir music midi vid img book ex txt fi arc word ppt
 [ -r "$HOME/.profile.local" ] &&
 	. "$HOME/.profile.local"
 
-if [ $(id -u) != 0 ] && [ "$ttyn" != 0 ]
+if [ $(id -u) != 0 ] && [ "$TTYN" != 0 ]
 then
 	printf '%s' "Options: [s]hell, [t]mux, [X]org: "
 	trap 'ans=s; echo' INT
@@ -60,7 +61,7 @@ then
 	;;
 	(x|X|'')
 		echo "Starting X.org..."
-		startx >> "$STARTX_LOG" 2>&1
+		startx >> "$XLOG" 2>&1
 	;;
 	(s|S)
 		echo "Continuing to login shell."

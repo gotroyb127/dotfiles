@@ -46,7 +46,8 @@ augroup AutoCmds
 	endif
 	autocmd ColorScheme * hi CursorLine ctermbg=234 cterm=NONE guibg='#1c1c1c'
 	autocmd ColorScheme * hi ExtraWhitespace ctermbg=red guibg=red
-	autocmd FileType python,sh,vim,c,cpp,go,rust,openscad call MapAutoComplete()
+	autocmd FileType python,sh,vim,c,cpp,go,rust,openscad,ada
+		\ call MapAutoComplete()
 "	autocmd InsertLeave * redraw!
 "	autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 "	autocmd InsertLeave * match ExtraWhitespace /\s\+\%#\@<!$/
@@ -149,7 +150,7 @@ func! Surround(lst)
 endfunc
 
 func! CommentLines(action) range
-	if &ft ==# "vim"
+	if index(["vim"], &ft) != -1
 		let cmnts = '"'
 	elseif index(["c", "cpp", "go", "rust", "openscad"], &ft) != -1
 		let cmnts = '//'
@@ -157,6 +158,8 @@ func! CommentLines(action) range
 		let cmnts = '.\"'
 	elseif index(["matlab", "plaintex", "tex"], &ft) != -1
 		let cmnts = '%'
+	elseif index(["ada"], &ft) != -1
+		let cmnts = '--'
 	else
 		let cmnts = '#'
 	endif
@@ -193,9 +196,12 @@ func! ColoToggle()
 endfunc
 
 func! MapAutoComplete()
+	if &ft != "ada"
+		inoremap ' ''<C-g>U<Left>
+	endif
 	inoremap " ""<C-g>U<Left>
-	inoremap ' ''<C-g>U<Left>
 	inoremap ( ()<C-g>U<Left>
+	inoremap [ []<C-g>U<Left>
 
 	if has("nvim")
 		inoremap {<C-j> {}<Left><CR><C-o>O

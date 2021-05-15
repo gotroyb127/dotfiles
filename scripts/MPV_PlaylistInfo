@@ -1,6 +1,68 @@
 #!/bin/sh
 
-neednl=n
+. "$(which Player_lib.sh)"
+
+PlaylistInfo() {
+	echoPL() {
+		cachedir="${TMPDIR-/tmp}/PlaylistInfo.cache"
+		mkdir -p "$cachedir"
+		IFS='
+'
+		for fname in $PL
+		do
+			cachepath="$cachedir/$fname.cache"
+			if ! [ -f "$cachepath" ]
+			then
+				mkdir -p "${cachepath%/*}"
+				ffprobe -v error -show_entries format=duration \
+					-of default=noprint_wrappers=1:nokey=1 "$fname" \
+					2> /dev/null > "$cachepath"
+			fi
+			printf '%s\n' "$fname"
+			cat "$cachepath"
+		done
+	}
+	SetInfoVars "N            PL       CT       RT                 Speed"\
+	            "playlist-pos playlist time-pos playtime-remaining speed"
+	PL=$(printf '%s\n' "$PL" | jq -r '.[] | .filename')
+	PL=$(echoPL)
+	printf '%s\n' "$PL" |
+		awk -v N="$((N+1))" -v SP="$Speed" \
+		    -v CT="$CT" -v RD="$RT" \
+		    -v c1='\033[33m' -v c2='\033[00m' \
+		'function SecsToTime(t) {
+			s = int(t % 60)
+			m = int((t/60) % 60)
+			h = int(t / 3600)
+			if (h != 0)
+				o = sprintf("%d:%d:%d", h, m, s)
+			else if (m != 0)
+				o = sprintf("%d:%d", m, s)
+			else
+				o = sprintf("%d", s)
+			return o
+		} (NR % 2) {
+			sub("^/.*/", "")
+			sub("\\.[^.]+$", "")
+			title = $0
+			sub(".*/", "", title)
+			if ((NR + 1) / 2 == N)
+				BD = CT + TD
+		} !(NR % 2) {
+			TD += $1
+			$0 = SecsToTime($0)
+			if (NR / 2 == N) {
+				printf("%s\t" c1 "%s" c2 "\n", $0, title)
+			} else
+				printf("%s\t%s\n", $0, title)
+		} END {
+			TRD = SecsToTime((TD - BD) / SP)
+			BD = SecsToTime(BD)
+			TD = SecsToTime(TD)
+			printf("(%s/%s)\t\t[%s %s] (-%s) x%s",
+			       N, NR/2, BD, TD, TRD, SP)
+		}'
+}
 Echo() {
 	[ "$neednl" = y ] && {
 		echo
@@ -8,7 +70,7 @@ Echo() {
 	}
 }
 Print() {
-	S=$(Player.sh playlist-info) || {
+	S=$(PlaylistInfo) || {
 		r=$?
 		Echo
 		return $r
@@ -41,10 +103,11 @@ Main() {
 	while true
 	do
 		Print || Wait
-		sleep .93
+		sleep .94
 	done
 }
 
 trap 'neednl=y; Wait; Main' INT
 
+neednl=n
 Main

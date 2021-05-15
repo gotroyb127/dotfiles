@@ -1,3 +1,49 @@
 #!/bin/sh
 
-Player.sh status
+. "$(which Player_lib.sh)"
+
+SetInfoVars "pause loop loopPl        Title\
+	CurrTime Duration RemTime            Speed" \
+	    "pause loop loop-playlist media-title\
+	time-pos duration playtime-remaining speed"
+
+p=?
+case $pause in
+(true)
+	p=''
+;;
+(false)
+	p=''
+;;
+esac
+
+[ "$loopPl" = inf ] &&
+	lp=P
+
+use_lf=y
+case $loop in
+(inf)
+	lf=
+	[ "$lp" = P ] &&
+		lf=F
+;;
+([0-9]*)
+	lf=$loop
+;;
+(*)
+	use_lf=
+;;
+esac
+
+pa=
+[ -e "$pidf" ] &&
+	pa=!
+
+[ -n "$use_lf$lp" ] &&
+	l=" ($lp$lf)"
+
+SetTimeVars CurrTime "$CurrTime" Duration "$Duration" RemTime "$RemTime"
+
+printf "%.150s [%s %s] (-%s) x%s %s" \
+       "$Title" "$CurrTime" "$Duration" \
+       "$RemTime" "$Speed" "$p$l$pa"

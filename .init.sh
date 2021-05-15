@@ -27,9 +27,11 @@ alias \
 	nmutt='neomutt'\
 	cal='cal -s'\
 	SU='sudo --preserve-env=LF_LEVEL ksh -l'\
-	LOG='vim "$ULOG"'\
-	XLOG='vim "$STARTX_LOG"'\
+	ULOG='vim "$ULOG"'\
+	XLOG='vim "$XLOG"'\
 	LOGIN='exec_ksh -l'\
+	gdb='gdb -q'\
+	bc='bc -lq'\
 	mksh='HISTFILE= ENV= mksh -o vi'\
 	dash='HISTFILE= ENV= dash'\
 	bash='HISTFILE= ENV= bash'\

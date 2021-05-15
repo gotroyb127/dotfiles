@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -e
+trap 'echo; exit 0' INT
+
+tty > /dev/null ||
+	exit
+
+while true
+do
+	printf '%s: ' "$(xbacklight)"
+	read n
+	case "$n" in
+	(-*)
+		n=${n#?}
+		mode=dec
+	;;
+	(+*)
+		n=${n#?}
+		mode=inc
+	;;
+	(*)
+		mode=set
+	esac
+	xbacklight -$mode $n
+done

@@ -29,5 +29,3 @@ wifi=
 	wifi=w
 
 printf '%s' "$wcon$eth$conn$wifi"
-
-exit

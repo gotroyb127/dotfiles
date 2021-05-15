@@ -25,7 +25,7 @@ case ${Option%%:*} in
 	slock $ctl suspend
 ;;
 (4)
-	pkill -15 -t tty"$XDG_VTNR" 'dwm$'
+	pkill -TERM -t tty"$TTYN" '^dwm$'
 ;;
 (5)
 	slock & sleep 1 && xset s activate

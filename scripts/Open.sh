@@ -38,7 +38,7 @@ done |
 		m = split(Openers, Opener, "[\t\n]+")
 		_ = split("", FGroups)
 	} {
-		for (i = 1; i <= n; ++i) {
+		for (i = 1; i <= n; i++) {
 			if (match($0, PGroup[i])) {
 				gsub("([\"$`])", "\\\\&")
 				FGroups[i] = FGroups[i] " \"" $0 "\""
@@ -46,7 +46,7 @@ done |
 			}
 		}
 	} END {
-		for (i = 1; i <= n; ++i) {
+		for (i = 1; i <= n; i++) {
 			if (FGroups[i] == "")
 				continue
 			postfix = ""

@@ -1,5 +1,10 @@
 #!/bin/sh
 
+[ $# -lt 2 ] && {
+	echo "${0##*/}: usage: ${0##*/} btn blkn" >&2
+	exit 2
+}
+
 btn=$1
 blkn=$2
 
@@ -77,4 +82,4 @@ case $blkn in
 esac
 
 [ -n "$sign" ] &&
-	kill -$((31 - sign)) $(pidof sblocks)
+	kill -$((31 - sign)) $(pidof sblocks) || true
