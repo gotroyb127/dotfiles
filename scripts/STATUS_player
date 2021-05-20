@@ -17,14 +17,20 @@ case $pause in
 ;;
 esac
 
-[ "$loopPl" = inf ] &&
+case $loopPl in
+(inf)
 	lp=P
+;;
+([2-9]*)
+	lp=${loopPl}P
+;;
+esac
 
 use_lf=y
 case $loop in
 (inf)
 	lf=
-	[ "$lp" = P ] &&
+	[ -n "$lp" ] &&
 		lf=F
 ;;
 ([0-9]*)
@@ -44,6 +50,6 @@ pa=
 
 SetTimeVars CurrTime "$CurrTime" Duration "$Duration" RemTime "$RemTime"
 
-printf "%.150s [%s %s] (-%s) x%s %s" \
+printf "%s [%s %s] (-%s) x%s %s" \
        "$Title" "$CurrTime" "$Duration" \
        "$RemTime" "$Speed" "$p$l$pa"

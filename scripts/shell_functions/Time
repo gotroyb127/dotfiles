@@ -12,6 +12,6 @@ Time() {
 	time \
 		while [ $((++a)) -le $m ]
 		do
-			"$@" > /dev/null
+			"$@" > /dev/null <&1
 		done
 }

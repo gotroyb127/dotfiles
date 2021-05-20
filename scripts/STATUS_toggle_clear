@@ -2,7 +2,7 @@
 
 tmpf=${TMPDIR-/tmp}/status.cleared
 sig() {
-	kill -$1 $(pidof sblocks)
+	kill -$1 $SBLOCKS_PID
 }
 
 if [ -e "$tmpf" ]

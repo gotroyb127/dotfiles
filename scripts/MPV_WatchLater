@@ -2,6 +2,7 @@
 
 IFS='
 '
+box='<>'
 PrintWhat() {
 	for f in $(find ~/.config/mpv/watch_later -type f)
 	do
@@ -22,7 +23,12 @@ PrintWhat() {
 		done
 }
 Print() {
-	printf '%s%s\n' "$(LF_Clear)" "$(PrintWhat)"
+	w=$(PrintWhat)
+	LF_Clear
+	echo "$box"
+	[ -n "$w" ] &&
+		printf '%s\n' "$w"
+	echo "$box"
 }
 
 while true

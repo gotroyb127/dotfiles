@@ -27,7 +27,7 @@ fi
 _mv() {
 	if ! mv "$@"
 	then
-		debug "mv $*"
+		debug "mv $* returned $?."
 	fi
 }
 _mktemp() {
@@ -40,25 +40,26 @@ _xsel() {
 die() {
 	ret=$1
 	shift
-	printf '%s\n' "$@" >&2
+	printf '%s\n' "$b0: $*" >&2
 	exit $ret
 }
-cleanbeforequit() {
-	rm -R "$cachedir"
+cleanup() {
+	debug "Cleaning up '$cachedir'."
+	rm -fR "$cachedir"
 }
 restart() {
 	cleanbeforequit
-	debug "Executing into '$0 $*'"
+	debug "Executing into '$0 $*'."
 	exec "$0" "$@"
 }
-initfiles() {
+initFiles() {
 	[ -f "$lockfile" ] &&
 		die 5 "Lock file '$lockfile' exists. Maybe another instance is already running."
 	rm -fR "$cachedir"
 	mkdir -p -m0700 "$cachedir"
 	touch "$activecachesfile" "$lockfile"
 }
-managenewsel() {
+manageNewSel() {
 	for sel in $CS_SELECTIONS
 	do
 		_mktemp
@@ -79,7 +80,7 @@ managenewsel() {
 		printf '%s\n' "$fname" >> "$activecachesfile"
 	done
 }
-managecachedsel() {
+manageCachedSel() {
 	_mktemp
 	tail "-$CS_MAXCACHED" "$activecachesfile" > "$tmpf"
 	_mv -f "$tmpf" "$activecachesfile"
@@ -94,19 +95,20 @@ managecachedsel() {
 		done
 }
 
-trap cleanbeforequit INT TERM
+trap exit INT TERM
+trap cleanup exit
 trap restart HUP
 
-initfiles
+initFiles
 while true
 do
-	managenewsel
-	managecachedsel
+	manageNewSel
+	manageCachedSel
 
+	debug 'Waiting for events...'
 	clipnotify &
-	wait $!
+		wait $!
+
 	[ $? != 0 ] &&
 		exit
 done
-
-cleanbeforequit

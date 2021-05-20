@@ -15,8 +15,9 @@ echo 'starting X...' | LF_Log &
 Fork Xstart -a
 Fork AutoUpdate -s5 >> "$ULOG" 2>&1
 
-Fork sblocks
 Fork clipsaved
+sblocks &
+	export SBLOCKS_PID=$!
 
 pgrep syncthing ||
 	Fork syncthing --no-browser >> "$SYNCTHING_LOG"

@@ -46,7 +46,7 @@ augroup AutoCmds
 	endif
 	autocmd ColorScheme * hi CursorLine ctermbg=234 cterm=NONE guibg='#1c1c1c'
 	autocmd ColorScheme * hi ExtraWhitespace ctermbg=red guibg=red
-	autocmd FileType python,sh,vim,c,cpp,go,rust,openscad,ada
+	autocmd FileType python,sh,vim,c,cpp,go,rust,openscad,ada,lua
 		\ call MapAutoComplete()
 "	autocmd InsertLeave * redraw!
 "	autocmd InsertLeave * match ExtraWhitespace /\s\+$/
@@ -158,7 +158,7 @@ func! CommentLines(action) range
 		let cmnts = '.\"'
 	elseif index(["matlab", "plaintex", "tex"], &ft) != -1
 		let cmnts = '%'
-	elseif index(["ada"], &ft) != -1
+	elseif index(["ada", "lua"], &ft) != -1
 		let cmnts = '--'
 	else
 		let cmnts = '#'
