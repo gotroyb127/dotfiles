@@ -22,10 +22,10 @@ Opener=\
 	f	timidity -in\
 	f	mpvs\
 	f	w3m -N\
-	f	nvim\
+	f	vis\
 "
 
-for arg
+for arg in "$@"
 do
 	[ -d "$arg" ] &&
 		continue

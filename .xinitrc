@@ -21,8 +21,8 @@ sblocks &
 
 pgrep syncthing ||
 	Fork syncthing --no-browser >> "$SYNCTHING_LOG"
-pgrep pulseaudio ||
-	Fork pulseaudio -D
+
+(sleep 3; exec pw-start.sh) &
 
 Fork dunst 2> /dev/null
 Fork lxqt-policykit-agent 2> /dev/null

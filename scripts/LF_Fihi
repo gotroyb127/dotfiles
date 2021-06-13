@@ -1,8 +1,10 @@
 #!/bin/sh
 
-tilde() { sed "s!$HOME!~!" ; }
+tilde() {
+	sed "s\`$HOME\`~\`"
+}
 
-if [ "X$1" = 'X-n' ]
+if [ "X$1" = X-n ]
 then
 	tilde
 else

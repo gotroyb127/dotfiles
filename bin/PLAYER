@@ -1,9 +1,11 @@
 #!/bin/sh
 
-mw=1920
-mh=1080
-
-xdotool getactivewindow windowsize $((2 * mw / 3)) 30 windowmove $((mw / 6)) -3
+read mw mh << EOF
+$(xdpyinfo | awk '/dimensions/ {
+	sub("x", " ", $2)
+	print $2
+}')
+EOF
 
 all=
 [ "X$1" = X-a ] && {
@@ -11,6 +13,9 @@ all=
 	shift
 }
 
+xdotool getactivewindow windowsize $((2 * mw / 3)) 30 windowmove $((mw / 6)) -3
+
+# wait for the resize
 sleep .1
 COLS=$(tput cols)
 

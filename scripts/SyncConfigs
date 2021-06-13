@@ -13,7 +13,7 @@ Targets=
 for t in \
 	~/.{tmux.conf,{xinit,input,keynav}rc,profile,init.sh} \
 	~/.X{modmap,Compose} \
-	~/.config/{nvim,lf,mpv,gsimplecal,zathura,dunst} \
+	~/.config/{vis,nvim,lf,mpv,gsimplecal,zathura,dunst} \
 	~/.local/{bin,scripts} \
 	~/Notes.txt
 do

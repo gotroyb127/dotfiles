@@ -14,7 +14,7 @@ export PATH=$PATH:$HOME/.local/scripts:$HOME/.local/bin
 export FPATH=$HOME/.local/scripts/shell_functions
 
 export PAGER=less
-export EDITOR=nvim
+export EDITOR=vis
 export OPENER=Open.sh
 
 TTYN=$(expr "$(tty 2> /dev/null)" : '/dev/tty\([0-9]*\)')
@@ -33,7 +33,6 @@ command -v systemctl > /dev/null &&
 
 export LESSHISTFILE='-'
 export TCELL_TRUECOLOR=y
-export MANPAGER='nvim +Man!'
 export CS_SELECTIONS=clipboard
 export GOPATH=${XDG_DATA_HOME:-$HOME/.local/share}/go
 export QT_QPA_PLATFORMTHEME=gtk2
@@ -49,10 +48,10 @@ unset dir music midi vid img book ex txt fi arc word ppt
 
 if [ $(id -u) != 0 ] && [ "$TTYN" != 0 ]
 then
-	printf '%s' "Options: [s]hell, [t]mux, [X]org: "
+	printf '%s' 'Options: [s]hell, [t]mux, [X]org: '
 	trap 'ans=s; echo' INT
 	read ans
-	case "$ans" in
+	case $ans in
 	(t|T|j)
 		tmux
 	;;

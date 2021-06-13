@@ -52,15 +52,20 @@ PlaylistInfo() {
 			TD += $1
 			$0 = SecsToTime($0)
 			if (NR / 2 == N) {
-				printf("%s\t" c1 "%s" c2 "\n", $0, title)
-			} else
-				printf("%s\t%s\n", $0, title)
+				cb = c1
+				ce = c2
+			} else {
+				cb = ""
+				ce = ""
+			}
+			printf("%-8s%s%s%s\n", $0, cb, title, ce)
 		} END {
 			TRD = SecsToTime((TD - BD) / SP)
 			BD = SecsToTime(BD)
 			TD = SecsToTime(TD)
-			printf("(%s/%s)\t\t[%s %s] (-%s) x%s",
-			       N, NR/2, BD, TD, TRD, SP)
+			idx = sprintf("(%s/%s)", N, NR/2)
+			printf("%-16s[%s %s] (-%s) x%s",
+			       idx, BD, TD, TRD, SP)
 		}'
 }
 Echo() {

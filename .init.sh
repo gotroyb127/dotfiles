@@ -22,13 +22,12 @@ alias \
 	ll='ls -l'\
 	la='ls -al'\
 	lA='ls -Al'\
-	vim='nvim'\
-	view='nvim -MR'\
+	view='less -N'\
+	XLOG='view "$XLOG"'\
+	ULOG='view "$ULOG"'\
 	nmutt='neomutt'\
 	cal='cal -s'\
 	SU='sudo --preserve-env=LF_LEVEL ksh -l'\
-	ULOG='vim "$ULOG"'\
-	XLOG='vim "$XLOG"'\
 	LOGIN='exec_ksh -l'\
 	gdb='gdb -q'\
 	bc='bc -lq'\

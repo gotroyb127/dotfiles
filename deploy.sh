@@ -17,7 +17,7 @@ Ask() {
 for t in * .*
 do
 	case $t in
-	(dunst|gsimplecal|lf|mpv|zathura|nvim)
+	(dunst|gsimplecal|lf|mpv|zathura|nvim|vis)
 		DEST=${XDG_CONFIG_HOME:-$HOME/.config}
 	;;
 	(scripts|bin)

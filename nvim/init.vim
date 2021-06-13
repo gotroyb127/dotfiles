@@ -31,7 +31,7 @@ set noexpandtab
 set timeout timeoutlen=3000
 set ttimeout ttimeoutlen=1
 
-set listchars=eol:$,tab:\|->,trail:~,extends:>,precedes:<,space:·
+set listchars=eol:↵,tab:\|->,trail:~,extends:>,precedes:<,space:·
 set langmap=ΑA,ΒB,ΨC,ΔD,ΕE,ΦF,ΓG,ΗH,ΙI,ΞJ,ΚK,ΛL,ΜM,ΝN,ΟO,ΠP,QQ,ΡR,ΣS,ΤT,ΘU,ΩV,-W,ΧX,ΥY,ΖZ,αa,βb,ψc,δd,εe,φf,γg,ηh,ιi,ξj,κk,λl,μm,νn,οo,πp,qq,ρr,σs,τt,θu,ωv,ςw,χx,υy,ζz
 
 let g:mapleader = ' '

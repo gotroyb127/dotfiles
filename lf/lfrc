@@ -1,4 +1,4 @@
-#!/bin/sh
+# lfrc
 
 set mouse
 set icons
@@ -22,23 +22,25 @@ set filesep "\n"
 set ifs "\n"
 
 cmd Quit      :Ulm \'; quit
-cmd open      $Open.sh $f
+cmd open      $Open.sh "$f"
 cmd OpenSel   $Open.sh $fx
-cmd EchoSel   !LF_Clear; echo "$fs" | LF_Fihi
+cmd EchoSel   !LF_Clear; printf '%s\n' "$fs" | LF_Fihi
 cmd rm        !LF_Rm
 cmd Ulm       &LF_MarkSave \'
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle
 cmd Resource  &{{
-	f="$XDG_CONFIG_HOME/lf/lfrc"
+	f=$XDG_CONFIG_HOME/lf/lfrc
 	lf -remote "send $id source '$f'"
-	lf -remote "send $id echo 'Configuration file ($(echo "$f" | LF_Fihi)) loaded.'"
+	lf -remote "send $id echo 'Configuration file ($(printf '%s\n' $f | LF_Fihi)) loaded.'"
 }}
 
 cmd Yankname &{{
-	[ -z "$f" ] && t="$PWD" || t="$f"
-	echo -n "${t##*/}" | xsel
-	echo -n "$t" | xsel -b
+	t=$f
+	[ -z "$f" ] &&
+		t=$PWD
+	printf %s "${t##*/}" | xsel
+	printf %s "$t" | xsel -b
 }}
 
 cmd SetPrompt &{{
@@ -47,7 +49,7 @@ cmd SetPrompt &{{
 	L='\033[38;2;95;255;135m'
 	D='\033[38;2;128;128;255m'
 	N='\033[0m'
-	[ "X$USER" = Xroot ] && {
+	[ $(id -u) = 0 ] && {
 		D='\033[38;2;255;0;0m'
 		lf -remote 'send '"$id"' map w $exec ksh'
 	}
@@ -61,53 +63,56 @@ cmd SetPrompt &{{
 }}
 
 cmd Recol &{{
-	w=$(tput cols)
-	N="$IFS"
-	if [ "$w" -le 75 ]
+	if [ "$(tput cols)" -le 75 ]
 	then
-		lf -remote "send $id set nopreview${N}send $id set ratios 1"
-	elif [ "$w" -le 180 ]
-	then
-		lf -remote "send $id set ratios 7:8${N}send $id set preview"
+		lf -remote "send $id :set nopreview; set ratios 1"
 	else
-		lf -remote "send $id set ratios 9:16${N}send $id set preview"
+		lf -remote "send $id :set ratios 7:8; set preview"
 	fi
 }}
 
 cmd Trash &{{
 	{
-		N="$IFS"
+		N=$IFS
 		mkdir -p "$TRASH"
-		LF_Move "mv${N}-v${N}--" "$TRASH" NO_DUPS
-		lf -remote "send load${N}"
-	} | LF_Log
+		LF_Move "mv${N}-v${N}--" "$TRASH" n $fx |
+			LF_Fihi -n
+		rm "$files"
+		lf -remote "send :clear; load"
+	} 2>&1 | LF_Log "$ULOG"
 }}
 
 cmd Paste &{{
 	{
-		N="$IFS"
-		if [ "X$1" = 'X--inside' ] && [ -d "$f" ]
+		N=$IFS
+		dest=$PWD
+		[ "X$1" = X-i ] && [ -d "$f" ] &&
+			dest=$f
+
+		files=~/.local/share/lf/files
+		mode=$(head -1 "$files")
+		list=$(sed 1d "$files")
+
+		[ -z "$list" ] && {
+			echo 'empty list...'
+			exit
+		}
+
+		if [ "$mode" = copy ]
 		then
-			DEST=$f
-		else
-			DEST=$PWD
+			op="cp${N}-av${N}--"
+			dups=y
+		elif [ "$mode" = move ]
+		then
+			op="mv${N}-v${N}--"
+			dups=n
 		fi
-		load=$(lf -remote 'load')
-		mode=$(echo "$load" | sed -n '1p')
-		list=$(echo "$load" | sed '1d')
-		if [ $mode = copy ]
-		then
-			OP="cp${N}-Rv${N}--"
-			DUPS=
-		elif [ $mode = move ]
-		then
-			OP="mv${N}-v${N}--"
-			DUPS=NO
-		fi
-		export fx="$list"
-		LF_Move "$OP" $DEST $DUPS | sed "s!'$HOME!'~!g"
-		lf -remote "send load${N}send clear"
-	} | LF_Log
+		LF_Move "$op" $dest $dups $list |
+			LF_Fihi -n
+
+		rm "$files"
+		lf -remote "send :clear; load"
+	} 2>&1 | LF_Log "$ULOG"
 }}
 
 map α :push a
@@ -169,21 +174,21 @@ map Jj %LF_Jump -type f
 map Jd %LF_Jump -type d
 map Ja %LF_Jump
 
-map i $nvim -MR "$f"
-map I $LF_Previewer "$f" | nl | less -R
+map i $less -N "$f"
+map I $LESSOPEN='|LF_Previewer %s' less -NR "$f"
 map w $exec $SHELL
 map W !:
 map q :Quit
 map Q :quit
 map <c-w> :${{ let --LF_LEVEL; exec $SHELL }}; Quit
 map p :Paste
-map P :Paste --inside
-map E :push $nvim<space>""<left>
+map P :Paste -i
+map E :push $vis<space>""<left>
 map D :push $mkdir<space>""<left>
 map x :push $chmod<space>+x<space>"$f"
 map X !LF_Clear; "$f"
-map C !printf %s "$fx" | vidir -v -
-map ` $nvim -MR "${TMPDIR:-/tmp}/lf.$USER.$id.log"
+map C !printf %s "$fx" | vidir -v - | LF_Fihi
+map ` $vis "${TMPDIR:-/tmp}/lf.$USER.$id.log"
 
 map <c-y> :up
 map <c-e> :down

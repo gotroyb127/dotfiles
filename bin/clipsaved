@@ -10,7 +10,7 @@ set -o nounset
 
 tmpf=
 cachedir=$CS_DIR/clipsave.$USER.$DISPLAY
-lockfile=$cachedir/CS.lck
+lockf=$cachedir/CS.lck
 activecachesfile=$cachedir/ActiveCaches
 
 if [ -n "$CS_DEBUG" ]
@@ -31,7 +31,8 @@ _mv() {
 	fi
 }
 _mktemp() {
-	[ -f "$tmpf" ] && return 0
+	[ -f "$tmpf" ] &&
+		return 0
 	tmpf=$(mktemp)
 }
 _xsel() {
@@ -40,31 +41,30 @@ _xsel() {
 die() {
 	ret=$1
 	shift
-	printf '%s\n' "$b0: $*" >&2
+	debug "exec $*"
 	exit $ret
 }
 cleanup() {
-	debug "Cleaning up '$cachedir'."
-	rm -fR "$cachedir"
+	debug "Removing '$lockf'."
+	rm -fR "$lockf"
 }
 restart() {
-	cleanbeforequit
 	debug "Executing into '$0 $*'."
 	exec "$0" "$@"
 }
 initFiles() {
-	[ -f "$lockfile" ] &&
-		die 5 "Lock file '$lockfile' exists. Maybe another instance is already running."
+	[ -f "$lockf" ] &&
+		die 5 "Lock file '$lockf' exists. Maybe another instance is already running."
 	rm -fR "$cachedir"
 	mkdir -p -m0700 "$cachedir"
-	touch "$activecachesfile" "$lockfile"
+	touch "$activecachesfile" "$lockf"
 }
 manageNewSel() {
 	for sel in $CS_SELECTIONS
 	do
 		_mktemp
 		_xsel --$sel -o > "$tmpf"
-		_xsel -k
+		_xsel --$sel -i < "$tmpf"
 		tmpcksum=$(cksum "$tmpf")
 
 		fname="$cachedir/${tmpcksum%% *}"

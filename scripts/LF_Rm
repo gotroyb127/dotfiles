@@ -11,7 +11,7 @@ read ans
 if [ "$ans" != y ]
 then
 	messg='Aborted'
-elif rm -vfR $fx | LF_Log
+elif rm -vfR $fx | LF_Log "$ULOG"
 then
 	messg='DONE'
 else
