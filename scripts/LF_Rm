@@ -4,14 +4,14 @@ IFS='
 '
 
 LF_Clear
-printf -- '--- Files to be removed: ---\n\n%s\n\nDelete? [y/n]: ' "$fx" \
+printf -- '--- Files to be removed: ---\n\n%s\n\nDelete? [y/n]: ' "$*" \
 	| LF_Fihi
 
 read ans
 if [ "$ans" != y ]
 then
 	messg='Aborted'
-elif rm -vfR $fx | LF_Log "$ULOG"
+elif rm -vfR "$@" | LF_Log "$ULOG"
 then
 	messg='DONE'
 else

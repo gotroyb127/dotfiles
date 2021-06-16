@@ -25,7 +25,7 @@ cmd Quit      :Ulm \'; quit
 cmd open      $Open.sh "$f"
 cmd OpenSel   $Open.sh $fx
 cmd EchoSel   !LF_Clear; printf '%s\n' "$fs" | LF_Fihi
-cmd rm        !LF_Rm
+cmd rm        !LF_Rm $fx
 cmd Ulm       &LF_MarkSave \'
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle

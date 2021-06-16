@@ -17,18 +17,9 @@ function mapCmds()
 end
 
 vis.events.subscribe(vis.events.WIN_OPEN, function(win)
---	if gApplied then
---		return
---	end
---	gApplied = true
-
 	set('nu')
 	set('rnu')
-	set('ai')
-	set('theme noclown')
 	set('cursorline')
-	cmd('langmap ΑΒΨΔΕΦΓΗΙΞΚΛΜΝΟΠΡΣΤΘΩ-ΧΥΖαβψδεφγηιξκλμνοπρστθωςχυζ'
-	        .. ' ABCDEFGHIJKLMNOPRSTUVWXYZabcdefghijklmnoprstuvwxyz')
 
 	map('! normal <M-q> ":q 0<Enter>"')
 	map('! normal <M-k> <C-w>k')
@@ -46,10 +37,25 @@ vis.events.subscribe(vis.events.WIN_OPEN, function(win)
 		map('! ' .. m .. ' <C-y> <vis-window-slide-down>')
 	end
 
-	mapPairs('\'', '"', '()', '[]', '{}', '`')
+	mapPairs('"', '()', '[]', '{}', '`')
+	if win.syntax ~= 'ada' then
+		mapPairs("'")
+	end
 	mapCmds()
 end)
 
+vis.events.subscribe(vis.events.INIT, function()
+	set('ai')
+	set('theme noclown')
+	cmd('langmap ΑΒΨΔΕΦΓΗΙΞΚΛΜΝΟΠΡΣΤΘΩ-ΧΥΖαβψδεφγηιξκλμνοπρστθωςχυζ'
+	        .. ' ABCDEFGHIJKLMNOPRSTUVWXYZabcdefghijklmnoprstuvwxyz')
+	set('selTrailWhitespace')
+end)
+
+vis:option_register("selTrailWhitespace", "bool", optTrailWhitespace,
+	'x/[ \\t]+$/ just before saving the file')
+
+vis.events.subscribe(vis.events.FILE_SAVE_PRE, fileSavePre)
 vis.events.subscribe(vis.events.FILE_SAVE_POST, fileSavePost)
 
 vis.events.subscribe(vis.events.WIN_STATUS, updateStatus)

@@ -89,5 +89,5 @@ lexers.STYLE_EOF = style{fg = fade_more}
 -- debugging changes
 --lexers.STYLE_CURSOR_PRIMARY = lexers.STYLE_CURSOR
 --lexers.STYLE_CURSOR_PRIMARY = style{fg = bg, bg = fade}
-lexers.STYLE_CURSOR_MATCHING = style{fg = bg, bg = fade}
+lexers.STYLE_CURSOR_MATCHING = style{fg = bg, bg = fade_more}
 --lexers.STYLE_STATUS_FOCUSED = lexers.STYLE_DEFAULT

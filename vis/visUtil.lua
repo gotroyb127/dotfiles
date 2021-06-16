@@ -124,8 +124,24 @@ function mapPairs(...)
 	end
 end
 
+local selTrailWhitepsace
+function optTrailWhitespace(value, toggle)
+	selTrailWhitepsace = value
+end
+function fileSavePre(file)
+	if selTrailWhitepsace then
+		vis:command('x/[ \t]+$/')
+	end
+	return true
+end
+
 function fileSavePost(file)
-	info(strf('"%s" %dL, %dC written', file.name, #file.lines, file.size))
+	local savedinfo, other
+
+	savedinfo = strf('"%s" %dL, %dC written', file.name, #file.lines, file.size)
+	other = selTrailWhitepsace and " (also ':x/[ \\t]+$/')" or ''
+
+	info(savedinfo .. other)
 end
 
 local lastMode;
@@ -155,15 +171,12 @@ function updateStatus(win)
 	local sels = win.selections
 
 	local sleft, sright
-	local fname
-	local dirname
+	local fname, dirname
 	local mod
 	local selinfo
 	local keys
-	local cc
-	local cp
-	local lnc
-	local lnt
+	local cc, cp
+	local lnc, lnt
 	local col
 
 	if f.path then
@@ -199,7 +212,7 @@ function updateStatus(win)
 	end
 
 	sleft = strf(' %s%s (%s)', fname, mod, dirname)
-	sright = strf('%s%sU+%04X |%d  %2d/%d| ', selinfo, keys, cp,
+	sright = strf('%s%sU+%04X |%2d  %2d/%d| ', selinfo, keys, cp,
 		col, lnc, lnt)
 
 	win:status(sleft, sright)
