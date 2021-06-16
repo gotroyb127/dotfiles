@@ -8,11 +8,10 @@ set -o nounset
 #"
 
 cachedir=$CS_DIR/clipsave.$USER.$DISPLAY
-activecachesfile=$cachedir/ActiveCaches
+activecachesf=$cachedir/ActiveCaches
 
 getfirstline() {
-	# This looks for the first line matching regex /./ to get the
-	# first line that can provide reasonable.
+	# get the first line with reasonable context
 	awk -v limit=300 -v printed=0 '
 		!printed && NF {
 			$0 = substr($0, 0, limit);
@@ -31,7 +30,7 @@ selfromfile() {
 	done
 }
 
-if [ "X$1" = 'X--rm' ]
+if [ $# -gt 1 ] && [ "X$1" = 'X--rm' ]
 then
 	rm=y
 	shift
@@ -42,9 +41,10 @@ fi
 tmpf=$(mktemp)
 trap 'rm "$tmpf"' exit
 
-for fname in $(tac "$activecachesfile")
+cd "$cachedir"
+for name in $(tac "$activecachesf")
 do
-	getfirstline "$fname"
+	getfirstline "$name"
 done > "$tmpf"
 
 out=$("$CS_LAUNCHER" "$@" < "$tmpf")
@@ -53,25 +53,25 @@ lret=$?
 	exit 0
 out=$(printf '%s' "$out" | sed 's/^\(.*\) ([0-9]\+ lines)$/\1/')
 
-fname=$(while read -r fname
+name=$(while read -r name
 	do
-		if [ "X$(getfirstline "$fname")" = "X$out" ]
+		if [ "X$(getfirstline "$name")" = "X$out" ]
 		then
-			printf '%s' "$fname"
+			printf '%s' "$name"
 			break
 		fi
-	done < "$activecachesfile"
+	done < "$activecachesf"
 )
 
-if [ -z "$fname" ]
+if [ -z "$name" ]
 then
 	printf '%s' "$out" > "$tmpf"
 	selfromfile "$tmpf"
 elif [ "$rm" = y ]
 then
-	sed "/${fname##*/}/d" "$activecachesfile" > "$tmpf"
-	cp -f "$tmpf" "$activecachesfile"
+	sed "/$name/d" "$activecachesf" > "$tmpf"
+	cp -f "$tmpf" "$activecachesf"
 else
-	selfromfile "$fname"
+	selfromfile "$name"
 	exit 0
 fi

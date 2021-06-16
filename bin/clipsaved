@@ -5,13 +5,13 @@ set -o nounset
 : "${CS_DIR:="${XDG_RUNTIME_DIR-"${TMPDIR-/tmp}"}"}"
 : "${CS_SELECTIONS=primary clipboard}"
 : "${CS_DEBUG=}"
-: "${CS_MAXCACHED:=200}"
+: "${CS_MAXCACHED:=1000}"
 #"
 
 tmpf=
 cachedir=$CS_DIR/clipsave.$USER.$DISPLAY
 lockf=$cachedir/CS.lck
-activecachesfile=$cachedir/ActiveCaches
+activecachesf=$cachedir/ActiveCaches
 
 if [ -n "$CS_DEBUG" ]
 then
@@ -41,7 +41,7 @@ _xsel() {
 die() {
 	ret=$1
 	shift
-	debug "exec $*"
+	printf '%s\n' "$@"
 	exit $ret
 }
 cleanup() {
@@ -49,15 +49,17 @@ cleanup() {
 	rm -fR "$lockf"
 }
 restart() {
-	debug "Executing into '$0 $*'."
+	cleanup
+	debug "Executing into '$0'."
 	exec "$0" "$@"
 }
 initFiles() {
 	[ -f "$lockf" ] &&
-		die 5 "Lock file '$lockf' exists. Maybe another instance is already running."
-	rm -fR "$cachedir"
+		die 5 "Lock file '$lockf' exists. Maybe another instance is running."
 	mkdir -p -m0700 "$cachedir"
-	touch "$activecachesfile" "$lockf"
+	cd "$cachedir"
+	debug "Chdir to '$cachedir'"
+	touch "$activecachesf" "$lockf"
 }
 manageNewSel() {
 	for sel in $CS_SELECTIONS
@@ -67,32 +69,35 @@ manageNewSel() {
 		_xsel --$sel -i < "$tmpf"
 		tmpcksum=$(cksum "$tmpf")
 
-		fname="$cachedir/${tmpcksum%% *}"
+		name=${tmpcksum%% *}
 
-		if [ -z "$(cat "$tmpf")" ] || [ -f "$fname" ]
+		if [ -z "$(cat "$tmpf")" ] || [ -f "$name" ]
 		then
 			debug "Skipping caching from $sel."
 			continue
 		fi
-		_mv -f "$tmpf" "$fname"
-		debug "Grapped from $sel: '$fname'."
+		_mv -f "$tmpf" "$name"
+		debug "Grapped from $sel: '$name'."
 
-		printf '%s\n' "$fname" >> "$activecachesfile"
+		printf '%s\n' "$name" >> "$activecachesf"
 	done
 }
 manageCachedSel() {
 	_mktemp
-	tail "-$CS_MAXCACHED" "$activecachesfile" > "$tmpf"
-	_mv -f "$tmpf" "$activecachesfile"
+	tail "-$CS_MAXCACHED" "$activecachesf" > "$tmpf"
 
+	debug 'Removing invalid entries...'
 	{
-		cat "$activecachesfile"
-		printf '%s\n' "$cachedir/"[0-9]*
-	} | sort | uniq -u |
-		while read -r f
+		cat "$tmpf"
+		printf '%s\n' [0-9]*
+	} | sort | uniq -u | tee /dev/stderr |
+		while read -r name
 		do
-			rm -f "$f"
+			debug "Removing '$name'"
+			rm -f "$name"
+			sed -i "/$name/d" "$tmpf"
 		done
+	_mv -f "$tmpf" "$activecachesf"
 }
 
 trap exit INT TERM
