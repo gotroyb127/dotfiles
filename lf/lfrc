@@ -35,6 +35,11 @@ cmd Resource  &{{
 	lf -remote "send $id echo 'Configuration file ($(printf '%s\n' $f | LF_Fihi)) loaded.'"
 }}
 
+cmd on-cd &{{
+	# set terminal title
+	printf '\x1b]2;%s\x1b\' "($(pwd | LF_Fihi -n)) - LF" > /dev/tty
+}}
+
 cmd Yankname &{{
 	t=$f
 	[ -z "$f" ] &&
@@ -242,4 +247,5 @@ map gd cd ~/Documents
 map gD cd ~/Downloads
 map gc &lf -remote "send $id cd '${XDG_CONFIG_HOME:-\"$HOME/.config\"}'"
 
+on-cd
 Recol; SetPrompt

@@ -2,33 +2,26 @@
 
 IFS='
 '
-#export  SED_CMD=$'-e\ts/\ I[.] /\ 1. /g\t'\
-#\	\	$'-e\ts/\ II[.] /\ 2. /g\t'\
-#\	\	$'-e\ts/\ III[.] /\ 3. /g\t'\
-#\	\	$'-e\ts/\ IV[.] /\ 4. /g\t'\
-#\	\	$'-e\ts/\ V[.] /\ 5. /g\t'\
-#\	\	$'-e\ts/\ VI[.] /\ 6. /g\t'\
-#\	\	$'-e\ts/\ VII[.] /\ 7. /g\t'\
-#\	\	$'-e\ts/\ VIII[.] /\ 8. /g\t'\
-#\	\	$'-e\ts/\ IX[.] /\ 9. /g\t'\
-#\	\	$'-e\ts/\ X[.] /\ 10. /g\t'\
-#\	\	$'-e\ts/\ XI[.] /\ 11. /g\t'
 
-for f in $(find "$@" -type f | sort)
+for f in $(find "$@" -type f)
 do
-	bname=$(echo "${f##*/}" | awk '
+	newname=$(printf '%s\n' "${f##*/}" | awk '
 		BEGIN {
 			n = split("I II III IV V VI VII VIII IX X XI", Out)
 		} {
-			for (w = 0; w < NF; ++w) {
+			for (w = 1; w <= NF; w++) {
 				for (i in Out) {
-					if (Out[i]"." == $w)
+					if (Out[i] "." == $w)
 						$w = i"."
 				}
 			}
 		print
 		}'
 	)
-	mv -vi "$f" "${f%/*}/$bname"
+
+	newfname=${f%/*}/$newname
+
+	[ "X$newfname" != "X$f" ] &&
+		mv -vi "$f" "${f%/*}/$newname"
 done
 

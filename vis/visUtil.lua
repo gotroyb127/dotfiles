@@ -51,7 +51,8 @@ function Comment(keys)
 	local key = keys:sub(1, 1)
 	local win = vis.win
 	local f = win.file
-	local sel = win.selection
+	local wsel = win.selection
+
 	local cmnts = '#'
 	local fts = {
 		ansi_c = '//',
@@ -67,44 +68,47 @@ function Comment(keys)
 		end
 	end
 
-	local pa = sel.range.start
-	local pz = sel.range.finish
-	local selline = sel.line
+	local selline = wsel.line
 
 	if key == 'c' then
-		-- Comment
-		function Do(pos)
-			f:insert(pos, cmnts)
-			pz = pz + #cmnts
+		function doPos(p)
+			f:insert(p, cmnts)
+			return #cmnts
 		end
 	elseif key == 'u' then
-		-- Uncomment
-		function Do(pos)
-			if f:content(pos, #cmnts) == cmnts then
-				f:delete(pos, #cmnts)
+		function doPos(p)
+			if f:content(p, #cmnts) == cmnts then
+				f:delete(p, #cmnts)
+				return -#cmnts
 			end
-			pz = pz - #cmnts
+			return 0
 		end
 	else
-		return 0
+		return 0 -- no key consumed
 	end
 
-	while pa > 0 and f:content(pa - 1, 1) ~= '\n' do
-		pa = pa - 1
-	end
-	local count = vis.count or 0
-	Do(pa)
-	while pa < pz or (pa < f.size and count > 1) do
-		if f:content(pa, 1) == '\n' then
-			Do(pa + 1)
-			count = count - 1
+	function doSel(sel, count)
+		local pa = sel.range.start
+		local pz = sel.range.finish
+
+		while pa > 0 and f:content(pa - 1, 1) ~= '\n' do
+			pa = pa - 1
 		end
-		pa = pa + 1
+		while pa < pz or (pa < f.size and count > 0) do
+			if pa == 0 or f:content(pa - 1, 1) == '\n' then
+				pz = pz + doPos(pa)
+				count = count - 1
+			end
+			pa = pa + 1
+		end
+	end
+
+	for sel in win:selections_iterator() do
+		doSel(sel, vis.count or 0)
 	end
 	vis.count = nil
 
-	sel:to(selline, 1)
---	win:draw()
+	wsel:to(selline, 1)
 	return 1 -- 1 key consumed
 end
 
@@ -124,43 +128,44 @@ function mapPairs(...)
 	end
 end
 
-local selTrailWhitepsace
-function optTrailWhitespace(value, toggle)
-	selTrailWhitepsace = value
-end
-function fileSavePre(file)
-	if selTrailWhitepsace then
-		vis:command('x/[ \t]+$/')
-	end
-	return true
-end
-
 function fileSavePost(file)
-	local savedinfo, other
-
-	savedinfo = strf('"%s" %dL, %dC written', file.name, #file.lines, file.size)
-	other = selTrailWhitepsace and " (also ':x/[ \\t]+$/')" or ''
-
-	info(savedinfo .. other)
+	info(strf('"%s" %dL, %dC written', file.name, #file.lines, file.size))
 end
 
-local lastMode;
+function termSetTitle(title)
+	io.stderr:write(strf('\x1b]2;%s\x1b\\', title))
+end
+local title
+function setTitle()
+	termSetTitle((title or '') .. ' - VIS')
+end
+function restoreTitle()
+	termSetTitle('no title')
+end
+
+local lastMode
 local home = os.getenv('HOME')
 function updateStatus(win)
 	if lastMode ~= vis.mode then
 		lastMode = vis.mode
 		local n
 		if lastMode == vis.modes.NORMAL then
+			modeStr = '[N]'
 			n = 2
 		elseif lastMode == vis.modes.OPERATOR_PENDING then
+			modeStr = '[OP]'
 			n = 4
 		elseif lastMode == vis.modes.INSERT then
+			modeStr = '[I]'
 			n = 6
 		elseif lastMode == vis.modes.REPLACE then
+			modeStr = '[R]'
 			n = 4
 		elseif lastMode == vis.modes.VISUAL then
+			modeStr = '[V]'
 			n = 2
 		elseif lastMode == vis.modes.VISUAL_LINE then
+			modeStr = '[VL]'
 			n = 2
 		end
 		io.stderr:write(strf('\x1b[%d q', n))
@@ -181,7 +186,7 @@ function updateStatus(win)
 
 	if f.path then
 		fname = f.path:gsub('^.*/', '', 1)
-		dirname = f.path:gsub('/[^/]*$', '', 1)
+		dirname = f.path:gsub('[^/]*$', '', 1)
 		if dirname:sub(1, #home) == home then
 			dirname = '~' .. dirname:sub(#home + 1)
 		end
@@ -206,12 +211,13 @@ function updateStatus(win)
 		selinfo = ''
 	end
 
-	keys = vis.input_queue
+	keys = (vis.count or '') .. vis.input_queue
 	if keys ~= '' then
 		keys = keys .. ' '
 	end
 
-	sleft = strf(' %s%s (%s)', fname, mod, dirname)
+	title = strf('%s%s (%s)', fname, mod, dirname)
+	sleft = strf('%s %s', modeStr ,title)
 	sright = strf('%s%sU+%04X |%2d  %2d/%d| ', selinfo, keys, cp,
 		col, lnc, lnt)
 

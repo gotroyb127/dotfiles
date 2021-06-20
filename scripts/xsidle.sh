@@ -4,12 +4,12 @@ set -e
 b0=${0##*/}
 [ $# -lt 1 ] && {
 	exec >&2
-	echo usage: $b0 lockCmd timeBeforeLocking \
-	                suspendCmd timeBeforeSuspend
+	echo "usage: $b0 lockCmd timeBeforeLocking [suspendCmd timeBeforeSuspend]"
 	exit 5
 }
 
 tmpDir="${TMPDIR-/tmp}"
+runningF="$tmpDir/$b0.$DISPLAY.running"
 dontLockF="$tmpDir/xsidle.sh.dontlock"
 haveLockedF="$tmpDir/$b0.locked"
 lockCmd=$1
@@ -33,7 +33,13 @@ Waked() {
 }
 
 trap exit INT TERM
-trap 'rm -f "$haveLockedF"' exit
+trap 'rm -f "$haveLockedF" "$runningF"' exit
+
+[ -e "$runningF" ] && {
+	echo "$b0: '$runningF' exists, exitting..." >&2
+	exit 3
+}
+touch "$runningF"
 
 while true
 do

@@ -8,7 +8,7 @@ set \
 
 HISTFILE=${XDG_CONFIG_HOME:-"$HOME/.config"}/shell_history
 HISTCONTROL='ignoredups:ignorespace'
-HISTSIZE=1000
+HISTSIZE=100000
 LF_LEVEL=$((${LF_LEVEL:-0} + 1))
 
 export LF_LEVEL
@@ -25,7 +25,6 @@ alias \
 	view='less -N'\
 	XLOG='view "$XLOG"'\
 	ULOG='view "$ULOG"'\
-	nmutt='neomutt'\
 	cal='cal -s'\
 	SU='sudo --preserve-env=LF_LEVEL ksh -l'\
 	LOGIN='exec_ksh -l'\
@@ -59,6 +58,7 @@ SET_PS1() {
 
 	local C=
 	local W=
+	local TTL=
 	local s='>'
 	local LVL=$LF_LEVEL
 
@@ -66,23 +66,19 @@ SET_PS1() {
 		D='\[\033[38;2;255;0;0m\]'
 		s='#'
 	}
-	while [ $# -gt 0 ]
+	OPTIND=1
+	while getopts wc:t: arg
 	do
-		case $1 in
-		(-w)
+		case $arg in
+		(w)
 			W="$U\u$N@$H\h "
-			shift 1
 		;;
-		(-c[0-9])
-			C="\033[${1#-c} q"
-			shift 1
+		(c)
+			C="\033[$OPTARG q"
 		;;
-		(-c)
-			C="\033[${2} q"
-			shift 2
-		;;
-		(*)
-			shift 1
+		(t)
+			# set terminal title
+			TTL="\033]2;$OPTARG\033\\"
 		;;
 		esac
 	done
@@ -95,7 +91,7 @@ SET_PS1() {
 		return $s
 	}
 
-	PS1="$C$B[$T\D{%-I:%-M:%-S}$B] $L$LVL $W$D\w\n\$(ExtStatus)$P$s $N"
+	PS1="$TTL$C$B[$T\D{%-I:%-M:%-S}$B] $L$LVL $W$D\w\n\$(ExtStatus)$P$s $N"
 }
 WHO() {
 	local U='\033[38;2;66;235;255m'
@@ -104,5 +100,5 @@ WHO() {
 	echo "$U$USER$N@$H$(hostname)"
 }
 
-SET_PS1
+SET_PS1 -t "$(hostname)"
 PS2=

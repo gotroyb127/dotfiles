@@ -14,9 +14,17 @@ function mapCmds()
 		return 0 -- no keys consumed
 	end
 	vis:map(vis.modes.NORMAL, leader('i'), toggleIc, 'Toggle ignorecase option')
+
+	function selTrailWhtSpc(keys)
+		cmd('x/[ \t]+$')
+		return 0 -- no keys consumed
+	end
+	vis:map(vis.modes.NORMAL, leader('w'), selTrailWhtSpc,
+		':x/[ \\t]+$ (trailing whitespace)')
 end
 
 vis.events.subscribe(vis.events.WIN_OPEN, function(win)
+	setTitle()
 	set('nu')
 	set('rnu')
 	set('cursorline')
@@ -49,13 +57,9 @@ vis.events.subscribe(vis.events.INIT, function()
 	set('theme noclown')
 	cmd('langmap ΑΒΨΔΕΦΓΗΙΞΚΛΜΝΟΠΡΣΤΘΩ-ΧΥΖαβψδεφγηιξκλμνοπρστθωςχυζ'
 	        .. ' ABCDEFGHIJKLMNOPRSTUVWXYZabcdefghijklmnoprstuvwxyz')
-	set('selTrailWhitespace')
 end)
 
-vis:option_register("selTrailWhitespace", "bool", optTrailWhitespace,
-	'x/[ \\t]+$/ just before saving the file')
-
-vis.events.subscribe(vis.events.FILE_SAVE_PRE, fileSavePre)
 vis.events.subscribe(vis.events.FILE_SAVE_POST, fileSavePost)
 
 vis.events.subscribe(vis.events.WIN_STATUS, updateStatus)
+vis.events.subscribe(vis.events.QUIT, restoreTitle)

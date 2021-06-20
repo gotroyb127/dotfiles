@@ -31,7 +31,6 @@ export MACHINECTL=loginctl
 command -v systemctl > /dev/null &&
 	MACHINECTL=systemctl
 
-export LESSHISTFILE='-'
 export TCELL_TRUECOLOR=y
 export CS_SELECTIONS=clipboard
 export GOPATH=${XDG_DATA_HOME:-$HOME/.local/share}/go

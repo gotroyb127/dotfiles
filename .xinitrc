@@ -22,7 +22,7 @@ sblocks &
 pgrep syncthing ||
 	Fork syncthing --no-browser >> "$SYNCTHING_LOG"
 
-(sleep 1; exec pw-start.sh) &
+(sleep 2; exec pw-start.sh) &
 
 Fork dunst 2> /dev/null
 Fork lxqt-policykit-agent 2> /dev/null
