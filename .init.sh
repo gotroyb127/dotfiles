@@ -101,4 +101,3 @@ WHO() {
 }
 
 SET_PS1 -t "$(hostname)"
-PS2=

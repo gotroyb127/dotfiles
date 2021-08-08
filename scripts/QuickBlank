@@ -38,7 +38,7 @@ Reset() {
 	nextAction=S
 }
 Pause() {
-	read ans
+	read -r ans
 	case $ans in
 	(q*)
 		exit 0

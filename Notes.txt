@@ -51,8 +51,8 @@ install dnsmasq package
 # lfrc
 	ID="\033[38;5;123m$id"
 
-# Firefox: diable ui animation: Go to about:config and add
-	ui.prefersReducedMotion equal to 1.
+# Firefox: diable ui animation: Go to about:config and set
+	ui.prefersReducedMotion to 1 (number).
 
 # load vmware modules
 sudo /etc/init.d/vmware start

@@ -27,6 +27,7 @@ export XLOG=$TMPDIR/x.$TTYN.log
 export ULOG="$TMPDIR/u.$(id -un).log"
 export SYNCTHING_LOG=$TMPDIR/sycnthing.log
 export MPVSOCKET=$TMPDIR/mpvs.socket.current
+export USE_PULSEAUDIO=y
 export MACHINECTL=loginctl
 command -v systemctl > /dev/null &&
 	MACHINECTL=systemctl

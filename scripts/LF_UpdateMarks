@@ -1,0 +1,27 @@
+#!/bin/sh
+
+marksF=${XDG_DATA_HOME:-$HOME/.local/share}/lf/marks
+
+[ $# -lt 1 ] && {
+	echo "${0##*/}: need at least one mark" >&2
+	exit 100
+}
+
+markLocGet() {
+	# assuming "$1" is valid
+	out=$(grep "^$1:" "$marksF") ||
+		return 1
+	printf '%s\n' "$out" | head -1 | cut -d: -f2-
+}
+
+newMark=\'
+newMarkLoc=$PWD
+for newMark in "$@"
+do
+	tmpMarkLoc=$(markLocGet "$newMark") ||
+		brk=y
+	LF_MarkSave "$newMark" "$newMarkLoc"
+	[ "X$brk" = Xy ] &&
+		break
+	newMarkLoc=$tmpMarkLoc
+done

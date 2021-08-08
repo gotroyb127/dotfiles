@@ -1,13 +1,15 @@
 #!/bin/sh
 
-marksf=${XDG_DATA_HOME:-$HOME/.local/share}/lf/marks
+marksF=${XDG_DATA_HOME:-$HOME/.local/share}/lf/marks
+mark=$1
+markLoc=$2
 
-[ "${#1}" = 1 ] || {
-	echo "${0##*/}: arguments must be one character" >&2
+[ $# -lt 2 ] || [ "${#1}" != 1 ] && {
+	echo "${0##*/}: arguments must be one character and a path" >&2
 	exit 100
 }
 
 {
-	echo "$1:$PWD"
-	sed "/^$1:/d" "$marksf"
-} | sponge "$marksf"
+	echo "$mark:$markLoc"
+	sed "/^$mark:/d" "$marksF"
+} | sponge "$marksF"

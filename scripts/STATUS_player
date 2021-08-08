@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# always print two '\1'
+trap '[ $? != 0 ] && printf "\1\1"' exit
+
 . "$(which Player_lib.sh)"
 
 SetInfoVars "pause loop loopPl        Title\
@@ -50,6 +53,6 @@ pa=
 
 SetTimeVars CurrTime "$CurrTime" Duration "$Duration" RemTime "$RemTime"
 
-printf "%s [%s %s] (-%s) x%s %s" \
+printf "%s [%s %s] (-%s) \1x%s\1 %s" \
        "$Title" "$CurrTime" "$Duration" \
        "$RemTime" "$Speed" "$p$l$pa"

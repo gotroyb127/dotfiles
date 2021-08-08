@@ -10,14 +10,25 @@ set -o nounset
 btn=$1
 blkn=$2
 
+clear1=0
+clear2=9
+plpause1=1
+plpause2=3
+plspeed=2
+kblt=4
+netw=5
+mixer=6
+battery=7
+date=8
+
 #echo "${0##*/} btn:$btn blkn:$blkn" >&2
 case $blkn in
-(0|7)
+($clear1|$clear2)
 	sign=
 	[ $btn = 2 ] &&
 		STATUS_toggle_clear
 ;;
-(1)
+($plpause1|$plpause2)
 	sign=1
 	case $btn in
 	(3)
@@ -25,7 +36,27 @@ case $blkn in
 	;;
 	esac
 ;;
-(2)
+($plspeed)
+	sign=1
+	case $btn in
+	(2)
+		Player.sh speed 1.0
+	;;
+	(3)
+		Player.sh play-pause
+	;;
+	(4)
+		Player.sh speed+ 0.1
+	;;
+	(5)
+		Player.sh speed- 0.1
+	;;
+	(*)
+		sign=
+	;;
+	esac
+;;
+($kblt)
 	sign=2
 	case $btn in
 	(1)
@@ -42,10 +73,10 @@ case $blkn in
 	;;
 	esac
 ;;
-(3)
+($netw)
 	sign=3
 ;;
-(4)
+($mixer)
 	sign=4
 	args=
 	sink=Master
@@ -73,12 +104,12 @@ case $blkn in
 	[ -n "$args" ] &&
 		amixer -Mq set $sink $args
 ;;
-(5)
+($battery)
 	sign=5
 ;;
-(6)
+($date)
 	sign=
-	[ "$btn" = 3 ] &&
+	[ $btn = 3 ] &&
 		gsimplecal
 ;;
 esac
