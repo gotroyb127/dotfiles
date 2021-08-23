@@ -14,6 +14,8 @@ markLocGet() {
 	printf '%s\n' "$out" | head -1 | cut -d: -f2-
 }
 
+cp -f "$marksF" "$marksF.save"
+
 newMark=\'
 newMarkLoc=$PWD
 for newMark in "$@"

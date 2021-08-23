@@ -59,6 +59,7 @@ function Comment(keys)
 		cpp = '//',
 		go = '//',
 		rust = '//',
+		ino = '//',
 		ada = '--',
 		lua = '--',
 	}
