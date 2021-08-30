@@ -12,6 +12,7 @@ set period 1
 set findlen 0
 set anchorfind
 set incsearch
+set incfilter
 set scrolloff 7
 set previewer LF_Previewer
 set cleaner LF_Cleaner
@@ -175,6 +176,13 @@ map Vv :SelRecurs
 map VV :SelRecurs; down
 map Vr :SelRecurs -r
 map VR :SelRecurs -r; up
+
+map f
+map F
+map ff :find
+map fF :find-back
+map Ff :filter
+map Fc :setfilter
 
 map Jj %LF_Jump -type f
 map Jd %LF_Jump -type d

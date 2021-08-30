@@ -3,8 +3,9 @@
 IFS='
 '
 box='<>'
+wldir=~/.config/mpv/watch_later
 PrintWhat() {
-	for f in $(find ~/.config/mpv/watch_later -type f)
+	for f in $(find "$wldir" -type f)
 	do
 		(
 			read i; i=${i#??}
@@ -30,17 +31,39 @@ Print() {
 		printf '%s\n' "$w"
 	echo "$box"
 }
-
-while true
-do
-	Print
+Read() {
+	printf %s "$1"
 	read ans
 	case $ans in
+	(c*)
+		clear
+		Read
+	;;
 	(q*)
+		exit 0
 		break
 	;;
 	(r*)
-		exec "$0" "$@"
+		echo exec "$0"
+		exec "$0"
 	;;
 	esac
-done
+}
+Main() {
+	while true
+	do
+		Print
+		Read
+	done
+}
+
+trap "echo; Read 'Action: '; Main" INT
+trap 'sleep .1; Main' USR1
+trap Main USR2
+
+[ $# -gt 0 ] && {
+	Print
+	exit
+}
+
+Main

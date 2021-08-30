@@ -1,17 +1,17 @@
 #!/bin/sh
 
-pref=${TMPDIR:-/tmp}/mpvs.socket
+pref=${TMPDIR:-/tmp}/mpvs.sock
 
-rmsocket() {
-	rm -f "$newsocket"
+rmSock() {
+	rm -f "$newSock"
 }
-setsocket() {
+setSock() {
 	touch "$1"
 	ln -sf "$1" "$MPVSOCKET"
 }
-restoresocket() {
-	rmsocket
-	m=$(ls "$pref".* | awk -F. -v m=0 '{
+restoreSock() {
+	rmSock
+	m=$(ls "$pref".* 2> /dev/null | awk -F. -v m=0 '{
 		if ((n = $NF + 0) > m)
 			m = n
 		} END {
@@ -22,20 +22,45 @@ restoresocket() {
 		unlink "$MPVSOCKET"
 		return
 	}
-	setsocket "$pref.$m"
+	setSock "$pref.$m"
 }
-
+getPids() {
+	pids=
+	for scriptName in "$@"
+	do
+		pids="$pids $(pidof -x "$scriptName")"
+	done
+}
+Kill() {
+	[ $# -gt 1 ] &&
+		kill "$@"
+}
+hookPre() {
+	getPids MPV_PlaylistInfo MPV_WatchLater
+	kill -USR1 $pids
+}
+hookPost() {
+	getPids MPV_PlaylistInfo MPV_WatchLater
+	kill -USR2 $pids
+}
+cleanExit() {
+	restoreSock
+	hookPost
+	exit 0
+}
 
 if [ ! -e "$MPVSOCKET" ]
 then
-	newsocket=$pref.1
+	newSock=$pref.1
 else
-	prevsocket=$(readlink "$MPVSOCKET")
-	n=${prevsocket#$pref.}
-	newsocket=$pref.$((n+1))
+	prevSock=$(readlink "$MPVSOCKET")
+	n=${prevSock#$pref.}
+	newSock=$pref.$((n + 1))
 fi
 
-setsocket "$newsocket"
-trap restoresocket exit TERM INT
+setSock "$newSock"
+trap cleanExit TERM INT
 
-mpv --input-ipc-server="$newsocket" "$@"
+hookPre
+mpv --input-ipc-server="$newSock" "$@"
+cleanExit

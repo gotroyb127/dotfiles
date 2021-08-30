@@ -2,7 +2,12 @@
 
 . "$(which Player_lib.sh)"
 
+Sleep() {
+	sleep "$1" &
+		wait $!
+}
 PlaylistInfo() {
+	set -e
 	echoPL() {
 		cachedir="${TMPDIR-/tmp}/PlaylistInfo.cache"
 		mkdir -p "$cachedir"
@@ -22,14 +27,14 @@ PlaylistInfo() {
 			cat "$cachepath"
 		done
 	}
-	SetInfoVars "N            PL       CT       RT                 Speed"\
-	            "playlist-pos playlist time-pos playtime-remaining speed"
+	SetInfoVars "N            PL       CT       Speed pause"\
+	            "playlist-pos playlist time-pos speed pause"
 	PL=$(printf '%s\n' "$PL" | jq -r '.[] | .filename')
 	PL=$(echoPL "$PL")
 	printf '%s\n' "$PL" |
 		awk -v N="$((N+1))" -v SP="$Speed" \
-		    -v CT="$CT" -v RD="$RT" \
-		    -v c1='\033[33m' -v c2='\033[00m' \
+			-v CT="$CT" -v pause="$pause" \
+			-v c1='\033[33m' -v c2='\033[00m' \
 		'function SecsToTime(t) {
 			s = int(t % 60)
 			m = int((t/60) % 60)
@@ -64,61 +69,59 @@ PlaylistInfo() {
 			BD = SecsToTime(BD)
 			TD = SecsToTime(TD)
 			idx = sprintf("(%s/%s)", N, NR/2)
-			printf("%-16s[%s %s] (-%s) x%s",
-			       idx, BD, TD, TRD, SP)
+			pSmbl = pause == "false" ? "" : ""
+			printf("%-16s[%s %s] (-%s) x%s %s",
+				idx, BD, TD, TRD, SP, pSmbl)
 		}'
 }
-Echo() {
-	[ "$neednl" = y ] && {
-		echo
-		neednl=n
-	}
-}
 Print() {
-	S=$(PlaylistInfo) || {
-		r=$?
-		Echo
-		return $r
-	}
+	S=$(PlaylistInfo) ||
+		return $?
 	LF_Clear
-	printf "%s\t" "$S"
-	neednl=y
+	printf '%s\t' "$S"
 }
 Wait() {
-	r=$?
-	[ $r != 0 ] &&
-		ret="[$r] "
-	Echo
-	printf '%s%s' "$ret" 'Waiting... : '
-	read ans
+	[ "X$neednl" = Xy ] &&
+		echo
+	printf 'Waiting...'
+	read unused
+	neednl=n
+}
+Read() {
+	printf 'Action: '
+	read -r ans
 	case $ans in
+	(c*)
+		clear
+		Read
+	;;
 	(q*)
 		exit 0
 	;;
-	(c*)
-		clear
-		Wait
-	;;
 	(r*)
-		exec "$0" "$@"
+		echo exec "$0"
+		exec "$0"
 	;;
 	esac
 }
 Main() {
 	while true
 	do
-		Print || Wait
-		sleep .94
+		Print ||
+			Wait
+		Sleep .94
 	done
 }
 
-[ $# -gt 0 ] || ! tty > /dev/null 2>&1 && {
+[ $# -gt 0 ] && [ "X$1" = X-o ] && {
 	PlaylistInfo
 	echo
 	exit
 }
 
-trap 'neednl=y; Wait; Main' INT
-
 neednl=n
+trap 'echo; Read; Main' INT
+trap 'Sleep .1; Main' USR1
+trap 'neednl=y; Main' USR2
+
 Main

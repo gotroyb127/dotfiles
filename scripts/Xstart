@@ -24,16 +24,16 @@ setxkbmap -layout us,gr -option grp:shift_caps_toggle
 
 log "----- X keymaps loaded. -----"
 
-[ "X$1" != 'X-a' ] &&
-	exit 0
-
 if [ -x "$Xstartlf" ]
 then
-	"$Xstartlf"
+	"$Xstartlf" "$@"
 elif [ -f "$Xstartlf" ]
 then
 	. "$Xstartlf"
 fi
+
+[ "X$1" != 'X-a' ] &&
+	exit 0
 
 if [ $(pgrep Xorg | wc -l) -gt 1 ]
 then

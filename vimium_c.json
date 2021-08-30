@@ -1,16 +1,18 @@
 {
 	"name": "Vimium C",
-	"@time": "11/26/2020, 12:19:01 PM",
-	"time": 1606385941882,
+	"@time": "8/28/2021, 11:11:31 PM",
+	"time": 1630181491378,
 	"environment": {
-		"extension": "1.87.0",
-		"platform": "linux"
+		"extension": "1.92.4",
+		"platform": "linux",
+		"firefox": 92
 	},
 	"exclusionRules": [],
 	"extAllowList": "#",
 	"grabBackFocus": true,
 	"ignoreKeyboardLayout": true,
 	"keyMappings": [
+		"#! no-check",
 		"# Insert your preferred key mappings here.",
 		"map go LinkHints.activateModeToOpenInNewForegroundTab",
 		"",

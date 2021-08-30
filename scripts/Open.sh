@@ -9,7 +9,7 @@ PGroup=\
 	\\.(od[ft]|doc|docx)$\
 	\\.(png|jpg|jpeg|JPG|webp|svg|tiff|gif)$\
 	\\.(mid|MID)$\
-	\\.((mp|MP)[34]|mk[av]|ogg|wav|webm)$\
+	\\.((mp|MP)[34]|m4a|mk[av]|ogg|wav|webm)$\
 	\\.htm|html$\
 	$\
 '
