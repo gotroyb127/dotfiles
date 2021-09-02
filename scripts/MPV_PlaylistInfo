@@ -77,17 +77,13 @@ PlaylistInfo() {
 Print() {
 	S=$(PlaylistInfo) ||
 		return $?
+	neednl=y
 	LF_Clear
 	printf '%s\t' "$S"
 }
-Wait() {
+Read() {
 	[ "X$neednl" = Xy ] &&
 		echo
-	printf 'Waiting...'
-	read unused
-	neednl=n
-}
-Read() {
 	printf 'Action: '
 	read -r ans
 	case $ans in
@@ -103,12 +99,13 @@ Read() {
 		exec "$0"
 	;;
 	esac
+	neednl=n
 }
 Main() {
 	while true
 	do
 		Print ||
-			Wait
+			Read
 		Sleep .94
 	done
 }

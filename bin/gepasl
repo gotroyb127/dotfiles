@@ -5,7 +5,7 @@ usage() {
 	echo "$b0: usage: $b0 pwfile launcher [launcher_args...]" >&2
 }
 
-[ $# -lt 1 ] || [ ! -e "${PWFILE=$1}" ] && {
+[ $# -lt 1 ] || [ ! -e "${inputf=$1}" ] && {
 	usage
 	exit 2
 }
@@ -48,4 +48,4 @@ awk -v DM="$*" \
 			printf("%s", a[i,2]) | "xsel -pi"
 		}
 	}
-}' "$PWFILE"
+}' "$inputf"
