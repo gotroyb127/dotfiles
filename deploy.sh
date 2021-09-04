@@ -4,9 +4,6 @@ diff=diff
 command -v colordiff > /dev/null &&
 	diff=colordiff
 cp='cp -vfR'
-# check if -u flag is supported
-cp -u /dev/null /dev/zero 2> /dev/null &&
-	cp="$cp -u"
 
 Ask() {
 	printf '%s [y/n]: ' "$1"
@@ -14,6 +11,7 @@ Ask() {
 	[ "X$ans" = Xy ]
 }
 
+cd "${0%/*}"
 for t in * .*
 do
 	case $t in
@@ -24,7 +22,7 @@ do
 		DEST=$HOME/.local
 	;;
 	(.init.sh|.inputrc|.profile|.tmux.conf|.vimrc\
-	|.xinitrc|.keynavrc|.XCompose|.Xmodmap)
+	|.xinitrc|.gdbinit|.keynavrc|.XCompose|.Xmodmap)
 		DEST=$HOME
 	;;
 	(*)

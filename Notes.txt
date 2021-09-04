@@ -1,5 +1,3 @@
-# Notes.txt
-
 # ~/.profile
 startx 2>&1 | tee -a "$STARTX_LOG" >> "$HOME/.startx.log"
 
@@ -33,6 +31,22 @@ for i in $(seq 1 255); do echo "\\033[38;5;${i}m$i"; done | column -x | less -R
 // ┃Ctrl   ┃Meta   ┃Alt    ┃              Space               ┃AltGr  ┃Meta   ┃Menu   ┃Ctrl  ┃
 // ┗━━━━━━━┻━━━━━━━┻━━━━━━━┹──────────────────────────────────┺━━━━━━━┻━━━━━━━┻━━━━━━━┻━━━━━━┛
 
+pipewire-pulse/pulseaudio: allow multiple users to use the same server
+	~/.config/pipewire/pipewire-pulse.conf (cp from /usr/share/pipewire/):
+		server.address = [
+			...
+	                "tcp:127.0.0.1:8888" # IPv4 on a single address
+			...
+		]
+	~/.config/pulse/default.pa:
+		.include /etc/pulse/default.pa
+		load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
+	~wineuser/.config/pulse/client.conf:
+		# when using the pipewire-pulse daemon
+		default-server = tcp:127.0.0.1:8888
+		# when using the pulseaudio daemon
+		#default-server = tcp:127.0.0.1
+
 # mpv: use monophonic output
 Player.sh Command '"set_property", "audio-channels", "mono"'
 
@@ -59,15 +73,8 @@ sudo /etc/init.d/vmware start
 ## mount linux guest with vmware (open-vm-tools installed)
 	/usr/bin/vmhgfs-fuse .host:/ /mount-point -o allow_other
 
-# Youtube-dl usefull usages
-youtube-dl -k -x -f mp4 --audio-format mp3 --playlist-items 20-25 -o '%(title)s.%(ext)s'
-youtube-dl --rm-cache-dir # ERROR: unable to download video data: HTTP Error 403: Forbidden
-
 # use ffmpeg to see camera's input
 ffmpeg -i /dev/video0 -c:v rawvideo -pix_fmt yuv420p -window_size qcif -f sdl "SDL output"
-
-# refresh disks
-partprobe
 
 # use with modprobe to load kernel drivers
 Kernel driver: xhci_hcd
@@ -88,13 +95,6 @@ rsync -a --info=progress2 --del
 	git commit -m "Initial commit"
 	git push -u origin master --force
 
-# installed with wine
-wine{,-mono} lib32-{mpg123,libpulse}
-
-# Mount mtp devices: using the simple-mptfs package (AUR)
-simple-mtpfs --device 1 -o allow_other /mnt/Android -o uid="$(id -u)" -o gid="$(id -g)"
-fusermount -u /mnt/Android
-
 # Metadata-Tag manipulators
 mat2    -- remove metadata
 tagutil -- can change metadata values
@@ -111,8 +111,16 @@ tagutil -- can change metadata values
 	--domains skarnet.org\
 	--no-parent \
 
+gtk:
+	theme:
+		Opendesktop-dark
+	~/.gtkrc-2.0:
+		gtk-key-theme-name = "Emacs"
+	~/.gtkrc-2.0:
+		gtk-key-theme-name = "Emacs"
+
 # nbase-iso:
 pacman -S --needed base-devel moreutils tmux xorg{,-xinit} git bc acpi alsa-utils xsel shotgun unclutter clipmenu dunst highlight mediainfo ttf-{fira-code,nerd-fonts-symbols-mono}
 
-# List of essential packages
-{linux,linux-firmware,base-devel,moreutils,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils {xdotool,xsel,shotgun,unclutter,clipmenu,dunst,highlight,mediainfo} ttf-{fira-code,nerd-fonts-symbols-mono}
+# essential packages
+{linux,linux-firmware,base-devel,moreutils,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils pipewire{,-{alsa,pulse}} pulsemixer {sxiv,xdotool,xsel,keynav,shotgun,unclutter,clipmenu,dunst,highlight,mediainfo} lxappearance ttf-{fira-code,nerd-fonts-symbols-mono}

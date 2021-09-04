@@ -64,7 +64,7 @@ c cursorzoom 50 30
 shift+c cursorzoom 150 90
 
 # Record keynav actions
-q record ~/.config/keynav_macros
+q record
 shift+at playback
 
 # History

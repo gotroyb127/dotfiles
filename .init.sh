@@ -1,5 +1,8 @@
+#!/bin/sh
+
 # only usefull when the shell is interactive
-[ -z "${-##*c*}" ] && return
+[ -z "${-##*c*}" ] &&
+	return
 
 set \
 	-o vi\
@@ -100,4 +103,7 @@ WHO() {
 	echo "$U$USER$N@$H$(hostname)"
 }
 
-SET_PS1 -t "$(hostname)"
+SET_PS1 -t "$USER@$(hostname)"
+
+[ -f "$ENV.local" ] &&
+	. "$ENV.local"
