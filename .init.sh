@@ -31,6 +31,7 @@ alias \
 	cal='cal -s'\
 	SU='sudo --preserve-env=LF_LEVEL ksh -l'\
 	LOGIN='exec_ksh -l'\
+	P='sudo pacman'\
 	gdb='gdb -q'\
 	bc='bc -lq'\
 	mksh='HISTFILE= ENV= mksh -o vi'\
@@ -107,3 +108,4 @@ SET_PS1 -t "$USER@$(hostname)"
 
 [ -f "$ENV.local" ] &&
 	. "$ENV.local"
+true

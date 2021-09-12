@@ -47,7 +47,7 @@ PauseAfter() {
 		fi
 		Notify "Pausing mpv after $time."
 	}
-	Command '"set_property", "pause", false'
+	SetP '"pause", false'
 	printf '%s' $$ > "$pidf"
 	n=$(($1 + 1))
 	shift
@@ -64,7 +64,7 @@ PauseAfter() {
 			(
 				sleep $secs
 			) & wait $!
-			Command '"set_property", "pause", true'
+			SetP '"pause", true'
 			Notify "Mpv paused."
 		fi
 	done
@@ -83,7 +83,7 @@ Main() {
 			shift 2
 		;;
 		(position)
-			Command '"set_property", "time-pos", '"$2"
+			SetP '"time-pos", '"$2"
 			ResyncPause &
 			shift 2
 		;;
@@ -97,7 +97,7 @@ Main() {
 				    "time-pos duration"
 			SetTimeVars pos $pos dur $dur
 			secs=$(dmenu -p "[$pos / $dur"'] Jump to: ' < /dev/null | TimeToSecs)
-			Command '"set_property", "time-pos", '"$secs"
+			SetP '"time-pos", '"$secs"
 			ResyncPause &
 			shift
 		;;
@@ -107,7 +107,7 @@ Main() {
 			shift 2
 		;;
 		(speed)
-			Command '"set_property", "speed", '"$2"
+			SetP '"speed", '"$2"
 			ResyncPause &
 			shift 2
 		;;
@@ -117,19 +117,19 @@ Main() {
 			shift 2
 		;;
 		(play)
-#			Command '"set_property", "keep-open", "no"'
-			Command '"set_property", "pause", false'
+#			SetP '"keep-open", "no"'
+			SetP '"pause", false'
 			ResyncPause &
 			shift
 		;;
 		(pause)
-			Command '"set_property", "pause", true'
+			SetP '"pause", true'
 			ResyncPause &
 			shift
 		;;
 		(play-pause)
 #			[ "$(Info eof-reached)" = true ] &&
-#				Command '"set_property", "keep-open", "no"'
+#				SetP '"keep-open", "no"'
 			Command '"cycle", "pause"'
 			ResyncPause &
 			shift
@@ -137,9 +137,9 @@ Main() {
 		(pause-after)
 #			if [ "$(Info keep-open)" != always ]
 #			then
-#				Command '"set_property", "keep-open", "always"'
+#				SetP '"keep-open", "always"'
 #			else
-#				Command '"set_property", "keep-open", "no"'
+#				SetP '"keep-open", "no"'
 #			fi
 			shift
 			[ "X$1" = X-f ] && {
@@ -155,14 +155,14 @@ Main() {
 		(loop-)
 			if [ "$(Info loop)" = inf ] && [ "$2" != 0 ]
 			then
-				Command '"set_property", "loop", 0'
+				SetP '"loop", 0'
 			else
 				Command '"add", "loop", -'"$2"
 			fi
 			shift 2
 		;;
 		(loop)
-			Command '"set_property", "loop", '"$2"
+			SetP '"loop", '"$2"
 			shift 2
 		;;
 		(loop+)
@@ -170,12 +170,7 @@ Main() {
 			shift 2
 		;;
 		(loop-playlist)
-			if [ "$(Info loop-playlist)" = inf ]
-			then
-				Command '"set_property", "loop-playlist", "no"'
-			else
-				Command '"set_property", "loop-playlist", "inf"'
-			fi
+			Command '"cycle-values", "loop-playlist", "no", "inf"'
 			shift
 		;;
 		(next)

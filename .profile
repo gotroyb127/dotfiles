@@ -68,4 +68,4 @@ then
 	esac
 	trap - INT
 fi
-echo '---> Sourced ~/.profile'
+echo '--> Sourced ~/.profile'

@@ -50,6 +50,11 @@ pipewire-pulse/pulseaudio: allow multiple users to use the same server
 # mpv: use monophonic output
 Player.sh Command '"set_property", "audio-channels", "mono"'
 
+mpv:
+	Player.sh Command '"set_property", "af", "rubberband=pitch=speed"'
+	Player.sh Command '"af-command", "all", "set-pitch", "1.0"'
+	...
+
 # Yamaha Musicsoft Downloader with wine
 sudo modprobe snd_seq
 
@@ -114,6 +119,8 @@ tagutil -- can change metadata values
 gtk:
 	theme:
 		Opendesktop-dark
+	icons:
+		X11-Default-Black
 	~/.gtkrc-2.0:
 		gtk-key-theme-name = "Emacs"
 	~/.gtkrc-2.0:
@@ -123,4 +130,4 @@ gtk:
 pacman -S --needed base-devel moreutils tmux xorg{,-xinit} git bc acpi alsa-utils xsel shotgun unclutter clipmenu dunst highlight mediainfo ttf-{fira-code,nerd-fonts-symbols-mono}
 
 # essential packages
-{linux,linux-firmware,base-devel,moreutils,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils pipewire{,-{alsa,pulse}} pulsemixer {sxiv,xdotool,xsel,keynav,shotgun,unclutter,clipmenu,dunst,highlight,mediainfo} lxappearance ttf-{fira-code,nerd-fonts-symbols-mono}
+{linux,linux-firmware,base-devel,moreutils,grub,efibootmgr,networkmanager} neovim tmux xorg{,-xinit} oksh git {mpv,socat,jq,bc,youtube-dl,timidity++} acpi alsa-utils pipewire{,-{alsa,pulse}} pulsemixer {sxiv,xdotool,xsel,keynav,shotgun,unclutter,xssstate,clipnotify,dunst,highlight,w3m,mediainfo} {gsimplecal,lxappearance,lxqt-policykit} ttf-{fira-code,nerd-fonts-symbols-mono}

@@ -20,7 +20,7 @@ Opener=\
 	a	lowriter\
 	c	sxiv -o\
 	f	timidity -in\
-	f	mpvs --ao=alsa,pulse\
+	f	mpvs\
 	f	w3m -N\
 	f	vis\
 "

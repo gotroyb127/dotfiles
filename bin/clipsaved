@@ -66,16 +66,21 @@ manageNewSel() {
 	do
 		_mktemp
 		_xsel --$sel -o > "$tmpf"
+
+		[ -z "$(cat "$tmpf")"] && {
+			debug "$sel seems empty. Skipping caching."
+			continue
+		}
+
 		_xsel --$sel -i < "$tmpf"
 		tmpcksum=$(cksum "$tmpf")
 
 		name=${tmpcksum%% *}
 
-		if [ -z "$(cat "$tmpf")" ] || [ -f "$name" ]
-		then
-			debug "Skipping caching from $sel."
+		[ -f "$name" ] && {
+			debug "$sel already cached. Skipping caching."
 			continue
-		fi
+		}
 		_mv -f "$tmpf" "$name"
 		debug "Grapped from $sel: '$name'."
 
@@ -89,8 +94,8 @@ manageCachedSel() {
 	debug 'Removing invalid entries...'
 	{
 		cat "$tmpf"
-		printf '%s\n' [0-9]*
-	} | sort | uniq -u | tee /dev/stderr |
+		ls | grep '^[0-9]\+$'
+	} | sort | uniq -u |
 		while read -r name
 		do
 			debug "Removing '$name'"
@@ -99,21 +104,28 @@ manageCachedSel() {
 		done
 	_mv -f "$tmpf" "$activecachesf"
 }
+Wait() {
+	clipnotify &
+		wait $!
+}
+Main() {
+	while true
+	do
+		manageCachedSel
+		manageNewSel
+
+		debug 'Waiting for events...'
+		Wait
+
+		[ $? != 0 ] &&
+			exit
+	done
+}
 
 trap exit INT TERM
 trap cleanup exit
 trap restart HUP
+trap 'manageCachedSel; Wait; Main' USR1
 
 initFiles
-while true
-do
-	manageNewSel
-	manageCachedSel
-
-	debug 'Waiting for events...'
-	clipnotify &
-		wait $!
-
-	[ $? != 0 ] &&
-		exit
-done
+Main

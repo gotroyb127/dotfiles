@@ -8,5 +8,5 @@ else
 		splitw -vl65% MPV_PlaylistInfo \; \
 		splitw -dh MPV_WatchLater \; \
 		selectp -t1 \; \
-		resizep -Z
+#		resizep -Z
 fi

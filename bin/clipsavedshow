@@ -30,7 +30,7 @@ selfromfile() {
 	done
 }
 
-if [ $# -gt 1 ] && [ "X$1" = 'X--rm' ]
+if [ $# -gt 1 ] && [ "X$1" = X--rm ]
 then
 	rm=y
 	shift
@@ -71,6 +71,7 @@ elif [ "$rm" = y ]
 then
 	sed "/$name/d" "$activecachesf" > "$tmpf"
 	cp -f "$tmpf" "$activecachesf"
+	pkill -USR1 clipsaved
 else
 	selfromfile "$name"
 	exit 0
