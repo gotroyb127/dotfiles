@@ -16,14 +16,15 @@ markLocGet() {
 
 cp -f "$marksF" "$marksF.save"
 
-newMark=\'
 newMarkLoc=$PWD
 for newMark in "$@"
 do
-	tmpMarkLoc=$(markLocGet "$newMark") ||
+	prevMarkLoc=$(markLocGet "$newMark") ||
 		brk=y
+	[ "X$prevMarkLoc" = "X$newMarkLoc" ] &&
+		break
 	LF_MarkSave "$newMark" "$newMarkLoc"
 	[ "X$brk" = Xy ] &&
 		break
-	newMarkLoc=$tmpMarkLoc
+	newMarkLoc=$prevMarkLoc
 done

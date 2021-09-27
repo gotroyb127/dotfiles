@@ -1,25 +1,38 @@
 #!/bin/sh
 
-DEST="$HOME/Screenshots"
 Title="shot_$(date +'%Y%m%d_%H%M%S')"
+wflag=
 
+Shoot() {
+	local fname=$1
+	mkdir -p "${fname%/*}"
+	shotgun $shootOpts "$fname"
+}
 Notify() {
-	notify-send -t 3000 -i "$1" "$2"
+	notify-send -t 3000 "$@"
 }
 
-case $1 in
-(-w)
-	fname="$DEST/${Title}w.png"
-	id=$(xdotool getwindowfocus)
-	opts="-i $id"
-	msg="Window-Screenshot saved."
-;;
-(*)
-	fname="$DEST/$Title.png"
-	opts=
-	msg="Screenshot saved."
-;;
-esac
+if [ "X$1" = X-w ]
+then
+	shift
+	wflag=y
+else
+	wflag=n
+fi
+dest="${1:-$HOME/Screenshots}"
 
-shotgun $opts "$fname"
-Notify "$fname" "$msg"
+if [ "X$wflag" = Xy ]
+then
+	fname="$dest/${Title}w.png"
+	id=$(xdotool getwindowfocus)
+	shootOpts="-i $id"
+	msg="Window-Screenshot saved"
+else
+	fname="$dest/$Title.png"
+	shootOpts=
+	msg="Screenshot saved"
+fi
+
+Shoot "$fname" &&
+	Notify -i "$fname" "$msg" "$fname" ||
+	Notify 'Screenshot failed'

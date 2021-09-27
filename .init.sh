@@ -37,7 +37,7 @@ alias \
 	mksh='HISTFILE= ENV= mksh -o vi'\
 	dash='HISTFILE= ENV= dash'\
 	bash='HISTFILE= ENV= bash'\
-	yt-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s'"\
+	yt-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s' -4"\
 	scrcpy="scrcpy --shortcut-mod 'lalt+lctrl'"\
 	MakeInstall='make && sudo make install'\
 
@@ -104,7 +104,12 @@ WHO() {
 	echo "$U$USER$N@$H$(hostname)"
 }
 
-SET_PS1 -t "$USER@$(hostname)"
+if [ "$SSH_TTY" ] && [ "$SSH_CONNECTION" ] && [ "$SSH_CLIENT" ]
+then
+	SET_PS1 -wt "ssh:$USER@$(hostname)"
+else
+	SET_PS1 -t "$USER@$(hostname)"
+fi
 
 [ -f "$ENV.local" ] &&
 	. "$ENV.local"

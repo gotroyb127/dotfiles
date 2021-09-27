@@ -1,7 +1,7 @@
 #!/bin/sh
 
 tilde() {
-	sed "s\`$HOME\`~\`"
+	sed "s\`$HOME\`~\`g"
 }
 
 if [ "X$1" = X-n ]

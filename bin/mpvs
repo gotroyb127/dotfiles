@@ -37,11 +37,11 @@ Kill() {
 }
 hookPre() {
 	getPids MPV_PlaylistInfo MPV_WatchLater
-	kill -USR1 $pids
+	Kill -USR1 $pids
 }
 hookPost() {
 	getPids MPV_PlaylistInfo MPV_WatchLater
-	kill -USR2 $pids
+	Kill -USR2 $pids
 }
 cleanExit() {
 	restoreSock

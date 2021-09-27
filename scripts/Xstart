@@ -9,7 +9,7 @@ Xstartlf=$HOME/.Xstart.local
 xmodmapf=$HOME/.Xmodmap
 
 # Xorg settings
-xset m 11/2 0
+xset m 6 0
 xset s 900 600
 xset s blank
 xset r rate 250 25

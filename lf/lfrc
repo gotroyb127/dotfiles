@@ -28,7 +28,7 @@ cmd OpenSel   $Open.sh $fx
 cmd EchoSel   !LF_Clear; printf '%s\n' "$fs" | LF_Fihi
 cmd rm        !LF_Rm $fx
 #cmd Ulm       &LF_MarkSave \'
-cmd Ulm       &LF_UpdateMarks \' 1 2 3
+cmd Ulm       &LF_UpdateMarks \' 1 2 3 4
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle
 cmd Resource  &{{
@@ -54,6 +54,8 @@ cmd SetPrompt &{{
 	B='\033[38;2;15;251;191m'
 	T='\033[38;2;255;200;170m'
 	L='\033[38;2;95;255;135m'
+	U='\033[38;2;66;235;255m'
+	H='\033[38;2;8;255;166m'
 	D='\033[38;2;128;128;255m'
 	N='\033[0m'
 	[ $(id -u) = 0 ] && {
@@ -63,10 +65,16 @@ cmd SetPrompt &{{
 	ID="$T$id"
 	CO="\033[38;5;252m:"
 	LV="$L$LF_LEVEL"
+	if [ "$SSH_TTY" ] && [ "$SSH_CONNECTION" ] && [ "$SSH_CLIENT" ]
+	then
+		W="$U%u$N@$H%h "
+	else
+		W=
+	fi
 	CD="$D%d"
 	CF="$N%f"
 
-	lf -remote "send $id set promptfmt \"$B[$ID$CO$LV$B] $CD$CF\""
+	lf -remote "send $id set promptfmt \"$B[$ID$CO$LV$B] $W$CD$CF\""
 }}
 
 cmd Recol &{{

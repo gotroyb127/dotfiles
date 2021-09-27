@@ -118,7 +118,7 @@ Main() {
 
 neednl=n
 trap 'echo; Read; Main' INT
-trap 'Sleep .1; Main' USR1
+trap 'Sleep 1; Main' USR1
 trap 'neednl=y; Main' USR2
 
 Main
