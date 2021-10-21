@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. "$(which Player_lib.sh)"
+. Player_lib.sh
 
 Sleep() {
 	sleep "$1" &

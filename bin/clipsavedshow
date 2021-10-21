@@ -44,6 +44,7 @@ trap 'rm "$tmpf"' exit
 cd "$cachedir"
 for name in $(tac "$activecachesf")
 do
+	printf '%s ' "$name"
 	getfirstline "$name"
 done > "$tmpf"
 
@@ -52,18 +53,9 @@ lret=$?
 [ "$lret" != 0 ] &&
 	exit 0
 out=$(printf '%s' "$out" | sed 's/^\(.*\) ([0-9]\+ lines)$/\1/')
+name=${out%% *}
 
-name=$(while read -r name
-	do
-		if [ "X$(getfirstline "$name")" = "X$out" ]
-		then
-			printf '%s' "$name"
-			break
-		fi
-	done < "$activecachesf"
-)
-
-if [ -z "$name" ]
+if [ ! -e "$name" ]
 then
 	printf '%s' "$out" > "$tmpf"
 	selfromfile "$tmpf"

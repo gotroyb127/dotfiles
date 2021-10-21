@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pref=${TMPDIR:-/tmp}/mpvs.sock
+pref=${TMPDIR:-/tmp}/mpvs/mpvs.sock
 
 rmSock() {
 	rm -f "$newSock"
@@ -58,6 +58,7 @@ else
 	newSock=$pref.$((n + 1))
 fi
 
+mkdir -p "${pref%/*}"
 setSock "$newSock"
 trap cleanExit TERM INT
 

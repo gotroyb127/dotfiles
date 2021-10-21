@@ -3,11 +3,17 @@ require('vis')
 require('visUtil')
 
 function mapCmds()
-	vis:map(vis.modes.NORMAL, leader('l'), Listchars, 'Toggle showing of whitespace')
-
 	for _, m in ipairs{vis.modes.NORMAL, vis.modes.VISUAL} do
 		vis:map(m, leader('c'), Comment, '(Un)comment selected lines')
 	end
+
+	function Listchars(keys)
+		set('show-spaces!')
+		set('show-tabs!')
+		set('show-newlines!')
+		return 0
+	end
+	vis:map(vis.modes.NORMAL, leader('l'), Listchars, 'Toggle showing of whitespace')
 
 	function toggleIc(keys)
 		set('ic!')
@@ -29,7 +35,7 @@ vis.events.subscribe(vis.events.WIN_OPEN, function(win)
 	set('rnu')
 	set('cursorline')
 
-	map('! normal <M-q> ":q 0<Enter>"')
+	map('! normal <M-q> ":q 0<Enter>:<Escape>kdd<Escape>"')
 	map('! normal <M-k> <C-w>k')
 	map('! normal <M-j> <C-w>j')
 	map('! normal <M-m> <vis-motion-window-line-middle>')
@@ -59,7 +65,9 @@ vis.events.subscribe(vis.events.INIT, function()
 	        .. ' ABCDEFGHIJKLMNOPRSTUVWXYZabcdefghijklmnoprstuvwxyz')
 end)
 
-vis.events.subscribe(vis.events.FILE_SAVE_POST, fileSavePost)
+vis.events.subscribe(vis.events.FILE_OPEN, onFileOpen)
+vis.events.subscribe(vis.events.FILE_CLOSE, onFileClose)
+vis.events.subscribe(vis.events.FILE_SAVE_POST, onFileSavePost)
 
-vis.events.subscribe(vis.events.WIN_STATUS, updateStatus)
+vis.events.subscribe(vis.events.WIN_STATUS, pUpdateStatus)
 vis.events.subscribe(vis.events.QUIT, restoreTitle)

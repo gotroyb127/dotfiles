@@ -3,7 +3,7 @@
 # always print two '\1'
 trap '[ $? != 0 ] && printf "\1\1"' exit
 
-. "$(which Player_lib.sh)"
+. Player_lib.sh
 
 SetInfoVars "pause loop loopPl        Title\
 	CurrTime Duration RemTime            Speed" \

@@ -1,5 +1,9 @@
 #!/bin/sh
 
+echo() {
+	printf '%s\n' "$*"
+}
+
 read mw mh << EOF
 $(xdpyinfo | awk '/dimensions/ {
 	sub("x", " ", $2)
@@ -25,8 +29,7 @@ then
 	readlns() {
 		while read -r l
 		do
-			l=${l#$c}
-			l=${l%%$c*}
+			l=$(echo "$l" | cut -d"$c" -f1-4)
 			printf "\n%${COLS}s " "$l"
 		done
 	}

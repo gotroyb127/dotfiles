@@ -1,7 +1,7 @@
 #!/bin/sh
 
 set -e
-. "$(which Player_lib.sh)"
+. Player_lib.sh
 ResyncPause() {
 	pause=$(Info pause)
 	[ ! -e "$pidf" ] &&

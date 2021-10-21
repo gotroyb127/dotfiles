@@ -2,6 +2,7 @@
 require('vis')
 
 local strf = string.format
+local shcmd = os.execute;
 
 local leaderc = ' '
 
@@ -29,18 +30,15 @@ function mapw(s)
 	cmd('map-window' .. s)
 end
 
+--function errHandler(err)
+--	msg('error: ', err)
+--end
+
 function leader(keys)
 	return leaderc .. keys
 end
 function leaderq(keys)
 	return strf('%q', leaderc .. keys)
-end
-
-function Listchars(keys)
-	set('show-spaces!')
-	set('show-tabs!')
-	set('show-newlines!')
-	return 0
 end
 
 function Comment(keys)
@@ -129,19 +127,53 @@ function mapPairs(...)
 	end
 end
 
-function fileSavePost(file)
+local visTmpDir = "/tmp/vis"
+function onFileOpen(file)
+	local visTmpOpen = visTmpDir .. "/open"
+	local tmpf, iofile
+
+	if not file.path then
+		return
+	end
+
+	tmpf = visTmpOpen .. file.path
+	tmpdirname = string.gsub(tmpf, "/[^/]*$", "")
+
+	file.tmpfpath = tmpf
+
+	shcmd(strf('mkdir -p %q', tmpdirname))
+	if shcmd(strf('[ -e %q ]', tmpf)) then
+		msg(strf('WARNING: another vis has been editing this file (%s)',
+			file.path))
+	else
+		shcmd(strf('echo $PPID > %q', tmpf))
+	end
+end
+function onFileClose(file)
+	local tmpf = file.tmpfpath
+	if shcmd(strf('[ $PPID = "$(cat %q)" ]', tmpf)) then
+		shcmd(strf('rm %q', tmpf))
+	end
+end
+
+function onFileSavePost(file)
 	info(strf('"%s" %dL, %dC written', file.name, #file.lines, file.size))
 end
 
+local title
 function termSetTitle(title)
 	io.stderr:write(strf('\x1b]2;%s\x1b\\', title))
 end
-local title
 function setTitle()
 	termSetTitle((title or '') .. ' - VIS')
 end
 function restoreTitle()
 	termSetTitle('no title')
+end
+
+function pUpdateStatus(win)
+--	xpcall(updateStatus, errHandler, win)
+	pcall(updateStatus, win)
 end
 
 local lastMode
@@ -181,7 +213,7 @@ function updateStatus(win)
 	local mod
 	local selinfo
 	local keys
-	local cc, cp
+	local cc, cp, cps, ok
 	local lnc, lnt
 	local col
 
@@ -201,7 +233,15 @@ function updateStatus(win)
 		return true
 	end
 	cc = f:content(sel.range)
-	cp = cc ~= '' and utf8.codepoint(cc) or 0
+	if cc == '' then
+		cps = ''
+	else
+		ok, cp = pcall(utf8.codepoint, cc)
+		if not ok then
+			cp = cc:byte()
+		end
+		cps = strf('U+%04X ', cp)
+	end
 	col = sel.col
 	lnc = sel.line
 	lnt = #f.lines
@@ -219,7 +259,7 @@ function updateStatus(win)
 
 	title = strf('%s%s (%s)', fname, mod, dirname)
 	sleft = strf('%s %s', modeStr ,title)
-	sright = strf('%s%sU+%04X |%2d  %2d/%d| ', selinfo, keys, cp,
+	sright = strf('%s%s%s |%2d  %2d/%d| ', selinfo, keys, cps,
 		col, lnc, lnt)
 
 	win:status(sleft, sright)
