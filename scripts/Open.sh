@@ -7,7 +7,7 @@ PGroup=\
 '	\\.(ps|pdf|djvu|epub)$\
 	\\.(ppt|pptx)$\
 	\\.(od[ft]|doc|docx)$\
-	\\.(png|jpg|jpeg|JPG|webp|svg|tiff|gif)$\
+	\\.(ff|png|jpg|jpeg|JPG|webp|svg|tiff|gif)$\
 	\\.(mid|MID)$\
 	\\.((mp|MP)[34]|m4a|mk[av]|ogg|wav|webm|avi)$\
 	\\.htm|html$\
