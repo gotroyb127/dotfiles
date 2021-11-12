@@ -48,11 +48,11 @@ pipewire-pulse/pulseaudio: allow multiple users to use the same server
 		#default-server = tcp:127.0.0.1
 
 # mpv: use monophonic output
-Player.sh Command '"set_property", "audio-channels", "mono"'
+Player.sh Cmd '"set_property", "audio-channels", "mono"'
 
 mpv:
-	Player.sh Command '"set_property", "af", "rubberband=pitch=speed"'
-	Player.sh Command '"af-command", "all", "set-pitch", "1.0"'
+	Player.sh Cmd '"set_property", "af", "rubberband=pitch=speed"'
+	Player.sh Cmd '"af-command", "all", "set-pitch", "1.0"'
 	...
 
 # Yamaha Musicsoft Downloader with wine

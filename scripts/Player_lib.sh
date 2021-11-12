@@ -8,11 +8,11 @@ TestSocket() {
 Socat() {
 	socat - "$MPVSOCKET" 2> /dev/null
 }
-Command() {
+Cmd() {
 	printf '{ "command": [%s] }\n' "$1" | Socat > /dev/null
 }
 SetP() {
-	Command '"set_property", '"$1"
+	Cmd '"set_property", '"$1"
 }
 Notify() {
 	notify-send -t 2000 "$1" "$(date +'%-I:%-M:%-S %p.')"

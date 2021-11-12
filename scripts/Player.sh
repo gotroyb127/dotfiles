@@ -78,7 +78,7 @@ Main() {
 	do
 		case $1 in
 		(position-)
-			Command '"seek", -'"$2"
+			Cmd '"seek", -'"$2"
 			ResyncPause &
 			shift 2
 		;;
@@ -88,7 +88,7 @@ Main() {
 			shift 2
 		;;
 		(position+)
-			Command '"seek", '"$2"
+			Cmd '"seek", '"$2"
 			ResyncPause &
 			shift 2
 		;;
@@ -102,7 +102,7 @@ Main() {
 			shift
 		;;
 		(speed-)
-			Command '"add", "speed", -'"$2"
+			Cmd '"add", "speed", -'"$2"
 			ResyncPause &
 			shift 2
 		;;
@@ -112,9 +112,16 @@ Main() {
 			shift 2
 		;;
 		(speed+)
-			Command '"add", "speed", '"$2"
+			Cmd '"add", "speed", '"$2"
 			ResyncPause &
 			shift 2
+		;;
+		(speedm)
+			SetInfoVars "sp" "speed"
+			nsp=$(dmenu -p "x$sp"' Set speed: ' < /dev/null)
+			SetP '"speed", '"$nsp"
+			ResyncPause &
+			shift
 		;;
 		(play)
 #			SetP '"keep-open", "no"'
@@ -130,7 +137,7 @@ Main() {
 		(play-pause)
 #			[ "$(Info eof-reached)" = true ] &&
 #				SetP '"keep-open", "no"'
-			Command '"cycle", "pause"'
+			Cmd '"cycle", "pause"'
 			ResyncPause &
 			shift
 		;;
@@ -157,7 +164,7 @@ Main() {
 			then
 				SetP '"loop", 0'
 			else
-				Command '"add", "loop", -'"$2"
+				Cmd '"add", "loop", -'"$2"
 			fi
 			shift 2
 		;;
@@ -166,29 +173,29 @@ Main() {
 			shift 2
 		;;
 		(loop+)
-			Command '"add", "loop", '"$2"
+			Cmd '"add", "loop", '"$2"
 			shift 2
 		;;
 		(loop-playlist)
-			Command '"cycle-values", "loop-playlist", "no", "inf"'
+			Cmd '"cycle-values", "loop-playlist", "no", "inf"'
 			shift
 		;;
 		(next)
-			Command '"playlist-next"'
+			Cmd '"playlist-next"'
 			ResyncPause &
 			shift
 		;;
 		(prev*)
-			Command '"playlist-prev"'
+			Cmd '"playlist-prev"'
 			ResyncPause &
 			shift
 		;;
 		(quit-wl)
-			Command '"quit-watch-later"'
+			Cmd '"quit-watch-later"'
 			shift
 		;;
 		(quit)
-			Command '"quit"'
+			Cmd '"quit"'
 			ResyncPause TERM &
 			shift
 		;;

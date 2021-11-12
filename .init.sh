@@ -21,32 +21,31 @@ then
 	alias ls='ls --color=auto'
 fi
 alias \
-	E='set -o emacs'\
-	ll='ls -l'\
-	la='ls -al'\
-	lA='ls -Al'\
-	view='less -N'\
-	XLOG='view "$XLOG"'\
-	ULOG='view "$ULOG"'\
-	cal='cal -s'\
-	SU='sudo --preserve-env=LF_LEVEL ksh -l'\
-	LOGIN='exec_ksh -l'\
-	P='sudo pacman'\
-	gdb='gdb -q'\
-	bc='bc -lq'\
-	mksh='HISTFILE= ENV= mksh -o vi'\
-	dash='HISTFILE= ENV= dash'\
-	bash='HISTFILE= ENV= bash'\
-	yt-dl="youtube-dl -f mp4 --audio-format mp3 -o '%(title)s.%(ext)s' -4"\
-	scrcpy="scrcpy --shortcut-mod 'lalt+lctrl'"\
-	MakeInstall='make && sudo make install'\
+	E='set -o emacs' \
+	ll='ls -l' \
+	la='ls -al' \
+	lA='ls -Al' \
+	view='less -N' \
+	XLOG='view "$XLOG"' \
+	ULOG='view "$ULOG"' \
+	cal='cal -s' \
+	SU='doas ksh -l' \
+	LOGIN='exec_ksh -l' \
+	gdb='gdb -q' \
+	bc='bc -lq' \
+	mksh='HISTFILE= ENV= mksh -o vi' \
+	dash='HISTFILE= ENV= dash' \
+	bash='HISTFILE= ENV= bash' \
+	yt-dl='youtube-dl' \
+	scrcpy="scrcpy --shortcut-mod 'lalt+lctrl'" \
+	MakeInstall='make && doas make install' \
 
 LF() {
-	let --LF_LEVEL
+	let LF_LEVEL--
 	exec "$0" -ic "lf $1"
 }
 exec_ksh() {
-	let --LF_LEVEL
+	let LF_LEVEL--
 	exec ksh "$@"
 }
 SET_PS1() {

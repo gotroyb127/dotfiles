@@ -2,12 +2,12 @@
 
 xhost +SI:localuser:wineuser > /dev/null
 
-[ "$#" -le 0 ] && {
+[ $# -le 0 ] && {
 	exec >&2
 	echo "${0##*/}: error: no command given."
 	exit 2
 }
 
-exec sudo -u wineuser env -u PATH -C /home/wineuser \
+exec doas -u wineuser env -u PATH -C /home/wineuser \
 	HOME=/home/wineuser USER=wineuser USERNAME=wineuser LOGNAME=wineuser \
 	"$@"

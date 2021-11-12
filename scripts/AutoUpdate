@@ -22,6 +22,8 @@ UpdateCache() {
 	msg "Updating cache file ($cache)."
 }
 
+command -v doas > /dev/null 2>&1 ||
+	alias doas=sudo
 while [ $# -gt 0 ]
 do
 	case $1 in
@@ -54,8 +56,8 @@ do
 done
 
 {
-	sudo -n pacman -Sy &&
-	sudo -n pacman -Fy
+	doas -n pacman -Sy &&
+	doas -n pacman -Fy
 } 2>&1 | {
 	box="---------- $b0 ----------"
 	echo "$box"
@@ -84,9 +86,9 @@ then
 
 	if tty > /dev/null
 	then
-		sudo pacman -Su
+		doas pacman -Su
 	else
-		st tmux.sh new 'sudo pacman -Su; $SHELL'
+		st tmux.sh new 'doas pacman -Su; $SHELL'
 	fi
 	pacman -Quq > /dev/null ||
 		UpdateCache

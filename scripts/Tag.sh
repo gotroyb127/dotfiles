@@ -2,16 +2,15 @@
 
 IFS='
 '
-Title() { echo "${1##*/}" | sed 's/\.mp[34]$//g'; }
-
+Title() {
+	echo "${1##*/}" | sed 's/\.[^.]\+$//g'
+}
 Tag() {
-	for f in $(find $1 -type f)
-	do
-		tagutil clear: set:title=$(Title "$f") print "$f"
-	done
+	tagutil clear: set:title="$(Title "$1")" print "$1"
 }
 
-for fname in $@
+set -e
+for f in $@
 do
-	[ -d "$fname" ] || [ -f "$fname" ] && Tag $fname
+	Tag "$f"
 done

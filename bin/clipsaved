@@ -67,7 +67,7 @@ manageNewSel() {
 		_mktemp
 		_xsel --$sel -o > "$tmpf"
 
-		[ -z "$(cat "$tmpf")"] && {
+		[ -z "$(cat "$tmpf")" ] && {
 			debug "$sel seems empty. Skipping caching."
 			continue
 		}
