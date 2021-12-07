@@ -1,0 +1,4 @@
+#!/bin/sh
+
+sed "s!$(pwd | sed 's/!/\\!/g')/!!" |
+	vidir - "$@"

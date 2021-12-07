@@ -1,0 +1,33 @@
+#!/bin/sh
+
+set -e
+
+cachedir=${XDG_CACHE_HOME:-$HOME/.cache}/cscript
+exe=$cachedir$(realpath "$0")
+
+cc=${cc:-cc}
+cflags=${cflags:-}
+
+getctime() {
+	stat -c '%Z' "$1"
+}
+
+mkdir -p "${exe%/*}"
+
+compl=y
+if [ -e "$exe" ]
+then
+	ct0=$(getctime "$0") &&
+	ctexe=$(getctime "$exe") &&
+	[ "$ct0" = "$ctexe" ] &&
+		compl=n
+fi
+
+[ "$compl" = y ] && {
+	sed 1g "$0" |
+		$cc -xc - $cflags -o "$exe" || {
+			printf '%s\n' "cscript: compilation failed (exit code: $?)" >&2
+			exit 100
+		}
+}
+exec "$exe" "$@"

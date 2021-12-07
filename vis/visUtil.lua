@@ -142,7 +142,7 @@ function onFileOpen(file)
 	file.tmpfpath = tmpf
 
 	shcmd(strf('mkdir -p %q', tmpdirname))
-	if shcmd(strf('[ -e %q ]', tmpf)) then
+	if shcmd(strf('[ -e %q ] && ps -p $$ > /dev/null', tmpf)) then
 		msg(strf('WARNING: another vis has been editing this file (%s)',
 			file.path))
 	else
@@ -246,11 +246,13 @@ function updateStatus(win)
 	lnc = sel.line
 	lnt = #f.lines
 
-	if #sels > 1 then
-		selinfo = strf('%d/%d ', sel.number, #sels)
-	else
-		selinfo = ''
+	for i = 1, col do
+		if f.lines[lnc]:sub(i, i) == '\t' then
+			col = col + 7
+		end
 	end
+
+	selinfo = #sels > 1 and strf('%d/%d ', sel.number, #sels) or ''
 
 	keys = (vis.count or '') .. vis.input_queue
 	if keys ~= '' then

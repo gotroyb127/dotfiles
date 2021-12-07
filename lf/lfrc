@@ -93,7 +93,7 @@ cmd Trash &{{
 		LF_Move "mv${N}-v${N}--" "$TRASH" n $fx |
 			LF_Fihi -n
 		rm "$files"
-		lf -remote "send :clear; load"
+		lf -remote "send :unselect; load"
 	} 2>&1 | LF_Log "$ULOG"
 }}
 
@@ -209,7 +209,7 @@ map E :push $vis<space>""<left>
 map D :push $mkdir<space>""<left>
 map x :push $chmod<space>+x<space>"$f"
 map X !LF_Clear; "$f"
-map C !printf %s "$fx" | vidir -v - | LF_Fihi
+map C !printf '%s\n' "$fx" | LF_Vidir -v | LF_Fihi
 map ` $vis "${TMPDIR:-/tmp}/lf.$USER.$id.log"
 
 map <c-y> :up

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+exec awk -v sq=\' '{
+	gsub(sq, sq "\\" sq sq)
+	printf(sq "%s" sq "\n", $0)
+}'
