@@ -17,11 +17,12 @@ xset -dpms
 
 xsetroot -solid gray0
 
-setxkbmap -layout us,gr -option grp:shift_caps_toggle
-setxkbmap -option srvrkeys:none
-
 [ -f "$xmodmapf" ] &&
 	xmodmap "$xmodmapf"
+
+setxkbmap -layout us,gr \
+	-option grp:shift_caps_toggle \
+	-option srvrkeys:none
 
 log "----- X keymaps loaded. -----"
 

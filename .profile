@@ -49,7 +49,7 @@ unset dir music midi vid img book ex txt fi arc word ppt
 
 if [ $(id -u) != 0 ] && [ "$TTYN" != 0 ]
 then
-	printf '%s' 'Options: [s]hell, [t]mux, [X]org: '
+	printf '%s' 'Options: [s]hell, [t]mux, [X]11: '
 	trap 'ans=s; echo' INT
 	read ans
 	case $ans in
@@ -60,7 +60,7 @@ then
 		tmux attach
 	;;
 	(x|X|'')
-		echo "Starting X.org..."
+		echo "Starting X.."
 		startx >> "$XLOG" 2>&1
 	;;
 	(s|S)

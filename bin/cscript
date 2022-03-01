@@ -2,32 +2,35 @@
 
 set -e
 
+abspath() (
+	cd "${1%/*}"
+	printf '%s\n' "$PWD/${1##*/}"
+)
+
 cachedir=${XDG_CACHE_HOME:-$HOME/.cache}/cscript
-exe=$cachedir$(realpath "$0")
+# use abspath to get a path that depends on the target file
+# and not how it is called, e.g. ./script.c and /home/u/script.c need
+# to refer to the same executable
+# append a r component so that no names collide
+exe=$cachedir/r$(abspath "$0") # $(abspath $0) starts with a /
+dof=$cachedir/default.do
 
-cc=${cc:-cc}
-cflags=${cflags:-}
+export CC CARGS DEPS
 
-getctime() {
-	stat -c '%Z' "$1"
+[ ! -e "$dof" ] && {
+	mkdir -p "${dof%/*}"
+	sed 's/^\t//' << \EOF > "$dof"
+	set -u
+	src=/${1#r}
+
+	redo-ifchange "$src"
+	cd ${src%/*}
+	[ -n "${DEPS:-}" ] &&
+		redo-ifchange $DEPS
+	sed 1g "$src" |
+		$CC -xc - $CARGS -o "${0%/*}/$3"
+EOF
 }
 
-mkdir -p "${exe%/*}"
-
-compl=y
-if [ -e "$exe" ]
-then
-	ct0=$(getctime "$0") &&
-	ctexe=$(getctime "$exe") &&
-	[ "$ct0" = "$ctexe" ] &&
-		compl=n
-fi
-
-[ "$compl" = y ] && {
-	sed 1g "$0" |
-		$cc -xc - $cflags -o "$exe" || {
-			printf '%s\n' "cscript: compilation failed (exit code: $?)" >&2
-			exit 100
-		}
-}
+redo-ifchange "$exe"
 exec "$exe" "$@"

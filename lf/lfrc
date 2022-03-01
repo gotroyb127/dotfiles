@@ -28,7 +28,7 @@ cmd OpenSel   $Open.sh $fx
 cmd EchoSel   !LF_Clear; printf '%s\n' "$fs" | LF_Fihi
 cmd rm        !LF_Rm $fx
 #cmd Ulm       &LF_MarkSave \'
-cmd Ulm       &LF_UpdateMarks \' 1 2 3 4
+cmd Ulm       &LF_UpdateMarks \' 1 2 3 4 5 6
 cmd SelRecurs &find "$f" | sort "$@" | LF_Toggle
 cmd REsel     &LF_Pattern "$@" | LF_Toggle
 cmd Resource  &{{
@@ -253,13 +253,13 @@ map gr cd /
 map ge cd /etc
 map gb cd /bin
 map gv cd /var
-map gT cd /tmp
+map gt cd /tmp
 map gm cd /mnt
 map gh cd ~
 map gl cd ~/.local
 map gs cd ~/.local/scripts
 map gS cd ~/.local/bin
-map gt cd ~/.local/trash
+map gT cd ~/.local/trash
 map gd cd ~/Documents
 map gD cd ~/Downloads
 map gc &lf -remote "send $id cd '${XDG_CONFIG_HOME:-\"$HOME/.config\"}'"

@@ -36,8 +36,8 @@ vis.events.subscribe(vis.events.WIN_OPEN, function(win)
 	set('cursorline')
 
 	map('! normal <M-q> ":q 0<Enter>:<Escape>kdd<Escape>"')
-	map('! normal <M-k> <C-w>k')
-	map('! normal <M-j> <C-w>j')
+	map('! normal <M-h> <C-w>k')
+	map('! normal <M-l> <C-w>j')
 	map('! normal <M-m> <vis-motion-window-line-middle>')
 	map('! normal gI 0i')
 

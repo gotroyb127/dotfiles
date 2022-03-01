@@ -26,6 +26,10 @@ function map(s)
 	cmd('map' .. s)
 end
 
+function unmap(s)
+	cmd('unmap' .. s)
+end
+
 function mapw(s)
 	cmd('map-window' .. s)
 end
@@ -119,8 +123,8 @@ function mapPairs(...)
 	for _, s in ipairs{...} do
 		local o = s:sub(1, 1)
 		local c = s:sub(-1)
-		map(strf('! insert %q %s%s<vis-motion-char-prev>',
-			o, v(o), v(c)))
+--		map(strf('! insert %q %s%s<vis-motion-char-prev>',
+--			o, v(o), v(c)))
 		map(strf('! visual %s %q', leaderq(o),
 			strf(':x/%s.|\\n)+/ c/%s&%s/<Enter>v',
 			v'(', v(o), v(c))))
@@ -142,7 +146,8 @@ function onFileOpen(file)
 	file.tmpfpath = tmpf
 
 	shcmd(strf('mkdir -p %q', tmpdirname))
-	if shcmd(strf('[ -e %q ] && ps -p $$ > /dev/null', tmpf)) then
+	if shcmd(strf('[ -e %q ] && kill -0 $(cat %q) 2> /dev/null', tmpf, tmpf))
+	then
 		msg(strf('WARNING: another vis has been editing this file (%s)',
 			file.path))
 	else

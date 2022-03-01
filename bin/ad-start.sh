@@ -1,14 +1,15 @@
 #!/bin/sh
 
+start() {
+	! pgrep "^$1" >/dev/null &&
+		"$@"
+}
+
 if [ ! "X$USE_PIPEWIRE" = Xn ]
 then
-	pgrep pipewire >/dev/null || {
-		pipewire &
-		pipewire-pulse &
-		pipewire-media-session &
-	}
+	start pipewire &
+	start pipewire-pulse &
+	start wireplumber &
 else
-	pgrep pulseaudio >/dev/null || {
-		pulseaudio -D
-	}
+	start pulseaudio -D &
 fi

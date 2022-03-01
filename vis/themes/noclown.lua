@@ -77,6 +77,7 @@ lexers.STYLE_FOLDDISPLAYTEXT = ''
 lexers.STYLE_LINENUMBER_CURSOR = style{fg = fade}
 lexers.STYLE_CURSOR = style{fg = bg, bg = fade}
 lexers.STYLE_CURSOR_PRIMARY = style{fg = bg, bg = fg}
+lexers.STYLE_CURSOR_MATCHING = style{fg = bg, bg = fade_more}
 lexers.STYLE_CURSOR_LINE = style{bg = cursln}
 lexers.STYLE_COLOR_COLUMN = lexers.STYLE_CURSOR_LINE
 lexers.STYLE_SELECTION = style{bg = fade_more}
@@ -85,9 +86,3 @@ lexers.STYLE_STATUS_FOCUSED = style{fg = bg, bg = fg}
 lexers.STYLE_SEPARATOR = lexers.STYLE_DEFAULT
 lexers.STYLE_INFO = style{fg = info}
 lexers.STYLE_EOF = style{fg = fade_more}
-
--- debugging changes
---lexers.STYLE_CURSOR_PRIMARY = lexers.STYLE_CURSOR
---lexers.STYLE_CURSOR_PRIMARY = style{fg = bg, bg = fade}
-lexers.STYLE_CURSOR_MATCHING = style{fg = bg, bg = fade_more}
---lexers.STYLE_STATUS_FOCUSED = lexers.STYLE_DEFAULT
